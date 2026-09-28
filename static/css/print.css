@@ -1,0 +1,100 @@
+/*
+ * CROPWISE AI - Print Stylesheet
+ * Formats official crop advisory report for A4 / Letter paper
+ */
+
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    font-size: 11pt;
+  }
+
+  .navbar,
+  .footer,
+  .btn,
+  .lang-switcher,
+  .no-print {
+    display: none !important;
+  }
+
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .report-page {
+    border: 2px solid #2D6A4F !important;
+    border-radius: 8px;
+    padding: 24px;
+    margin: 0 auto;
+    page-break-after: always;
+  }
+
+  .report-header {
+    border-bottom: 2px solid #2D6A4F;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .report-brand-title {
+    font-size: 20pt;
+    font-weight: 800;
+    color: #1B4332 !important;
+  }
+
+  .report-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .report-section-box {
+    border: 1px solid #CCCCCC;
+    border-radius: 6px;
+    padding: 12px;
+    background-color: #FAFAFA !important;
+  }
+
+  .report-section-box h4 {
+    font-size: 11pt;
+    color: #1B4332 !important;
+    border-bottom: 1px solid #E0E0E0;
+    padding-bottom: 4px;
+    margin-bottom: 8px;
+  }
+
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  .report-table th,
+  .report-table td {
+    border: 1px solid #DDDDDD;
+    padding: 6px 10px;
+    font-size: 9pt;
+    text-align: left;
+  }
+
+  .report-table th {
+    background-color: #E8F5E9 !important;
+    color: #1B4332 !important;
+  }
+
+  .report-footer {
+    border-top: 1px solid #CCCCCC;
+    padding-top: 8px;
+    margin-top: 20px;
+    font-size: 8pt;
+    color: #666666;
+    display: flex;
+    justify-content: space-between;
+  }
+}

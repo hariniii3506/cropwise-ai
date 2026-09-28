@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+
+{% block title %}Government Agricultural Schemes - CROPWISE AI{% endblock %}
+
+{% block content %}
+<div class="container schemes-page" style="padding-top: 30px; padding-bottom: 50px;">
+  <!-- Header Banner -->
+  <section class="schemes-header" style="background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%); color: white; border-radius: 20px; padding: 35px 25px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(45, 106, 79, 0.15);">
+    <p class="dashboard-eyebrow" style="color: var(--color-accent); font-weight: 700; letter-spacing: 2px;">AGRICULTURAL SUBSIDIES & SUPPORT</p>
+    <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">Government Schemes</h1>
+    
+    <!-- Recommended Crop Binding Header -->
+    <div style="margin-top: 15px; background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+      <div>
+        <h2 style="font-size: 1.2rem; font-weight: 700; color: white; margin-bottom: 4px;">Government Schemes for Your Recommended Crop</h2>
+        {% if recommended_crop %}
+          <div style="font-size: 1.1rem; font-weight: 800; color: #FFF9C4;">
+            🌾 Recommended Crop: {{ recommended_crop }}
+          </div>
+        {% else %}
+          <div style="font-size: 1rem; font-weight: 700; color: #FFCDD2;">
+            ⚠️ Recommended Crop: Not Available (Missing crop recommendation)
+          </div>
+        {% endif %}
+      </div>
+      {% if not recommended_crop %}
+        <a href="{{ url_for('recommend') }}" class="btn btn-sm btn-primary" style="background-color: var(--color-accent); border-color: var(--color-accent); color: var(--color-primary-dark); font-weight: bold; padding: 8px 16px;">
+          🌱 Get Recommendation Now
+        </a>
+      {% endif %}
+    </div>
+  </section>
+
+  <div class="schemes-layout" style="display: grid; grid-template-columns: 1fr; gap: 30px; align-items: start;">
+    <!-- Layout Styling -->
+    <style>
+      @media (min-width: 992px) {
+        .schemes-layout {
+          grid-template-columns: 320px 1fr !important;
+        }
+      }
+      .scheme-card {
+        background: var(--color-card-bg);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        margin-bottom: 25px;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--color-card-border);
+        transition: var(--transition);
+      }
+      .scheme-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--color-leaf);
+      }
+      .badge-category {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: var(--radius-sm);
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        background-color: var(--color-leaf-subtle);
+        color: var(--color-primary);
+        margin-bottom: 12px;
+      }
+      .eligibility-banner {
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .eligibility-banner.eligible {
+        background-color: var(--color-leaf-subtle);
+        border-left: 5px solid var(--color-primary);
+        color: var(--color-primary-dark);
+      }
+      .eligibility-banner.ineligible {
+        background-color: #FFEBEE;
+        border-left: 5px solid #C92A2A;
+        color: #8C1D18;
+      }
+      .eligibility-banner.unconfirmed {
+        background-color: #FFF8E1;
+        border-left: 5px solid var(--color-earth);
+        color: var(--color-primary-dark);
+      }
+      .scheme-info-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px dashed var(--color-card-border);
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+      }
+      .scheme-info-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .filter-box {
+        background: var(--color-card-bg);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--color-card-border);
+      }
+      .category-header {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: var(--color-primary-dark);
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid var(--color-card-border);
+        font-family: var(--font-heading);
+      }
+    </style>
+
+    <!-- Column 1: Eligibility Update Form / Filter -->
+    <aside class="filter-box">
+      <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--color-primary-dark); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--color-bg-alt);">
+        🏛️ Profile &amp; Location
+      </h3>
+      
+      <div style="background-color: var(--color-leaf-subtle); border-radius: var(--radius-sm); padding: 10px; font-size: 0.8rem; color: var(--color-primary-dark); margin-bottom: 20px; line-height: 1.4;">
+        ℹ️ Check eligibility by updating location or land criteria below. Recommended crop is bound automatically.
+      </div>
+
+      <form action="{{ url_for('schemes') }}" method="POST" id="eligibilityForm">
+        <!-- Country -->
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label class="form-label" for="country" style="font-size: 0.8rem; font-weight: 700;">Country</label>
+          <select id="country" name="country" class="form-control" style="width: 100%;" required>
+            <option value="India" {% if country == "India" %}selected{% endif %}>India (இந்தியா)</option>
+          </select>
+        </div>
+
+        <!-- State -->
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label class="form-label" for="state" style="font-size: 0.8rem; font-weight: 700;">State</label>
+          <select id="state" name="state" class="form-control" style="width: 100%;" required>
+            <option value="Tamil Nadu" {% if state == "Tamil Nadu" %}selected{% endif %}>Tamil Nadu (தமிழ்நாடு)</option>
+            <option value="Kerala" {% if state == "Kerala" %}selected{% endif %}>Kerala (கேரளா)</option>
+            <option value="Karnataka" {% if state == "Karnataka" %}selected{% endif %}>Karnataka (கர்நாடகா)</option>
+            <option value="Andhra Pradesh" {% if state == "Andhra Pradesh" %}selected{% endif %}>Andhra Pradesh</option>
+          </select>
+        </div>
+
+        <!-- District -->
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label class="form-label" for="district" style="font-size: 0.8rem; font-weight: 700;">District / City</label>
+          <input type="text" id="district" name="district" class="form-control" value="{{ district }}" placeholder="e.g. Theni" required>
+        </div>
+
+        <!-- Land Area -->
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label class="form-label" for="landArea" style="font-size: 0.8rem; font-weight: 700;">Land Size (Acres)</label>
+          <input type="number" step="0.1" id="landArea" name="land_area" class="form-control" value="{{ land_area }}" required>
+        </div>
+
+        <!-- Farmer Category -->
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label class="form-label" for="farmerCategory" style="font-size: 0.8rem; font-weight: 700;">Farmer Category</label>
+          <select id="farmerCategory" name="farmer_category" class="form-control" style="width: 100%;" required>
+            <option value="General" {% if farmer_category == "General" %}selected{% endif %}>General (பொது)</option>
+            <option value="Small/Marginal" {% if farmer_category == "Small/Marginal" %}selected{% endif %}>Small &amp; Marginal (&lt; 5 acres)</option>
+            <option value="SC/ST" {% if farmer_category == "SC/ST" %}selected{% endif %}>SC / ST (ஆதிதிராவிடர்)</option>
+            <option value="Women" {% if farmer_category == "Women" %}selected{% endif %}>Women Farmer (பெண் விவசாயி)</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-weight: bold;" id="btnUpdateEligibility">
+          Re-evaluate Schemes
+        </button>
+      </form>
+    </aside>
+
+    <!-- Column 2: Search, Filters, and Grouped Listings -->
+    <main class="schemes-content">
+      <!-- Search & Filters Toolbar -->
+      <section style="background: var(--color-card-bg); border-radius: var(--radius-md); padding: 20px; margin-bottom: 25px; box-shadow: var(--shadow-sm); border: 1px solid var(--color-card-border);">
+        <form action="{{ url_for('schemes') }}" method="GET" style="display: flex; flex-wrap: wrap; gap: 10px; width: 100%;">
+          <!-- Search input -->
+          <input 
+            type="text" 
+            name="search" 
+            class="form-control" 
+            placeholder="Search schemes (e.g. PM-Kisan, micro irrigation)..." 
+            value="{{ search_q }}"
+            style="flex: 1; min-width: 200px;"
+          >
+
+          <!-- Eligibility filter -->
+          <select name="eligibility" class="form-control" style="width: auto; min-width: 150px;">
+            <option value="">All Eligibility States</option>
+            <option value="eligible" {% if selected_eligibility == "eligible" %}selected{% endif %}>Eligible only</option>
+            <option value="ineligible" {% if selected_eligibility == "ineligible" %}selected{% endif %}>Ineligible only</option>
+            <option value="unconfirmed" {% if selected_eligibility == "unconfirmed" %}selected{% endif %}>Unconfirmed only</option>
+          </select>
+
+          <button type="submit" class="btn btn-secondary" style="padding: 10px 20px;" id="btnSearchFilter">Filter</button>
+        </form>
+      </section>
+
+      <!-- Render Grouped Schemes -->
+      {% set ns = namespace(found_any=false) %}
+      
+      {% for cat in categories %}
+        {% set cat_schemes = grouped_schemes[cat] %}
+        
+        {% if cat_schemes %}
+          {% set ns.found_any = true %}
+          <h3 class="category-header">
+            {% if loop.index == 1 %}A. Crop-specific schemes/support
+            {% elif loop.index == 2 %}B. General farmer assistance schemes
+            {% elif loop.index == 3 %}C. Irrigation schemes
+            {% elif loop.index == 4 %}D. Crop insurance
+            {% elif loop.index == 5 %}E. Seeds/input assistance
+            {% elif loop.index == 6 %}F. Farm equipment subsidies
+            {% elif loop.index == 7 %}G. Soil/land improvement
+            {% elif loop.index == 8 %}H. Organic/natural farming
+            {% elif loop.index == 9 %}I. Other agriculture subsidies
+            {% else %}{{ cat }}
+            {% endif %}
+          </h3>
+
+          {% for scheme in cat_schemes %}
+            <article class="scheme-card">
+              <span class="badge-category">{{ scheme.category }}</span>
+              
+              <h2 style="font-size: 1.3rem; font-weight: 700; color: var(--color-primary-dark); margin-bottom: 5px;">
+                {{ scheme.name }}
+              </h2>
+              <p style="font-size: 0.8rem; color: var(--color-primary); font-weight: 600; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">
+                🏛️ Source: {{ scheme.department }}
+              </p>
+
+              <p style="font-size: 0.95rem; line-height: 1.6; color: var(--color-text-main); margin-bottom: 15px;">
+                <strong>Benefit:</strong> {{ scheme.purpose }}
+              </p>
+
+              <!-- Custom Dynamic Eligibility Banners -->
+              {% if scheme.status == 'eligible' %}
+                <div class="eligibility-banner eligible">
+                  <span>✅</span>
+                  <div>
+                    <strong>You may be eligible for this scheme</strong>
+                    <p style="font-size: 0.8rem; margin: 4px 0 0 0; opacity: 0.9;">{{ scheme.eligibility_reason }}</p>
+                  </div>
+                </div>
+              {% elif scheme.status == 'unconfirmed' %}
+                <div class="eligibility-banner unconfirmed">
+                  <span>⚠️</span>
+                  <div>
+                    <strong>Eligibility cannot be confirmed yet</strong>
+                    <p style="font-size: 0.8rem; margin: 4px 0 0 0; opacity: 0.9;">{{ scheme.eligibility_reason }}</p>
+                  </div>
+                </div>
+              {% else %}
+                <div class="eligibility-banner ineligible">
+                  <span>❌</span>
+                  <div>
+                    <strong>You may not be eligible</strong>
+                    <p style="font-size: 0.8rem; margin: 4px 0 0 0; opacity: 0.9;">Reason: {{ scheme.eligibility_reason }}</p>
+                  </div>
+                </div>
+              {% endif %}
+
+              <!-- Documents Section -->
+              <div style="margin-bottom: 15px; background-color: var(--color-bg-alt); border-radius: var(--radius-sm); padding: 12px 16px;">
+                <h4 style="font-size: 0.85rem; font-weight: 700; color: var(--color-primary-dark); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Required Documents:</h4>
+                <ul style="padding-left: 20px; font-size: 0.85rem; color: var(--color-text-muted);">
+                  {% for doc in scheme.documents %}
+                    <li>{{ doc }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+
+              <!-- Details Row -->
+              <div class="scheme-info-row">
+                <div class="scheme-info-item">
+                  <span>📅</span>
+                  <span><strong>Deadline:</strong> {{ scheme.deadline }}</span>
+                </div>
+                <div class="scheme-info-item">
+                  <span>📝</span>
+                  <span><strong>Application Method:</strong> {{ scheme.method }}</span>
+                </div>
+              </div>
+
+              <!-- Secure Action Buttons linking directly to Official portals -->
+              <div style="margin-top: 20px; text-align: right;">
+                {% if scheme.status == 'eligible' %}
+                  <a href="{{ url_for('scheme_apply', scheme=scheme.id) }}" class="btn btn-primary" style="padding: 10px 25px;" id="applyLink-{{ scheme.id }}">
+                    Apply Now →
+                  </a>
+                {% else %}
+                  <a href="{{ url_for('scheme_apply', scheme=scheme.id) }}" class="btn btn-secondary" style="padding: 10px 25px;" id="viewLink-{{ scheme.id }}">
+                    Open Official Website
+                  </a>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+
+      {% if not ns.found_any %}
+        <div style="background: var(--color-card-bg); border-radius: var(--radius-md); padding: 50px 20px; text-align: center; border: 1px solid var(--color-card-border); box-shadow: var(--shadow-sm);">
+          <span style="font-size: 3rem;">🌾</span>
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--color-primary-dark); margin-top: 15px; margin-bottom: 8px;">No Schemes Found</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.95rem;">No government schemes match the selected eligibility parameters or keywords.</p>
+        </div>
+      {% endif %}
+    </main>
+  </div>
+</div>
+{% endblock %}

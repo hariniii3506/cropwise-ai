@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Alternative Crops - CROPWISE AI | மாற்று பயிர்கள்{% endblock %}
+
+{% block content %}
+<div class="container alternative-page-container">
+  <div style="margin-bottom: 24px;">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline" data-i18n="nav.back_dashboard">← Back to Dashboard</a>
+  </div>
+
+  <div class="section-header alternative-heading-block">
+    <h1 class="section-title" data-i18n="alt.heading">Alternative Crop Options</h1>
+    <div style="font-size: 1.1rem; font-weight: 700; color: var(--color-primary); margin-top: 2px;">மாற்று பயிர் தேர்வுகள்</div>
+    <p class="section-subtitle" data-i18n="alt.subheading">
+      Explore other crop options that suit your soil and growing conditions.
+    </p>
+  </div>
+
+  <!-- Primary Crop Banner -->
+  <div class="card alternative-primary-card" style="border-left: 6px solid var(--color-primary); background-color: var(--color-leaf-subtle); margin-bottom: 36px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+      <div>
+        <span class="hero-badge" style="background: var(--color-primary); color: #FFFFFF;" data-i18n="alt.primary_badge">
+          Primary Recommended Crop
+        </span>
+        <h2 style="font-size: 1.8rem; font-family: var(--font-heading); color: var(--color-primary-dark); margin: 6px 0;">
+          {{ primary_crop.name }}
+          <span style="font-size: 1.2rem; font-weight: 600; color: var(--color-primary);">({{ primary_crop.tamil_name }})</span>
+        </h2>
+        <p style="color: var(--color-text-muted); max-width: 700px; font-size: 0.95rem;">
+          {{ primary_crop.description }}
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <a href="{{ url_for('duration', crop=primary_crop.name) }}" class="btn btn-sm btn-primary">Duration &amp; Timeline</a>
+        <a href="{{ url_for('budget', crop=primary_crop.name) }}" class="btn btn-sm btn-secondary">Budget</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alternatives Grid -->
+  <h3 class="alternative-section-title" style="font-size: 1.3rem; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 20px;">
+    Secondary Cultivation Candidates
+  </h3>
+
+  <div class="features-grid alternative-candidates-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+    {% for alt in alternatives %}
+      {% set alt_slug = alt.name.lower().replace(' / ragi', '').replace(' ', '_') %}
+      <div class="feature-card" style="padding: 24px;">
+        <div style="display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px;">
+          <div style="width: 70px; height: 70px; border-radius: 14px; overflow: hidden; background: var(--color-bg-alt); flex-shrink: 0;">
+            <img src="{{ url_for('static', filename='images/crops/' + alt_slug + '.svg') }}" alt="{{ alt.name }}" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div>
+            <span style="display: inline-block; font-size: 0.75rem; font-weight: 700; background: #E8F5E9; color: #2D6A4F; padding: 2px 8px; border-radius: var(--radius-pill); margin-bottom: 4px;" data-i18n="alt.secondary_badge">
+              Alternative Option
+            </span>
+            <h4 style="font-size: 1.25rem; font-weight: 800; color: var(--color-primary-dark);">
+              {{ alt.name }}
+            </h4>
+            <div style="font-size: 0.95rem; font-weight: 600; color: var(--color-primary);">
+              {{ alt.tamil_name }} • <span style="font-size: 0.82rem; color: var(--color-text-muted); font-style: italic;">{{ alt.scientific_name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <p style="font-size: 0.88rem; color: var(--color-text-muted); line-height: 1.5; margin-bottom: 16px;">
+          {{ alt.description }}
+        </p>
+
+        <!-- Key Metrics -->
+        <div style="background: var(--color-bg-alt); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px; font-size: 0.85rem;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <span style="color: var(--color-text-muted);">Duration:</span>
+            <strong>{{ alt.duration_days }}</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <span style="color: var(--color-text-muted);">Water Need:</span>
+            <strong>{{ alt.water_requirement }} ({{ alt.water_mm_range }})</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--color-text-muted);">Ideal Soil:</span>
+            <strong>{{ alt.ideal_soil|join(', ') }}</strong>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <a href="{{ url_for('duration', crop=alt.name) }}" class="btn btn-sm btn-outline" style="flex: 1;">Timeline</a>
+          <a href="{{ url_for('calendar', crop=alt.name) }}" class="btn btn-sm btn-outline" style="flex: 1;">Calendar</a>
+          <a href="{{ url_for('budget', crop=alt.name) }}" class="btn btn-sm btn-secondary" style="flex: 1;">Budget</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,702 @@
+{% extends "base.html" %}
+
+{% block title %}Farm Expenses & Notes - CROPWISE AI | பண்ணை செலவு & குறிப்புகள்{% endblock %}
+
+{% block content %}
+<div class="container expenses-page">
+
+  <div style="margin-bottom: 24px;">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline" data-i18n="nav.back_dashboard">
+      ← Back to Dashboard
+    </a>
+  </div>
+
+  <div class="section-header expenses-heading-block">
+    <h1 class="section-title" data-i18n="exp.heading">
+      Farm Expense Tracker &amp; Notebook
+    </h1>
+
+    <p class="section-subtitle" data-i18n="exp.subheading">
+      Manage farm expenditure and maintain day-to-day agricultural field records.
+    </p>
+  </div>
+
+  <!-- Top Total Expenses Metric Banner -->
+  <div class="card expense-summary-card"
+       style="background: linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%);
+              color: #FFFFFF;
+              padding: 28px;
+              margin-bottom: 30px;">
+
+    <div class="expense-summary-content">
+
+      <div class="expense-summary-total-block">
+
+        <span class="expense-summary-label" data-i18n="exp.total_expenses">
+          Total Logged Expenses
+        </span>
+
+        <div class="expense-summary-total">
+          ₹{{ "{:,.2f}".format(summary.total_expenses) }}
+        </div>
+
+        <div class="expense-summary-count">
+          {{ summary.total_count }}
+          <span data-i18n="exp.entries_recorded">
+            total expense entries recorded
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Quick Category Breakdown Pills -->
+      <div class="expense-category-list">
+
+        {% for cat, amt in summary.by_category.items() %}
+
+        <div class="expense-category-badge">
+          <strong>{{ cat }}:</strong>
+          ₹{{ "{:,.0f}".format(amt) }}
+        </div>
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="expenses-entry-grid">
+
+    <!-- LEFT COLUMN: EXPENSE FORM & SUMMARY SECTIONS -->
+    <div class="expenses-left-col" style="display: flex; flex-direction: column; gap: 20px;">
+
+      <!-- 1. Add New Expense Form Card -->
+      <div class="card expenses-entry-card">
+
+        <h3 class="card-title"
+            style="margin-bottom: 18px;"
+            data-i18n="exp.add_expense">
+          Add New Expense
+        </h3>
+
+        <form action="{{ url_for('add_new_expense') }}"
+              method="POST"
+              id="addExpenseForm"
+              autocomplete="off">
+
+          <div class="form-grid">
+
+            <!-- DATE -->
+            <div class="form-group">
+              <label class="form-label"
+                     for="expDate"
+                     data-i18n="exp.date">
+                Date
+              </label>
+              <input
+                type="date"
+                id="expDate"
+                name="expense_date"
+                class="form-control"
+                value="{{ current_date }}"
+                max="{{ current_date }}"
+                required
+              >
+            </div>
+
+            <!-- CATEGORY -->
+            <div class="form-group">
+              <label class="form-label"
+                     for="expCat"
+                     data-i18n="exp.category">
+                Category
+              </label>
+              <select
+                id="expCat"
+                name="category"
+                class="form-control"
+                required
+              >
+                <option value="Seeds" data-i18n="exp.cat_seeds">
+                  Seeds &amp; Saplings (விதை &amp; நாற்று)
+                </option>
+                <option value="Labour" data-i18n="exp.cat_labour">
+                  Farm Labour (பண்ணை கூலி)
+                </option>
+                <option value="Fertilizer" data-i18n="exp.cat_fert">
+                  Fertilizer &amp; Manure (உரம் &amp; பூச்சிக்கொல்லி)
+                </option>
+                <option value="Irrigation" data-i18n="exp.cat_irrig">
+                  Irrigation &amp; Power (பாசனம் &amp; மின்சாரம்)
+                </option>
+                <option value="Machinery" data-i18n="exp.cat_mach">
+                  Machinery &amp; Fuel (இயந்திர உழவு)
+                </option>
+                <option value="Other" data-i18n="exp.cat_other">
+                  Other Expenses (இதர செலவுகள்)
+                </option>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- AMOUNT -->
+          <div class="form-group">
+            <label class="form-label"
+                   for="expAmount"
+                   data-i18n="exp.amount">
+              Amount (₹)
+            </label>
+            <input
+              type="number"
+              step="any"
+              min="0"
+              id="expAmount"
+              name="amount"
+              class="form-control"
+              placeholder="Enter amount"
+              required
+              autocomplete="off"
+              value=""
+            >
+          </div>
+
+          <!-- DESCRIPTION -->
+          <div class="form-group">
+            <label class="form-label"
+                   for="expDesc"
+                   data-i18n="exp.desc">
+              Description
+            </label>
+            <input
+              type="text"
+              id="expDesc"
+              name="description"
+              class="form-control"
+              placeholder="e.g. 2 bags of DAP fertilizer / Tractor ploughing"
+              autocomplete="off"
+            >
+          </div>
+
+          <!-- SUBMIT -->
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="width: 100%;"
+            data-i18n="exp.btn_add"
+          >
+            ➕ Log Expense
+          </button>
+
+        </form>
+
+      </div>
+
+      <!-- 2. Monthly Expense Summary (Real Data) -->
+      <div class="card expenses-summary-subcard" style="padding: 22px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+          <h3 class="card-title" style="font-size: 1.05rem; margin-bottom: 0;">📊 Monthly Expense Summary</h3>
+          <span style="font-size: 0.8rem; background: var(--color-leaf-subtle); color: var(--color-primary-dark); padding: 3px 10px; border-radius: var(--radius-pill); font-weight: 600;">
+            {{ current_month_name }}
+          </span>
+        </div>
+
+        {% if month_expenses and month_expenses|length > 0 %}
+          <div style="background: var(--color-bg-alt); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 12px; border: 1px solid var(--color-card-border); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 0.8rem; color: var(--color-text-muted);">This Month's Spending</div>
+              <div style="font-size: 1.35rem; font-weight: 800; color: var(--color-primary-dark);">₹{{ "{:,.2f}".format(month_total) }}</div>
+            </div>
+            <div style="text-align: right; font-size: 0.85rem; color: var(--color-text-muted);">
+              <strong>{{ month_expenses|length }}</strong> entries
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            {% for cat, amt in month_by_category.items() %}
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; padding: 6px 10px; background: var(--color-card-bg); border-radius: 6px; border: 1px solid var(--color-card-border);">
+              <span style="font-weight: 600; color: var(--color-text-main);">{{ cat }}</span>
+              <strong style="color: var(--color-primary);">₹{{ "{:,.2f}".format(amt) }}</strong>
+            </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div style="text-align: center; padding: 18px 10px; color: var(--color-text-muted); font-size: 0.88rem; background: var(--color-bg-alt); border-radius: var(--radius-sm); border: 1px dashed var(--color-card-border);">
+            <span style="font-size: 1.3rem; display: block; margin-bottom: 4px;">📅</span>
+            No expenses recorded for this month.
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- 3. Recent Logged Expenses (Real Data) -->
+      <div class="card expenses-recent-subcard" style="padding: 22px;">
+        <h3 class="card-title" style="font-size: 1.05rem; margin-bottom: 12px;">⚡ Recent Expenses</h3>
+        {% if expenses and expenses|length > 0 %}
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            {% for exp in expenses[:3] %}
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--color-bg-alt); border-radius: var(--radius-sm); border: 1px solid var(--color-card-border); gap: 10px;">
+              <div style="min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
+                  <span style="background: var(--color-leaf-subtle); color: var(--color-primary-dark); font-weight: 700; padding: 1px 6px; border-radius: var(--radius-pill); font-size: 0.75rem;">
+                    {{ exp.category }}
+                  </span>
+                  <span style="font-size: 0.78rem; color: var(--color-text-muted);">{{ exp.expense_date }}</span>
+                </div>
+                <div style="font-size: 0.82rem; color: var(--color-text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                  {{ exp.description or 'No description' }}
+                </div>
+              </div>
+              <div style="text-align: right; flex-shrink: 0;">
+                <strong style="color: var(--color-primary); font-size: 0.92rem;">₹{{ "{:,.0f}".format(exp.amount) }}</strong>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div style="text-align: center; padding: 18px 10px; color: var(--color-text-muted); font-size: 0.88rem; background: var(--color-bg-alt); border-radius: var(--radius-sm); border: 1px dashed var(--color-card-border);">
+            No expense records logged yet.
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+
+    <!-- RIGHT: FIELD NOTES & REMINDERS -->
+    <div class="card expenses-entry-card">
+
+      <h3 class="card-title"
+          style="margin-bottom: 18px;"
+          data-i18n="notes.heading">
+        Farm Notes &amp; Field Log
+      </h3>
+
+      <form
+        action="{{ url_for('add_new_note') }}"
+        method="POST"
+        id="addNoteForm"
+        autocomplete="off"
+      >
+
+        <!-- NOTE TITLE -->
+        <div class="form-group">
+
+          <label class="form-label"
+                 for="noteTitle"
+                 data-i18n="notes.title">
+            Note Title
+          </label>
+
+          <input
+            type="text"
+            id="noteTitle"
+            name="title"
+            class="form-control"
+            placeholder="e.g. Nursery bed watered today / Canal release schedule"
+            required
+            autocomplete="off"
+          >
+
+        </div>
+
+
+        <!-- NOTE TAG -->
+        <div class="form-group">
+
+          <label class="form-label"
+                 for="noteTag"
+                 data-i18n="notes.tag">
+            Tag / Category
+          </label>
+
+          <select
+            id="noteTag"
+            name="tag"
+            class="form-control"
+          >
+
+            <option value="Field Observation">
+              Field Observation (வயல் கவனிப்பு)
+            </option>
+
+            <option value="Irrigation Schedule">
+              Irrigation Schedule (பாசன அட்டவணை)
+            </option>
+
+            <option value="Pest Surveillance">
+              Pest Surveillance (பூச்சி கண்காணிப்பு)
+            </option>
+
+            <option value="Market Mandi">
+              Market / Mandi (சந்தை விலை குறிப்பு)
+            </option>
+
+            <option value="General">
+              General (பொதுவானது)
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- NOTE CONTENT -->
+        <div class="form-group">
+
+          <label class="form-label"
+                 for="noteContent"
+                 data-i18n="notes.content">
+            Note Content
+          </label>
+
+          <textarea
+            id="noteContent"
+            name="content"
+            class="form-control"
+            rows="3"
+            placeholder="Write observation or reminder here..."
+            required
+          ></textarea>
+
+        </div>
+
+
+        <!-- SAVE NOTE -->
+        <button
+          type="submit"
+          class="btn btn-secondary"
+          style="width: 100%;"
+          data-i18n="notes.btn_save"
+        >
+          📌 Save Field Note
+        </button>
+
+      </form>
+
+      <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--color-card-border);">
+        <h4 class="card-title" style="font-size: 1rem; margin-bottom: 14px;" data-i18n="reminders.heading">
+          Add Farm Reminder
+        </h4>
+
+        <form action="{{ url_for('add_new_reminder') }}" method="POST" id="addReminderForm" autocomplete="off">
+          <div class="form-group">
+            <label class="form-label" for="reminderDate" data-i18n="reminders.date">Reminder Date</label>
+            <input type="date" id="reminderDate" name="reminder_date" class="form-control" min="{{ current_date }}" required>
+          </div>
+          <div class="form-group">
+            <span class="form-label" data-i18n="reminders.time">Reminder Time</span>
+            <input type="hidden" id="reminderTime" name="reminder_time" value="08:00" required>
+            <div class="reminder-time-controls">
+              <label class="sr-only" for="reminderHour">Reminder hour</label>
+              <select id="reminderHour" class="form-control" aria-label="Reminder hour">
+                {% for hour in range(1, 13) %}<option value="{{ '%02d'|format(hour) }}"{% if hour == 8 %} selected{% endif %}>{{ '%02d'|format(hour) }}</option>{% endfor %}
+              </select>
+              <span class="time-separator">:</span>
+              <label class="sr-only" for="reminderMinute">Reminder minute</label>
+              <select id="reminderMinute" class="form-control" aria-label="Reminder minute">
+                {% for minute in range(0, 60, 5) %}<option value="{{ '%02d'|format(minute) }}">{{ '%02d'|format(minute) }}</option>{% endfor %}
+              </select>
+              <input type="hidden" id="reminderPeriod" value="AM">
+              <div class="period-toggle reminder-period-toggle" role="group" aria-label="Reminder AM or PM">
+                <button type="button" class="period-option is-selected" data-period-target="reminderPeriod" data-period="AM">AM</button>
+                <button type="button" class="period-option" data-period-target="reminderPeriod" data-period="PM">PM</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reminderTitle" data-i18n="reminders.title">Reminder Title</label>
+            <input type="text" id="reminderTitle" name="reminder_title" class="form-control" placeholder="e.g. Apply fertilizer to Paddy field" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reminderDescription" data-i18n="reminders.description">Reminder Description</label>
+            <textarea id="reminderDescription" name="reminder_description" class="form-control" rows="2" placeholder="Add a clear farm task description" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;" data-i18n="reminders.btn_save">Save Farm Reminder</button>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- EXPENSE HISTORY -->
+  <div class="card expenses-history-card">
+
+    <h3 class="card-title"
+        style="margin-bottom: 16px;"
+        data-i18n="exp.history">
+      Expense History Log
+    </h3>
+
+    {% if expenses and expenses|length > 0 %}
+
+    <div class="table-responsive">
+
+      <table class="custom-table">
+
+        <thead>
+
+          <tr>
+
+            <th data-i18n="exp.date">
+              Date
+            </th>
+
+            <th data-i18n="exp.category">
+              Category
+            </th>
+
+            <th data-i18n="exp.desc">
+              Description
+            </th>
+
+            <th data-i18n="exp.amount">
+              Amount (₹)
+            </th>
+
+            <th data-i18n="hist.col_actions">
+              Action
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          {% for exp in expenses %}
+
+          <tr>
+
+            <td>
+              {{ exp.expense_date }}
+            </td>
+
+
+            <td>
+
+              <span
+                style="
+                  background: var(--color-leaf-subtle);
+                  color: var(--color-primary-dark);
+                  font-weight: 700;
+                  padding: 2px 8px;
+                  border-radius: var(--radius-pill);
+                  font-size: 0.82rem;
+                "
+              >
+                {{ exp.category }}
+              </span>
+
+            </td>
+
+
+            <td>
+              {{ exp.description or '-' }}
+            </td>
+
+
+            <td>
+
+              <strong style="color: var(--color-primary);">
+                ₹{{ "{:,.2f}".format(exp.amount) }}
+              </strong>
+
+            </td>
+
+
+            <td>
+
+              <form
+                action="{{ url_for('delete_user_expense', exp_id=exp.id) }}"
+                method="POST"
+                onsubmit="return confirm('Delete this expense?');"
+                style="display: inline;"
+              >
+
+                <button
+                  type="submit"
+                  class="btn btn-sm btn-danger"
+                  style="padding: 2px 8px; font-size: 0.78rem;"
+                  data-i18n="btn.delete"
+                >
+                  Delete
+                </button>
+
+              </form>
+
+            </td>
+
+          </tr>
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    {% else %}
+
+    <p
+      style="color: var(--color-text-muted); font-size: 0.9rem;"
+      data-i18n="exp.empty"
+    >
+      No expense records logged yet.
+    </p>
+
+    {% endif %}
+
+  </div>
+
+
+  <!-- SAVED FIELD NOTES AND REMINDERS -->
+  <div class="card saved-notes-card combined-saved-card">
+    <div class="saved-section-header">
+      <h3 class="card-title" data-i18n="notes.saved_heading">Saved Field Notes &amp; Reminders</h3>
+      <button type="button" class="btn btn-sm btn-secondary" id="enableReminderNotifications" data-i18n="reminders.enable_notifications">Enable Notifications</button>
+    </div>
+    <p id="notificationPermissionStatus" class="notification-permission-status"></p>
+
+    {% if (notes and notes|length > 0) or (reminders and reminders|length > 0) %}
+    <div class="saved-records-grid">
+      {% for n in notes %}
+      <div class="saved-record-card">
+        <div class="saved-record-meta"><span class="record-tag">{{ n.tag }}</span><span>{{ n.created_at[:10] }}</span></div>
+        <h4>{{ n.title }}</h4>
+        <p>{{ n.content }}</p>
+        <form action="{{ url_for('delete_user_note', note_id=n.id) }}" method="POST" onsubmit="return confirm('Delete this note?');">
+          <button type="submit" class="btn btn-sm btn-danger" data-i18n="btn.delete">Delete</button>
+        </form>
+      </div>
+      {% endfor %}
+
+      {% for reminder in reminders %}
+      <div class="saved-record-card farm-reminder-card reminder-card-{{ reminder.status }}" data-reminder-id="{{ reminder.id }}" data-reminder-at="{{ reminder.reminder_date }}T{{ reminder.reminder_time or '00:00' }}" data-reminder-title="{{ reminder.title|e }}" data-reminder-description="{{ reminder.description|e }}">
+        <div class="saved-record-meta"><span class="record-tag">Farm Reminder</span><span class="reminder-status reminder-status-{{ reminder.status }}">{{ reminder.status|title }}</span></div>
+        <h4>{{ reminder.title }}</h4>
+        <p>{{ reminder.description }}</p>
+        <p class="reminder-date-line">{{ reminder.reminder_date }} · <span class="reminder-display-time" data-time="{{ reminder.reminder_time or '00:00' }}">{{ reminder.reminder_time or '00:00' }}</span></p>
+        <div class="saved-record-actions">
+          {% if reminder.status != 'completed' %}
+          <form action="{{ url_for('toggle_user_reminder', reminder_id=reminder.id) }}" method="POST"><button type="submit" class="btn btn-sm btn-secondary" data-i18n="reminders.mark_complete">Mark Complete</button></form>
+          {% endif %}
+          <form action="{{ url_for('delete_user_reminder', reminder_id=reminder.id) }}" method="POST" onsubmit="return confirm('Delete this reminder?');"><button type="submit" class="btn btn-sm btn-danger" data-i18n="btn.delete">Delete</button></form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-records-state"><span class="empty-records-icon" aria-hidden="true">📝</span><p data-i18n="notes.empty_combined">No field notes or reminders recorded yet.</p></div>
+    {% endif %}
+  </div>
+
+</div>
+
+
+<!--
+  IMPORTANT:
+  Amount field must always start empty.
+  This script does NOT insert any default amount.
+  It only clears the field when the page is loaded/reset.
+-->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const amountField = document.getElementById("expAmount");
+    const expenseForm = document.getElementById("addExpenseForm");
+
+    if (amountField) {
+        // Never show a hardcoded/default amount.
+        amountField.value = "";
+    }
+
+    if (expenseForm) {
+        expenseForm.addEventListener("reset", function () {
+            if (amountField) {
+                amountField.value = "";
+            }
+        });
+    }
+
+    document.querySelectorAll(".period-option").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const target = document.getElementById(button.dataset.periodTarget);
+        if (target) target.value = button.dataset.period;
+        document.querySelectorAll('[data-period-target="' + button.dataset.periodTarget + '"]').forEach(function (option) {
+          option.classList.toggle("is-selected", option === button);
+          option.setAttribute("aria-pressed", option === button ? "true" : "false");
+        });
+      });
+    });
+
+    const reminderForm = document.getElementById("addReminderForm");
+    if (reminderForm) {
+      reminderForm.addEventListener("submit", function () {
+        let hour = Number(document.getElementById("reminderHour").value);
+        const minute = document.getElementById("reminderMinute").value;
+        const period = document.getElementById("reminderPeriod").value;
+        if (period === "PM" && hour !== 12) hour += 12;
+        if (period === "AM" && hour === 12) hour = 0;
+        document.getElementById("reminderTime").value = String(hour).padStart(2, "0") + ":" + minute;
+      });
+    }
+
+    document.querySelectorAll(".reminder-display-time").forEach(function (timeElement) {
+      const parts = timeElement.dataset.time.split(":");
+      let hour = Number(parts[0]);
+      const minute = parts[1] || "00";
+      const period = hour >= 12 ? "PM" : "AM";
+      hour = hour % 12 || 12;
+      timeElement.textContent = String(hour).padStart(2, "0") + ":" + minute + " " + period;
+    });
+
+    const enableButton = document.getElementById("enableReminderNotifications");
+    const permissionStatus = document.getElementById("notificationPermissionStatus");
+    const reminderCards = Array.from(document.querySelectorAll(".farm-reminder-card"));
+
+    function updatePermissionStatus() {
+      if (!permissionStatus || !("Notification" in window)) return;
+      permissionStatus.textContent = Notification.permission === "granted"
+        ? "Browser notifications are enabled."
+        : "Enable browser notifications to receive reminders while this page is open.";
+    }
+
+    if (enableButton && "Notification" in window) {
+      enableButton.addEventListener("click", function () {
+        if (Notification.permission !== "granted") {
+          Notification.requestPermission().then(updatePermissionStatus);
+        }
+      });
+      updatePermissionStatus();
+    } else if (permissionStatus) {
+      permissionStatus.textContent = "Browser notifications are not supported in this browser.";
+    }
+
+    function notifyDueReminders() {
+      if (!("Notification" in window) || Notification.permission !== "granted") return;
+      const now = new Date();
+      reminderCards.forEach(function (card) {
+        const reminderAt = new Date(card.dataset.reminderAt);
+        const notificationKey = "cropwise-reminder-" + card.dataset.reminderId;
+        if (reminderAt <= now && !localStorage.getItem(notificationKey)) {
+          new Notification("CROPWISE AI 🌱", {
+            body: "Farm Reminder\n" + card.dataset.reminderTitle + "\n" + card.dataset.reminderDescription + "\nReminder time: " + reminderAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+          });
+          localStorage.setItem(notificationKey, "1");
+        }
+      });
+    }
+
+    notifyDueReminders();
+    window.setInterval(notifyDueReminders, 30000);
+
+});
+</script>
+
+{% endblock %}

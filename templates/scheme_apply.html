@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply Scheme - CROPWISE AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --color-primary: #2D6A4F;
+      --color-primary-dark: #1B4332;
+      --color-primary-light: #40916C;
+      --color-leaf: #52B788;
+      --color-leaf-light: #74C69D;
+      --color-leaf-soft: #D8F3DC;
+      --color-leaf-subtle: #E8F5E9;
+      --color-bg: #FAFBF8;
+      --color-bg-alt: #F4F7F4;
+      --color-card-bg: #FFFFFF;
+      --color-card-border: #E0EBE2;
+      --color-text-main: #1C2826;
+      --color-text-muted: #5C6B64;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    /* Top Toolbar */
+    .toolbar {
+      height: 60px;
+      background-color: var(--color-card-bg);
+      border-bottom: 1px solid var(--color-card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      box-shadow: 0 2px 10px rgba(27, 67, 50, 0.04);
+      z-index: 10;
+    }
+
+    .btn-back {
+      background: none;
+      border: none;
+      color: #4b5563;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .btn-back:hover {
+      color: var(--color-primary);
+    }
+
+    .portal-info {
+      text-align: center;
+    }
+
+    .portal-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-primary-dark);
+      max-width: 300px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .portal-badge {
+      font-size: 0.7rem;
+      background-color: #E8F5E9;
+      color: var(--color-primary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      display: inline-block;
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-external {
+      background-color: var(--color-primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(45, 106, 79, 0.15);
+      transition: all 0.2s ease;
+    }
+
+    .btn-external:hover {
+      background-color: var(--color-primary-dark);
+    }
+
+    .application-page {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      padding: 28px 20px 50px;
+    }
+
+    .application-card {
+      background: var(--color-card-bg);
+      border: 1px solid var(--color-card-border);
+      border-radius: 16px;
+      padding: clamp(22px, 5vw, 42px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .application-card h1 {
+      color: var(--color-primary-dark);
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(1.55rem, 4vw, 2.3rem);
+      line-height: 1.2;
+      margin: 8px 0 12px;
+    }
+
+    .eyebrow {
+      color: var(--color-primary);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .scheme-purpose {
+      color: var(--color-text-main);
+      line-height: 1.6;
+    }
+
+    .scheme-details {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 28px;
+      margin-top: 24px;
+    }
+
+    .detail-item {
+      border-top: 1px solid var(--color-card-border);
+      padding-top: 13px;
+    }
+
+    .detail-item strong {
+      display: block;
+      color: var(--color-primary-dark);
+      font-size: 0.86rem;
+      margin-bottom: 5px;
+    }
+
+    .detail-item span,
+    .documents {
+      color: var(--color-text-muted);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .documents {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .application-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .action-button {
+      align-items: center;
+      border-radius: 8px;
+      display: inline-flex;
+      font-weight: 700;
+      justify-content: center;
+      min-height: 46px;
+      padding: 11px 18px;
+      text-decoration: none;
+      transition: var(--transition, all 0.2s ease);
+    }
+
+    .action-button.primary {
+      background: var(--color-primary);
+      box-shadow: 0 4px 12px rgba(27, 67, 50, 0.18);
+      color: white;
+    }
+
+    .action-button.primary:hover {
+      background: var(--color-primary-dark);
+    }
+
+    .action-button.secondary {
+      background: var(--color-leaf-subtle);
+      color: var(--color-primary-dark);
+      border: 1px solid var(--color-card-border);
+    }
+
+    .action-button.secondary:hover {
+      background: var(--color-leaf-soft);
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .scheme-details {
+        grid-template-columns: 1fr;
+      }
+
+      .action-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Toolbar -->
+  <header class="toolbar">
+    <a href="{{ url_for('schemes') }}" class="btn-back">
+      ← Back
+    </a>
+    
+    <div class="portal-info">
+      <div class="portal-title">{{ scheme.name }}</div>
+      <span class="portal-badge">OFFICIAL GOVERNMENT PORTAL</span>
+    </div>
+
+    <a href="{{ scheme.url }}" target="_blank" rel="noopener noreferrer" class="btn-external">
+      Open Official Portal 🌐
+    </a>
+  </header>
+
+  <main class="application-page">
+    <section class="application-card" aria-labelledby="scheme-title">
+      <div class="eyebrow">Official Government Scheme</div>
+      <h1 id="scheme-title">{{ scheme.name }}</h1>
+      <p class="scheme-purpose">{{ scheme.purpose }}</p>
+
+      <div class="scheme-details">
+        <div class="detail-item"><strong>Government Department</strong><span>{{ scheme.department }}</span></div>
+        <div class="detail-item"><strong>Eligibility</strong><span>Based on your scheme result. Final eligibility must be confirmed on the official portal.</span></div>
+        <div class="detail-item"><strong>Benefit</strong><span>{{ scheme.purpose }}</span></div>
+        <div class="detail-item"><strong>Application Method</strong><span>{{ scheme.method }}</span></div>
+        <div class="detail-item"><strong>Required Documents</strong><ul class="documents">{% for document in scheme.documents %}<li>{{ document }}</li>{% endfor %}</ul></div>
+        <div class="detail-item"><strong>Official Portal</strong><span>{{ scheme.url }}</span></div>
+      </div>
+
+      <div class="application-actions">
+        <a href="{{ scheme.url }}" target="_blank" rel="noopener noreferrer" class="action-button primary">Open Official Application Portal ↗</a>
+        <a href="{{ url_for('schemes') }}" class="action-button secondary">← Back to Government Schemes</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Handle Android hardware back key navigation or simple checks if needed
+    document.addEventListener("DOMContentLoaded", () => {
+      // Ensure UserAgent or frame matches correctly
+      if (navigator.userAgent.includes("CropwiseAndroid")) {
+        console.log("Loading official government portal in-app WebView");
+      }
+    });
+  </script>
+</body>
+</html>

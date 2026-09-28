@@ -1,0 +1,1160 @@
+{
+  "Paddy": {
+    "name": "Paddy",
+    "tamil_name": "நெல்",
+    "scientific_name": "Oryza sativa",
+    "category": "Cereal / Food Grain",
+    "category_ta": "தானியம் / உணவுப் பயிர்",
+    "description": "Paddy is a primary staple food crop that thrives in submerged wetland conditions. It requires high rainfall or assured irrigation with clayey or alluvial soils.",
+    "description_ta": "நெல் முதன்மையான உணவுப் பயிராகும். இது களிமண் அல்லது வண்டல் மண் உள்ள நன்செய் நிலங்களில் அதிக நீர் வசதியுடன் செழித்து வளரும்.",
+    "ideal_soil": ["Clayey", "Alluvial", "Loamy"],
+    "ideal_soil_ta": "களிமண், வண்டல் மண், செம்மண்",
+    "ph_range": "5.5 - 7.5",
+    "temp_range": "20°C - 35°C",
+    "humidity_range": "70% - 90%",
+    "rainfall_range": "1000mm - 2500mm",
+    "water_requirement": "High",
+    "water_requirement_ta": "அதிகம்",
+    "water_mm_range": "1100 - 1500 mm",
+    "irrigation_methods": ["Flood Irrigation", "Alternate Wetting and Drying (AWD)", "System of Rice Intensification (SRI)"],
+    "duration_days": "110 - 145 Days",
+    "stages": [
+      {
+        "phase": "Sowing & Nursery",
+        "phase_ta": "விதைப்பு & நாற்றங்கால்",
+        "days": "Days 1 - 25",
+        "days_ta": "நாட்கள் 1 - 25",
+        "icon": "🌱",
+        "details": "Seed treatment with Pseudomonas, nursery bed preparation, sowing and seedling growth."
+      },
+      {
+        "phase": "Transplanting & Tillering",
+        "phase_ta": "நடவு & தூர் கட்டுதல்",
+        "days": "Days 26 - 60",
+        "days_ta": "நாட்கள் 26 - 60",
+        "icon": "🌿",
+        "details": "Transplanting in main field with 20x10 cm spacing. Maintain shallow standing water."
+      },
+      {
+        "phase": "Panicle & Flowering",
+        "phase_ta": "கதிர் உருவாக்கம் & பூத்தல்",
+        "days": "Days 61 - 100",
+        "days_ta": "நாட்கள் 61 - 100",
+        "icon": "🌾",
+        "details": "Critical moisture stage. Top dressing with nitrogen and potash fertilizers."
+      },
+      {
+        "phase": "Grain Filling & Harvest",
+        "phase_ta": "மணி பால் பிடித்தல் & அறுவடை",
+        "days": "Days 101 - 135",
+        "days_ta": "நாட்கள் 101 - 135",
+        "icon": "✂️",
+        "details": "Drain water 10 days before harvest. Harvest when 85% of grains turn golden yellow."
+      }
+    ],
+    "calendar": [
+      {"month": "January", "month_ta": "ஜனவரி", "activity": "Harvesting (Samba season) / Land Prep (Navarai)"},
+      {"month": "February", "month_ta": "பிப்ரவரி", "activity": "Sowing for summer/Navarai season"},
+      {"month": "June", "month_ta": "ஜூன்", "activity": "Kuruvai nursery raising and canal water release"},
+      {"month": "July", "month_ta": "ஜூலை", "activity": "Kuruvai transplanting & basal fertilizer"},
+      {"month": "August", "month_ta": "ஆகஸ்ட்", "activity": "Samba nursery sowing & Kuruvai weeding"},
+      {"month": "September", "month_ta": "செப்டம்பர்", "activity": "Samba main field transplanting"},
+      {"month": "October", "month_ta": "அக்டோபர்", "activity": "Kuruvai harvest & Samba tillering management"},
+      {"month": "November", "month_ta": "நவம்பர்", "activity": "Samba panicle initiation & disease surveillance"},
+      {"month": "December", "month_ta": "டிசம்பர்", "activity": "Samba flowering and grain filling"}
+    ],
+    "seasons": "Kuruvai (Jun-Sep), Samba / Thaladi (Aug-Jan), Navarai (Dec-Apr)",
+    "seasons_ta": "குறுவை (ஜூன்-செப்), சம்பா / தாளடி (ஆக-ஜன), நவரை (டிச-ஏப்)",
+    "cost_per_acre": {
+      "seed": 2200,
+      "labour": 8500,
+      "fertilizer": 4500,
+      "irrigation": 3000,
+      "machinery": 4800,
+      "other": 2000,
+      "total_estimate": 25000
+    },
+    "advisory_tips": [
+      "Practice System of Rice Intensification (SRI) to save 30% water and increase yield.",
+      "Apply neem-coated urea in splits to prevent nitrogen volatilization.",
+      "Drain standing water 10 days before scheduled harvesting."
+    ],
+    "advisory_tips_ta": [
+      "செம்மை நெல் சாகுபடி (SRI) முறையை கையாண்டால் 30% நீர் சேமிப்புடன் அதிக விளைச்சல் பெறலாம்.",
+      "தழைச்சத்து விரயமாவதைத் தவிர்க்க வேப்பம் புண்ணாக்கு கலந்த யூரியாவை பிரித்து இடவும்.",
+      "அறுவடைக்கு 10 நாட்களுக்கு முன்பாக நிலத்திலுள்ள நீரை முழுமையாக வடிக்கவும்."
+    ]
+  },
+  "Wheat": {
+    "name": "Wheat",
+    "tamil_name": "கோதுமை",
+    "scientific_name": "Triticum aestivum",
+    "category": "Cereal / Rabi Crop",
+    "category_ta": "தானியம் / ரபி பயிர்",
+    "description": "Wheat is a major rabi winter crop requiring cool temperatures during vegetative growth and warm dry conditions during ripening.",
+    "description_ta": "கோதுமை ஒரு குளிர்கால ரபி பயிராகும். இது பயிர் வளர்ச்சிக்கு குளிர்ந்த காலநிலையையும், முதிர்ச்சிக்கு மிதமான வெப்பநிலையையும் விரும்புகிறது.",
+    "ideal_soil": ["Loamy", "Clayey", "Alluvial"],
+    "ideal_soil_ta": "வண்டல் மண், களிமண், செம்மண்",
+    "ph_range": "6.0 - 7.8",
+    "temp_range": "12°C - 25°C",
+    "humidity_range": "40% - 65%",
+    "rainfall_range": "350mm - 750mm",
+    "water_requirement": "Moderate",
+    "water_requirement_ta": "மிதமானது",
+    "water_mm_range": "450 - 650 mm",
+    "irrigation_methods": ["Border Strip", "Sprinkler Irrigation", "Furrow Irrigation"],
+    "duration_days": "110 - 130 Days",
+    "stages": [
+      {
+        "phase": "Sowing & Germination",
+        "phase_ta": "விதைப்பு & முளைப்பு",
+        "days": "Days 1 - 20",
+        "days_ta": "நாட்கள் 1 - 20",
+        "icon": "🌱",
+        "details": "Sowing in well-ploughed lines at 22.5 cm row spacing."
+      },
+      {
+        "phase": "Crown Root & Tillering",
+        "phase_ta": "கிரீட வேர் & தூர் கட்டுதல்",
+        "days": "Days 21 - 50",
+        "days_ta": "நாட்கள் 21 - 50",
+        "icon": "🌿",
+        "details": "First critical irrigation at CRI stage (21 days). Weed management."
+      },
+      {
+        "phase": "Heading & Flowering",
+        "phase_ta": "கதிர் வருதல் & பூத்தல்",
+        "days": "Days 51 - 85",
+        "days_ta": "நாட்கள் 51 - 85",
+        "icon": "🌾",
+        "details": "Second and third critical irrigation during boot and flowering stage."
+      },
+      {
+        "phase": "Dough Stage & Harvest",
+        "phase_ta": "முதிர்ச்சி & அறுவடை",
+        "days": "Days 86 - 120",
+        "days_ta": "நாட்கள் 86 - 120",
+        "icon": "✂️",
+        "details": "Harvest when straw turns golden yellow and moisture drops below 14%."
+      }
+    ],
+    "calendar": [
+      {"month": "October", "month_ta": "அக்டோபர்", "activity": "Field preparation & basal fertilizer"},
+      {"month": "November", "month_ta": "நவம்பர்", "activity": "Main sowing window"},
+      {"month": "December", "month_ta": "டிசம்பர்", "activity": "Crown root irrigation & top dressing"},
+      {"month": "January", "month_ta": "ஜனவரி", "activity": "Jointing stage irrigation"},
+      {"month": "February", "month_ta": "பிப்ரவரி", "activity": "Flowering stage management & disease watch"},
+      {"month": "March", "month_ta": "மார்ச்", "activity": "Grain ripening & harvesting"}
+    ],
+    "seasons": "Rabi Season (Oct/Nov - Mar/Apr)",
+    "seasons_ta": "ரபி பருவம் (அக்/நவ - மார்ச்/ஏப்)",
+    "cost_per_acre": {
+      "seed": 1800,
+      "labour": 5500,
+      "fertilizer": 4000,
+      "irrigation": 2500,
+      "machinery": 3500,
+      "other": 1700,
+      "total_estimate": 19000
+    },
+    "advisory_tips": [
+      "Never miss the Crown Root Initiation (CRI) irrigation at 21 days after sowing.",
+      "Ensure proper row spacing to maximize sunlight penetration.",
+      "Protect against rust disease during cool humid mornings."
+    ],
+    "advisory_tips_ta": [
+      "விதைத்த 21-வது நாளில் கிரீட வேர் உருவாகும் போது கட்டாயம் முதல் பாசனம் செய்ய வேண்டும்.",
+      "சரியான வரிசை இடைவெளியை பராமரித்து சூரிய ஒளி நன்கு கிடைக்குமாறு செய்யவும்.",
+      "பனி படர்ந்த காலங்களில் துரு நோய் தாக்கத்தை கண்காணித்து கட்டுப்படுத்தவும்."
+    ]
+  },
+  "Maize": {
+    "name": "Maize",
+    "tamil_name": "மக்காச்சோளம்",
+    "scientific_name": "Zea mays",
+    "category": "Cereal / Coarse Grain",
+    "category_ta": "தானியம் / சிறுதானியம்",
+    "description": "Maize (Corn) is known as the Queen of Cereals. Highly versatile, requiring well-drained fertile loam soils with moderate rainfall.",
+    "description_ta": "மக்காச்சோளம் தானியங்களின் அரசி என அழைக்கப்படுகிறது. இது நல்ல வடிகால் வசதியுள்ள செம்மண் மற்றும் வண்டல் நிலங்களில் சிறந்து விளங்கும்.",
+    "ideal_soil": ["Loamy", "Red", "Alluvial", "Black"],
+    "ideal_soil_ta": "செம்மண், வண்டல் மண், கரிசல் மண்",
+    "ph_range": "5.8 - 7.5",
+    "temp_range": "18°C - 32°C",
+    "humidity_range": "50% - 75%",
+    "rainfall_range": "500mm - 900mm",
+    "water_requirement": "Moderate",
+    "water_requirement_ta": "மிதமானது",
+    "water_mm_range": "500 - 700 mm",
+    "irrigation_methods": ["Furrow Irrigation", "Drip Irrigation", "Sprinkler Irrigation"],
+    "duration_days": "95 - 115 Days",
+    "stages": [
+      {
+        "phase": "Sowing & Emergence",
+        "phase_ta": "விதைப்பு & முளைத்தல்",
+        "days": "Days 1 - 15",
+        "days_ta": "நாட்கள் 1 - 15",
+        "icon": "🌱",
+        "details": "Ridge and furrow method, 60x20 cm spacing. Seed treatment with biofertilizer."
+      },
+      {
+        "phase": "Knee-High Stage",
+        "phase_ta": "முழங்கால் வளர்ச்சி நிலை",
+        "days": "Days 16 - 40",
+        "days_ta": "நாட்கள் 16 - 40",
+        "icon": "🌿",
+        "details": "Earthing up, first top dressing of urea, weed control."
+      },
+      {
+        "phase": "Tasseling & Silking",
+        "phase_ta": "பூம்பூத்தல் & சூல்முடி தோன்றுதல்",
+        "days": "Days 41 - 70",
+        "days_ta": "நாட்கள் 41 - 70",
+        "icon": "🌾",
+        "details": "Critical moisture sensitive stage. Ensure no water stress during pollination."
+      },
+      {
+        "phase": "Grain Filling & Harvest",
+        "phase_ta": "கதிர் முதிர்ச்சி & அறுவடை",
+        "days": "Days 71 - 105",
+        "days_ta": "நாட்கள் 71 - 105",
+        "icon": "✂️",
+        "details": "Harvest when outer cob sheath turns dry papery white."
+      }
+    ],
+    "calendar": [
+      {"month": "January", "month_ta": "ஜனவரி", "activity": "Thai pattam sowing in southern regions"},
+      {"month": "June", "month_ta": "ஜூன்", "activity": "Adipattam sowing with onset of southwest monsoon"},
+      {"month": "July", "month_ta": "ஜூலை", "activity": "Knee-high earthing up and pest management"},
+      {"month": "August", "month_ta": "ஆகஸ்ட்", "activity": "Tasseling irrigation and Fall Armyworm scouting"},
+      {"month": "September", "month_ta": "செப்டம்பர்", "activity": "Cob maturity and harvesting"},
+      {"month": "October", "month_ta": "அக்டோபர்", "activity": "Purattasi pattam rainfed sowing"}
+    ],
+    "seasons": "Kharif (Jun-Jul), Rabi (Sep-Oct), Summer / Thai Pattam (Jan-Feb)",
+    "seasons_ta": "ஆடிப்பட்டம் (ஜூன்-ஜூலை), புரட்டாசிப் பட்டம் (செப்-அக்), தைப்பட்டம் (ஜன-பிப்)",
+    "cost_per_acre": {
+      "seed": 2400,
+      "labour": 6000,
+      "fertilizer": 4200,
+      "irrigation": 2200,
+      "machinery": 3800,
+      "other": 1800,
+      "total_estimate": 20400
+    },
+    "advisory_tips": [
+      "Avoid waterlogging as maize roots are sensitive to stagnant water.",
+      "Install pheromone traps to monitor and control Fall Armyworm (FAW) early.",
+      "Drip fertigation gives 25% higher yield and uniform cobs."
+    ],
+    "advisory_tips_ta": [
+      "மக்காச்சோள வேர்கள் தேங்கி நிற்கும் நீரை தாங்காது, நல்ல வடிகால் வசதி அமைக்கவும்.",
+      "படைப்புழுவை கட்டுப்படுத்த தொடக்கத்திலேயே இனக்கவர்ச்சி பொறிகளை வைக்கவும்.",
+      "சொட்டுநீர் பாசனம் மூலம் உரமிட்டால் 25% கூடுதல் மகசூல் பெறலாம்."
+    ]
+  },
+  "Cotton": {
+    "name": "Cotton",
+    "tamil_name": "பருத்தி",
+    "scientific_name": "Gossypium hirsutum",
+    "category": "Commercial / Fiber Crop",
+    "category_ta": "வணிகப் பயிர் / நார் பயிர்",
+    "description": "Cotton is the leading fiber crop ('White Gold'). It grows exceptionally well in deep black cotton soils and fertile loamy soils with warm climates.",
+    "description_ta": "பருத்தி 'வெள்ளை தங்கம்' என்று அழைக்கப்படும் முக்கிய வணிகப் பயிராகும். இது ஆழமான கரிசல் மண் மற்றும் வண்டல் நிலங்களில் நன்கு செழித்து வளரும்.",
+    "ideal_soil": ["Black", "Alluvial", "Loamy"],
+    "ideal_soil_ta": "கரிசல் மண், வண்டல் மண், செம்மண்",
+    "ph_range": "6.0 - 8.2",
+    "temp_range": "21°C - 35°C",
+    "humidity_range": "45% - 75%",
+    "rainfall_range": "500mm - 1000mm",
+    "water_requirement": "Moderate",
+    "water_requirement_ta": "மிதமானது",
+    "water_mm_range": "650 - 850 mm",
+    "irrigation_methods": ["Alternate Furrow", "Drip Irrigation", "Broad Bed and Furrow (BBF)"],
+    "duration_days": "140 - 170 Days",
+    "stages": [
+      {
+        "phase": "Germination & Square Formation",
+        "phase_ta": "முளைப்பு & பூ அரும்பு தோன்றுதல்",
+        "days": "Days 1 - 45",
+        "days_ta": "நாட்கள் 1 - 45",
+        "icon": "🌱",
+        "details": "Seed treatment with Imidacloprid, gap filling within 10 days."
+      },
+      {
+        "phase": "Flowering & Boll Formation",
+        "phase_ta": "பூத்தல் & காய் உருவாக்கம்",
+        "days": "Days 46 - 90",
+        "days_ta": "நாட்கள் 46 - 90",
+        "icon": "🌿",
+        "details": "Critical boll development phase. Foliar spray of Planofix and micronutrients."
+      },
+      {
+        "phase": "Boll Maturation & Bursting",
+        "phase_ta": "பருத்தி வெடித்தல் நிலை",
+        "days": "Days 91 - 130",
+        "days_ta": "நாட்கள் 91 - 130",
+        "icon": "🌾",
+        "details": "Defoliation and moisture control for uniform boll opening."
+      },
+      {
+        "phase": "Harvesting / Picking",
+        "phase_ta": "பருத்தி எடுத்தல் (அறுவடை)",
+        "days": "Days 131 - 165",
+        "days_ta": "நாட்கள் 131 - 165",
+        "icon": "✂️",
+        "details": "Pick clean bolls during morning hours. Store in clean dry cloth bags."
+      }
+    ],
+    "calendar": [
+      {"month": "August", "month_ta": "ஆகஸ்ட்", "activity": "Sowing for winter irrigated crop (Avani pattam)"},
+      {"month": "September", "month_ta": "செப்டம்பர்", "activity": "Thinning, gap filling and weed management"},
+      {"month": "October", "month_ta": "அக்டோபர்", "activity": "Square formation & sucking pest control"},
+      {"month": "November", "month_ta": "நவம்பர்", "activity": "Boll formation and foliar nutrition"},
+      {"month": "December", "month_ta": "டிசம்பர்", "activity": "First boll bursting and moisture regulation"},
+      {"month": "January", "month_ta": "ஜனவரி", "activity": "First and second round picking"},
+      {"month": "February", "month_ta": "பிப்ரவரி", "activity": "Final picking and field clearing"}
+    ],
+    "seasons": "Winter Irrigated (Aug-Sep to Feb), Summer Irrigated (Feb-Mar to Jul)",
+    "seasons_ta": "குளிர்கால பாசனம் (ஆக-செப் முதல் பிப்), கோடைப் பருத்தி (பிப்-மார்ச் முதல் ஜூலை)",
+    "cost_per_acre": {
+      "seed": 2600,
+      "labour": 9500,
+      "fertilizer": 4800,
+      "irrigation": 3000,
+      "machinery": 3600,
+      "other": 2500,
+      "total_estimate": 26000
+    },
+    "advisory_tips": [
+      "Avoid excess nitrogen during vegetative growth to prevent boll dropping.",
+      "Spray 1% DAP + 0.5% Urea during flowering to boost boll retention.",
+      "Pick cotton only after dew dries up to maintain pristine fiber quality."
+    ],
+    "advisory_tips_ta": [
+      "பூ மற்றும் காய்கள் உதிர்வதைத் தடுக்க அதிகப்படியான தழைச்சத்து இடுவதைத் தவிர்க்கவும்.",
+      "பூக்கும் தருணத்தில் 1% டி.ஏ.பி + 0.5% யூரியா தெளித்து காய் பிடிப்பை அதிகரிக்கவும்.",
+      "பனி ஈரம் காய்ந்த பிறகு பருத்தி எடுத்தால் தரம் சிறப்பாக இருக்கும்."
+    ]
+  },
+  "Sugarcane": {
+    "name": "Sugarcane",
+    "tamil_name": "கரும்பு",
+    "scientific_name": "Saccharum officinarum",
+    "category": "Commercial / Cash Crop",
+    "category_ta": "வணிகப் பயிர் / பணப்பயிர்",
+    "description": "Sugarcane is a long-duration high-value industrial cash crop. It requires heavy rainfall or dependable canal/well irrigation and nutrient-rich soils.",
+    "description_ta": "கரும்பு நீண்ட கால பணப்பயிராகும். இதற்கு அதிக நீர் பாசன வசதியும், சத்துக்கள் நிறைந்த வண்டல் அல்லது களிமண் நிலங்களும் தேவை.",
+    "ideal_soil": ["Clayey", "Loamy", "Alluvial", "Black"],
+    "ideal_soil_ta": "களிமண், வண்டல் மண், கரிசல் மண்",
+    "ph_range": "6.0 - 8.0",
+    "temp_range": "20°C - 38°C",
+    "humidity_range": "60% - 85%",
+    "rainfall_range": "1100mm - 2200mm",
+    "water_requirement": "High",
+    "water_requirement_ta": "அதிகம்",
+    "water_mm_range": "1500 - 2200 mm",
+    "irrigation_methods": ["Subsurface Drip", "Trash Mulched Furrow", "Drip Fertigation"],
+    "duration_days": "300 - 365 Days",
+    "stages": [
+      {
+        "phase": "Germination & Establishment",
+        "phase_ta": "முளைப்பு & நிலைநிறுத்தம்",
+        "days": "Days 1 - 45",
+        "days_ta": "நாட்கள் 1 - 45",
+        "icon": "🌱",
+        "details": "Planting two-budded setts treated with Carbendazim. Trash mulching."
+      },
+      {
+        "phase": "Tillering & Canopy Formation",
+        "phase_ta": "தூர் கட்டுதல் & இலை படர்தல்",
+        "days": "Days 46 - 120",
+        "days_ta": "நாட்கள் 46 - 120",
+        "icon": "🌿",
+        "details": "First & second top dressing, earthing up to support root anchorage."
+      },
+      {
+        "phase": "Grand Growth Stage",
+        "phase_ta": "தீவிர வளர்ச்சி நிலை",
+        "days": "Days 121 - 270",
+        "days_ta": "நாட்கள் 121 - 270",
+        "icon": "🌾",
+        "details": "Rapid stalk elongation and internode formation. Critical irrigation."
+      },
+      {
+        "phase": "Ripening & Sugar Accumulation",
+        "phase_ta": "முதிர்ச்சி & சர்க்கரை சேகரிப்பு",
+        "days": "Days 271 - 360",
+        "days_ta": "நாட்கள் 271 - 360",
+        "icon": "✂️",
+        "details": "Withhold water 15 days before harvest for higher sucrose recovery."
+      }
+    ],
+    "calendar": [
+      {"month": "January", "month_ta": "ஜனவரி", "activity": "Early season planting (Special / Margazhi pattam)"},
+      {"month": "February", "month_ta": "பிப்ரவரி", "activity": "Main season planting & trash mulching"},
+      {"month": "April", "month_ta": "ஏப்ரல்", "activity": "First earthing up and drip fertigation"},
+      {"month": "June", "month_ta": "ஜூன்", "activity": "Second earthing up and propping to prevent lodging"},
+      {"month": "September", "month_ta": "செப்டம்பர்", "activity": "Grand growth monitoring & borer management"},
+      {"month": "December", "month_ta": "டிசம்பர்", "activity": "Brix reading test and mill harvesting schedule"}
+    ],
+    "seasons": "Main Season (Dec-Feb), Mid-Season (Feb-Apr), Late Season (May-Jun)",
+    "seasons_ta": "முக்கிய பருவம் (டிச-பிப்), இடைப்பருவம் (பிப்-ஏப்), பிந்தைய பருவம் (மே-ஜூன்)",
+    "cost_per_acre": {
+      "seed": 8500,
+      "labour": 14000,
+      "fertilizer": 9000,
+      "irrigation": 5500,
+      "machinery": 6000,
+      "other": 4000,
+      "total_estimate": 47000
+    },
+    "advisory_tips": [
+      "Adopt Single Bud Netpot seedling technique to reduce seed cost by 75%.",
+      "Trash mulching conserves soil moisture and controls weed growth effectively.",
+      "Propping by tying canes prevents lodging during monsoon storms."
+    ],
+    "advisory_tips_ta": [
+      "ஒரு பரு நாற்று நடவு முறையை கையாண்டால் விதைச்செலவை 75% வரை குறைக்கலாம்.",
+      "கரும்பு தோகையை நிலத்தில் பரப்புவது ஈரப்பதத்தை காத்து களைகளை கட்டுப்படுத்தும்.",
+      "காற்று வீசும் போது கரும்பு சாயாமல் இருக்க கரும்புகளை ஒன்றாக கட்டி விடவும்."
+    ]
+  },
+  "Groundnut": {
+    "name": "Groundnut",
+    "tamil_name": "நிலக்கடலை",
+    "scientific_name": "Arachis hypogaea",
+    "category": "Oilseed / Legume",
+    "category_ta": "எண்ணெய் வித்து / பயறு வகை",
+    "description": "Groundnut is a premium oilseed and legume that enriches soil with nitrogen. It thrives best in well-aerated sandy loam and red loamy soils.",
+    "description_ta": "நிலக்கடலை முதன்மை எண்ணெய் வித்து பயிராகும். இது காற்றோட்டமுள்ள செம்மண் மற்றும் மணற்பாங்கான நிலங்களில் அதிக காய்களை பிடிக்கும்.",
+    "ideal_soil": ["Sandy", "Red", "Loamy"],
+    "ideal_soil_ta": "மணற்பாங்கான மண், செம்மண், பொறை மண்",
+    "ph_range": "5.5 - 7.5",
+    "temp_range": "20°C - 32°C",
+    "humidity_range": "45% - 70%",
+    "rainfall_range": "450mm - 800mm",
+    "water_requirement": "Moderate",
+    "water_requirement_ta": "மிதமானது",
+    "water_mm_range": "400 - 600 mm",
+    "irrigation_methods": ["Sprinkler Irrigation", "Check Basin", "Micro Sprinklers"],
+    "duration_days": "100 - 120 Days",
+    "stages": [
+      {
+        "phase": "Sowing & Vegetative Growth",
+        "phase_ta": "விதைப்பு & செடி வளர்ச்சி",
+        "days": "Days 1 - 25",
+        "days_ta": "நாட்கள் 1 - 25",
+        "icon": "🌱",
+        "details": "Rhizobium inoculation, sowing with 30x10 cm spacing. Light irrigation."
+      },
+      {
+        "phase": "Flowering & Pegging (Critical)",
+        "phase_ta": "பூத்தல் & விழுது இறங்குதல்",
+        "days": "Days 26 - 55",
+        "days_ta": "நாட்கள் 26 - 55",
+        "icon": "🌿",
+        "details": "Peg penetration stage. Apply Gypsum @ 200 kg/acre and light earthing up."
+      },
+      {
+        "phase": "Pod Development",
+        "phase_ta": "காய் உருவாக்கம் & முதிர்ச்சி",
+        "days": "Days 56 - 90",
+        "days_ta": "நாட்கள் 56 - 90",
+        "icon": "🌾",
+        "details": "Maintain optimum moisture. Do not hoe or disturb pegs after day 45."
+      },
+      {
+        "phase": "Harvesting & Drying",
+        "phase_ta": "அறுவடை & உலர்த்துதல்",
+        "days": "Days 91 - 110",
+        "days_ta": "நாட்கள் 91 - 110",
+        "icon": "✂️",
+        "details": "Harvest when inside of shell turns dark brownish-black. Dry pods to 8% moisture."
+      }
+    ],
+    "calendar": [
+      {"month": "January", "month_ta": "ஜனவரி", "activity": "Thai pattam irrigated groundnut sowing"},
+      {"month": "February", "month_ta": "பிப்ரவரி", "activity": "Weeding, gypsum application at pegging"},
+      {"month": "April", "month_ta": "ஏப்ரல்", "activity": "Summer crop harvest & drying"},
+      {"month": "June", "month_ta": "ஜூன்", "activity": "Adipattam rainfed sowing with monsoon onset"},
+      {"month": "July", "month_ta": "ஜூலை", "activity": "Basal weeding & Rhizobium soil enrichment"},
+      {"month": "October", "month_ta": "அக்டோபர்", "activity": "Rainfed crop pod harvest"}
+    ],
+    "seasons": "Chithirai / Summer (Apr-May), Adipattam (Jun-Jul), Karthigai (Nov-Dec)",
+    "seasons_ta": "சித்திரை / கோடை (ஏப்-மே), ஆடிப்பட்டம் (ஜூன்-ஜூலை), கார்த்திகைப் பட்டம் (நவ-டிச)",
+    "cost_per_acre": {
+      "seed": 4500,
+      "labour": 6500,
+      "fertilizer": 3200,
+      "irrigation": 2000,
+      "machinery": 3000,
+      "other": 1800,
+      "total_estimate": 21000
+    },
+    "advisory_tips": [
+      "Apply Gypsum at 40-45 days after sowing to provide calcium and sulfur for full pod filling.",
+      "Avoid disturbing soil during peg penetration phase.",
+      "Seed treatment with Trichoderma viride prevents root rot and collar rot."
+    ],
+    "advisory_tips_ta": [
+      "விதைத்த 40-45 நாட்களில் ஏக்கருக்கு 200 கிலோ ஜிப்சம் இட்டால் காய்களில் முழுமையான பருப்பு பிடிக்கும்.",
+      "விழுதுகள் நிலத்தில் இறங்கும் போது களை எடுக்கவோ நிலத்தை கிளறவோ கூடாது.",
+      "டிரைக்கோடெர்மா விரிடி கொண்டு விதை நேர்த்தி செய்தால் வேர் அழுகல் நோயை முற்றிலும் தடுக்கலாம்."
+    ]
+  },
+  "Black Gram": {
+    "name": "Black Gram",
+    "tamil_name": "உளுந்து",
+    "scientific_name": "Vigna mungo",
+    "category": "Pulses / Legume",
+    "category_ta": "பயறு வகை / புரதப் பயிர்",
+    "description": "Black Gram (Urad) is a short-duration nutritious pulse that fixes atmospheric nitrogen. Excellent for rice fallows, loamy and black soils.",
+    "description_ta": "உளுந்து குறுகிய கால புரதப்பயிராகும். நெல் தரிசில் ஈரப்பதத்தை பயன்படுத்தி மிக குறைந்த செலவில் நிறைவான லாபம் தரக்கூடியது.",
+    "ideal_soil": ["Loamy", "Clayey", "Black", "Alluvial"],
+    "ideal_soil_ta": "வண்டல் மண், கரிசல் மண், செம்மண்",
+    "ph_range": "6.0 - 7.8",
+    "temp_range": "22°C - 35°C",
+    "humidity_range": "40% - 70%",
+    "rainfall_range": "400mm - 750mm",
+    "water_requirement": "Low",
+    "water_requirement_ta": "குறைவு",
+    "water_mm_range": "300 - 450 mm",
+    "irrigation_methods": ["Sprinkler Irrigation", "Furrow Irrigation", "Rainfed / Rice Fallow Residual Moisture"],
+    "duration_days": "65 - 75 Days",
+    "stages": [
+      {
+        "phase": "Sowing & Emergence",
+        "phase_ta": "விதைப்பு & முளைத்தல்",
+        "days": "Days 1 - 10",
+        "days_ta": "நாட்கள் 1 - 10",
+        "icon": "🌱",
+        "details": "Seed treatment with Rhizobium & Phosphobacteria. 30x10 cm spacing."
+      },
+      {
+        "phase": "Vegetative & Branching",
+        "phase_ta": "வளர்ச்சி & கிளைத்தல்",
+        "days": "Days 11 - 30",
+        "days_ta": "நாட்கள் 11 - 30",
+        "icon": "🌿",
+        "details": "One weeding at 20 days. Spray TNAU Pulse Wonder @ 2 kg/acre."
+      },
+      {
+        "phase": "Flowering & Podding",
+        "phase_ta": "பூத்தல் & காய் பிடித்தல்",
+        "days": "Days 31 - 50",
+        "days_ta": "நாட்கள் 31 - 50",
+        "icon": "🌾",
+        "details": "Foliar spray of 2% DAP at flower initiation and 15 days later."
+      },
+      {
+        "phase": "Pod Maturity & Harvest",
+        "phase_ta": "முதிர்ச்சி & அறுவடை",
+        "days": "Days 51 - 70",
+        "days_ta": "நாட்கள் 51 - 70",
+        "icon": "✂️",
+        "details": "Harvest when 85% of pods turn jet black. Dry and thresh."
+      }
+    ],
+    "calendar": [
+      {"month": "January", "month_ta": "ஜனவரி", "activity": "Rice fallow pulse broadcasting in Delta districts"},
+      {"month": "February", "month_ta": "பிப்ரவரி", "activity": "Foliar spray of DAP and pulse wonder"},
+      {"month": "March", "month_ta": "மார்ச்", "activity": "Pod maturation and single/split picking"},
+      {"month": "June", "month_ta": "ஜூன்", "activity": "Adipattam sowing as intercrop/sole crop"},
+      {"month": "October", "month_ta": "அக்டோபர்", "activity": "Winter sowing in drylands"}
+    ],
+    "seasons": "Rice Fallows (Jan-Feb), Adipattam (Jun-Jul), Purattasi (Sep-Oct)",
+    "seasons_ta": "நெல் தரிசு (ஜன-பிப்), ஆடிப்பட்டம் (ஜூன்-ஜூலை), புரட்டாசிப் பட்டம் (செப்-அக்)",
+    "cost_per_acre": {
+      "seed": 1200,
+      "labour": 3800,
+      "fertilizer": 1800,
+      "irrigation": 1200,
+      "machinery": 1800,
+      "other": 1200,
+      "total_estimate": 11000
+    },
+    "advisory_tips": [
+      "Spray 2% DAP (or TNAU Pulse Wonder) at flowering to prevent flower drop and boost yield by 20%.",
+      "In rice fallow, broadcast seeds 4-6 days before paddy harvest on residual moisture.",
+      "Control yellow mosaic virus by timely management of whiteflies."
+    ],
+    "advisory_tips_ta": [
+      "பூக்கும் தருணத்தில் 2% டி.ஏ.பி அல்லது பயறு வகை நுண்ணூட்டம் தெளித்தால் பூ உதிர்வது நின்று 20% கூடுதல் விளைச்சல் தரும்.",
+      "நெல் தரிசில் நெல் அறுவடைக்கு 4-6 நாட்களுக்கு முன் ஈரப்பதத்தில் விதையை தூவ வேண்டும்.",
+      "மஞ்சள் தேமல் நோயை பரப்பும் வெள்ளை ஈக்களை ஆரம்பத்திலேயே கட்டுப்படுத்தவும்."
+    ]
+  },
+  "Chickpea": {
+    "name": "Chickpea",
+    "tamil_name": "கொண்டைக்கடலை",
+    "scientific_name": "Cicer arietinum",
+    "category": "Pulses / Rabi Crop",
+    "category_ta": "பயறு வகை / ரபி பருவம்",
+    "description": "Chickpea (Bengal Gram) is a premier winter pulse crop. It prefers cool dry climates and thrives on residual soil moisture in loamy/black soils.",
+    "description_ta": "கொண்டைக்கடலை ஒரு முக்கிய குளிர்கால பயறு வகையாகும். இது பனிப்பொழிவையும் குறைந்த ஈரப்பதத்தையும் பயன்படுத்தி நன்கு வளரும்.",
+    "ideal_soil": ["Black", "Loamy", "Alluvial"],
+    "ideal_soil_ta": "கரிசல் மண், வண்டல் மண், பொறை மண்",
+    "ph_range": "6.0 - 8.0",
+    "temp_range": "15°C - 26°C",
+    "humidity_range": "35% - 60%",
+    "rainfall_range": "300mm - 600mm",
+    "water_requirement": "Low",
+    "water_requirement_ta": "குறைவு",
+    "water_mm_range": "250 - 400 mm",
+    "irrigation_methods": ["Sprinkler Irrigation", "Border Strip", "Rainfed Residual Moisture"],
+    "duration_days": "90 - 110 Days",
+    "stages": [
+      {
+        "phase": "Sowing & Germination",
+        "phase_ta": "விதைப்பு & முளைப்பு",
+        "days": "Days 1 - 15",
+        "days_ta": "நாட்கள் 1 - 15",
+        "icon": "🌱",
+        "details": "Deep sowing at 8-10 cm depth in moist soil, 30x10 cm spacing."
+      },
+      {
+        "phase": "Branching & Nipping",
+        "phase_ta": "கிளைத்தல் & கொழுந்து கிள்ளுதல்",
+        "days": "Days 16 - 40",
+        "days_ta": "நாட்கள் 16 - 40",
+        "icon": "🌿",
+        "details": "Nip apical buds at 30-35 days to encourage bushy lateral branching."
+      },
+      {
+        "phase": "Pod Formation",
+        "phase_ta": "காய் உருவாக்கம்",
+        "days": "Days 41 - 75",
+        "days_ta": "நாட்கள் 41 - 75",
+        "icon": "🌾",
+        "details": "Scout for Helicoverpa pod borer. One light protective irrigation if dry."
+      },
+      {
+        "phase": "Maturity & Harvesting",
+        "phase_ta": "முதிர்ச்சி & அறுவடை",
+        "days": "Days 76 - 100",
+        "days_ta": "நாட்கள் 76 - 100",
+        "icon": "✂️",
+        "details": "Harvest when leaves turn yellow and pods rattle with dry seeds."
+      }
+    ],
+    "calendar": [
+      {"month": "October", "month_ta": "அக்டோபர்", "activity": "Field preparation and early rabi sowing"},
+      {"month": "November", "month_ta": "நவம்பர்", "activity": "Apical bud nipping for extra branching"},
+      {"month": "December", "month_ta": "டிசம்பர்", "activity": "Pod borer surveillance and protective spray"},
+      {"month": "January", "month_ta": "ஜனவரி", "activity": "Pod filling and maturity watch"},
+      {"month": "February", "month_ta": "பிப்ரவரி", "activity": "Crop drying and mechanical harvesting"}
+    ],
+    "seasons": "Rabi Season (Oct/Nov - Feb/Mar)",
+    "seasons_ta": "ரபி பருவம் (அக்/நவ - பிப்/மார்ச்)",
+    "cost_per_acre": {
+      "seed": 2000,
+      "labour": 4200,
+      "fertilizer": 2200,
+      "irrigation": 1400,
+      "machinery": 2400,
+      "other": 1300,
+      "total_estimate": 13500
+    },
+    "advisory_tips": [
+      "Practice 'nipping' (pinching the top shoot at 35 days) to stimulate more pod-bearing branches.",
+      "Avoid heavy irrigation during flowering to prevent flower abortion.",
+      "Use pheromone traps for early detection of pod borer."
+    ],
+    "advisory_tips_ta": [
+      "35-வது நாளில் செடியின் நுனிக்கொழுந்தை கிள்ளினால் பக்கவாட்டு கிளைகள் அதிகமாகி காய்கள் கூடும்.",
+      "பூக்கும் பருவத்தில் அதிக நீர் பாய்ச்சக் கூடாது, அது பூக்களை கொட்டச் செய்யும்.",
+      "காய்ப்புழுவை கண்காணிக்க ஏக்கருக்கு 5 இனக்கவர்ச்சி பொறிகளை வைக்கவும்."
+    ]
+  },
+  "Millets": {
+    "name": "Millets / Ragi",
+    "tamil_name": "கேழ்வரகு / சிறுதானியம்",
+    "scientific_name": "Eleusine coracana",
+    "category": "Nutri-Cereal / Millet",
+    "category_ta": "சத்துணவு தானியம் / சிறுதானியம்",
+    "description": "Finger Millet (Ragi) is a climate-resilient superfood crop rich in calcium and minerals. Highly drought-tolerant and adaptable to low fertility soils.",
+    "description_ta": "கேழ்வரகு (ராகி) அதிக ஊட்டச்சத்து மற்றும் சுண்ணாம்புச்சத்து நிறைந்த சிறுதானியமாகும். இது வறட்சியைத் தாங்கி குறைவான நீரில் செழித்து வளரும்.",
+    "ideal_soil": ["Red", "Sandy", "Loamy", "Laterite"],
+    "ideal_soil_ta": "செம்மண், சரளை மண், மணற்பாங்கான மண்",
+    "ph_range": "5.0 - 7.5",
+    "temp_range": "20°C - 35°C",
+    "humidity_range": "35% - 65%",
+    "rainfall_range": "350mm - 700mm",
+    "water_requirement": "Low",
+    "water_requirement_ta": "குறைவு",
+    "water_mm_range": "300 - 450 mm",
+    "irrigation_methods": ["Sprinkler Irrigation", "Drip Irrigation", "Rainfed"],
+    "duration_days": "90 - 110 Days",
+    "stages": [
+      {
+        "phase": "Nursery & Sowing",
+        "phase_ta": "நாற்றங்கால் & விதைப்பு",
+        "days": "Days 1 - 20",
+        "days_ta": "நாட்கள் 1 - 20",
+        "icon": "🌱",
+        "details": "Nursery sowing or direct line sowing with bio-fertilizer treatment."
+      },
+      {
+        "phase": "Transplanting & Tillering",
+        "phase_ta": "நடவு & தூர் வெடித்தல்",
+        "days": "Days 21 - 45",
+        "days_ta": "நாட்கள் 21 - 45",
+        "icon": "🌿",
+        "details": "Transplant 20-day seedlings @ 2 per hill at 22.5x10 cm spacing."
+      },
+      {
+        "phase": "Earhead Emergence",
+        "phase_ta": "கதிர் வெளிவருதல்",
+        "days": "Days 46 - 75",
+        "days_ta": "நாட்கள் 46 - 75",
+        "icon": "🌾",
+        "details": "Flowering and grain development. One protective irrigation."
+      },
+      {
+        "phase": "Maturity & Harvesting",
+        "phase_ta": "முதிர்ச்சி & அறுவடை",
+        "days": "Days 76 - 100",
+        "days_ta": "நாட்கள் 76 - 100",
+        "icon": "✂️",
+        "details": "Harvest when earheads turn rustic brown. Sun dry earheads."
+      }
+    ],
+    "calendar": [
+      {"month": "May", "month_ta": "மே", "activity": "Chithirai pattam irrigated sowing"},
+      {"month": "June", "month_ta": "ஜூன்", "activity": "Adipattam monsoon rainfed sowing"},
+      {"month": "July", "month_ta": "ஜூலை", "activity": "Transplanting and weeding"},
+      {"month": "September", "month_ta": "செப்டம்பர்", "activity": "Earhead formation & harvesting of early crops"},
+      {"month": "December", "month_ta": "டிசம்பர்", "activity": "Winter irrigated ragi sowing"}
+    ],
+    "seasons": "Adipattam (Jun-Jul), Purattasi (Sep-Oct), Margazhi (Dec-Jan)",
+    "seasons_ta": "ஆடிப்பட்டம் (ஜூன்-ஜூலை), புரட்டாசி (செப்-அக்), மார்கழி (டிச-ஜன)",
+    "cost_per_acre": {
+      "seed": 800,
+      "labour": 4500,
+      "fertilizer": 2000,
+      "irrigation": 1200,
+      "machinery": 2200,
+      "other": 1100,
+      "total_estimate": 11800
+    },
+    "advisory_tips": [
+      "Ideal crop for rainfed drylands with minimal input cost and assured returns.",
+      "Transplanting ragi yields 30% higher grain than direct broadcasting.",
+      "Excellent intercrop with red gram or groundnut."
+    ],
+    "advisory_tips_ta": [
+      "குறைந்த முதலீட்டில் வறண்ட நிலங்களுக்கு ஏற்ற மிகச் சிறந்த லாபகரமான பயிர்.",
+      "நேரடி விதைப்பை விட நாற்று நட்டு சாகுபடி செய்தால் 30% கூடுதல் மகசூல் கிடைக்கும்.",
+      "துவரை அல்லது நிலக்கடலையுடன் ஊடுபயிராக பயிரிட சிறந்தது."
+    ]
+  },
+  "Banana": {
+    "name": "Banana",
+    "tamil_name": "வாழை",
+    "scientific_name": "Musa acuminata",
+    "category": "Horticultural / Fruit Crop",
+    "category_ta": "தோட்டக்கலை / பழப்பயிர்",
+    "description": "Banana is a major commercial fruit crop. It demands rich, well-drained loamy soils, high organic matter, warm humid climate, and frequent irrigation.",
+    "description_ta": "வாழை ஒரு முக்கியமான வணிக தோட்டக்கலைப் பயிராகும். இதற்கு வளமான வண்டல் மண், அதிக ஈரப்பதம் மற்றும் தொடர்ச்சியான நீர்ப்பாசனம் தேவை.",
+    "ideal_soil": ["Loamy", "Alluvial", "Clayey"],
+    "ideal_soil_ta": "வண்டல் மண், செம்மண், களிமண்",
+    "ph_range": "6.0 - 7.5",
+    "temp_range": "22°C - 38°C",
+    "humidity_range": "65% - 90%",
+    "rainfall_range": "1000mm - 2200mm",
+    "water_requirement": "High",
+    "water_requirement_ta": "அதிகம்",
+    "water_mm_range": "1200 - 1800 mm",
+    "irrigation_methods": ["Drip Fertigation", "Basin Irrigation"],
+    "duration_days": "270 - 360 Days",
+    "stages": [
+      {
+        "phase": "Planting & Vegetative",
+        "phase_ta": "நடவு & வளர்ச்சி நிலை",
+        "days": "Months 1 - 4",
+        "days_ta": "மாதங்கள் 1 - 4",
+        "icon": "🌱",
+        "details": "Tissue culture / sword suckers planting at 1.8x1.8 m spacing. Regular organic manuring."
+      },
+      {
+        "phase": "Shooting & Floral Initiation",
+        "phase_ta": "தண்டு வளர்ச்சி & பூ தள்ளுதல்",
+        "days": "Months 5 - 8",
+        "days_ta": "மாதங்கள் 5 - 8",
+        "icon": "🌿",
+        "details": "Bunch emergence (Shooting). Propping with bamboo poles to prevent wind damage."
+      },
+      {
+        "phase": "Bunch Development",
+        "phase_ta": "வாழைத்தார் வளர்ச்சி",
+        "days": "Months 9 - 11",
+        "days_ta": "மாதங்கள் 9 - 11",
+        "icon": "🌾",
+        "details": "Denavelling (removal of male bud), bunch sleeving with polypropylene bags."
+      },
+      {
+        "phase": "Harvesting",
+        "phase_ta": "அறுவடை",
+        "days": "Months 11 - 13",
+        "days_ta": "மாதங்கள் 11 - 13",
+        "icon": "✂️",
+        "details": "Harvest when fruit angles disappear and become rounded (75-80% maturity)."
+      }
+    ],
+    "calendar": [
+      {"month": "February", "month_ta": "பிப்ரவரி", "activity": "Spring planting for festival market"},
+      {"month": "May", "month_ta": "மே", "activity": "Drip fertigation and micronutrient spray"},
+      {"month": "July", "month_ta": "ஜூலை", "activity": "Propping with casuarina/bamboo poles against monsoon wind"},
+      {"month": "September", "month_ta": "செப்டம்பர்", "activity": "Bunch sleeving and male bud removal"},
+      {"month": "November", "month_ta": "நவம்பர்", "activity": "Bunch harvesting and ratoon management"}
+    ],
+    "seasons": "Year-round (Best: Feb-Mar and Jul-Aug)",
+    "seasons_ta": "ஆண்டு முழுவதும் (சிறந்தது: பிப்-மார்ச் மற்றும் ஜூலை-ஆகஸ்ட்)",
+    "cost_per_acre": {
+      "seed": 12000,
+      "labour": 18000,
+      "fertilizer": 14000,
+      "irrigation": 6000,
+      "machinery": 5000,
+      "other": 5000,
+      "total_estimate": 60000
+    },
+    "advisory_tips": [
+      "Sleeve banana bunches with blue polypropylene covers to enhance cosmetic quality and prevent sun scorch.",
+      "Remove side suckers (desuckering) every month until bunch shooting.",
+      "Provide sturdy propping support before monsoon gales."
+    ],
+    "advisory_tips_ta": [
+      "வாழைத்தாருக்கு நீல நிற பாலிப்ரோப்பிலீன் பை மாட்டி வைத்தால் காய் பளபளப்பாகவும் நோய் தாக்கமின்றியும் இருக்கும்.",
+      "தார் போடும் வரை பக்கவாட்டு குருத்துகளை (பக்கக்கன்றுகளை) தவறாமல் வெட்டி அகற்றவும்.",
+      "காற்று வீசும் முன் மரங்களுக்கு ஊன்றுகோல் கொடுத்து தாங்க வைக்கவும்."
+    ]
+  },
+  "Coconut": {
+    "name": "Coconut",
+    "tamil_name": "தென்னை",
+    "scientific_name": "Cocos nucifera",
+    "category": "Perennial / Plantation Crop",
+    "category_ta": "பல்லாண்டு பயிர் / தோட்டப்பயிர்",
+    "description": "Coconut ('Kalpavriksha') is a perennial plantation tree crop suited for coastal, alluvial, and red sandy loams with warm humid tropical weather.",
+    "description_ta": "தென்னை கற்பகவிருட்சம் எனப்படும் பல்லாண்டு பயிராகும். இது கடற்கரை ஓரங்கள், வண்டல் மண் மற்றும் செம்மண் நிலங்களில் வருடம் முழுவதும் பலன் தரும்.",
+    "ideal_soil": ["Sandy", "Alluvial", "Red", "Loamy"],
+    "ideal_soil_ta": "மணற்பாங்கான மண், வண்டல் மண், செம்மண்",
+    "ph_range": "5.5 - 8.0",
+    "temp_range": "22°C - 36°C",
+    "humidity_range": "60% - 90%",
+    "rainfall_range": "1000mm - 2500mm",
+    "water_requirement": "High",
+    "water_requirement_ta": "அதிகம்",
+    "water_mm_range": "100 - 150 Liters/tree/day",
+    "irrigation_methods": ["Drip Irrigation", "Ring Basin", "Pitcher Irrigation"],
+    "duration_days": "Perennial (Bearing 4-5 Years+)",
+    "stages": [
+      {
+        "phase": "Pit Preparation & Planting",
+        "phase_ta": "குழி எடுத்தல் & நடவு",
+        "days": "Year 1",
+        "days_ta": "ஆண்டு 1",
+        "icon": "🌱",
+        "details": "1x1x1 m pit filled with topsoil, red soil, farmyard manure and salt. 7.5x7.5 m spacing."
+      },
+      {
+        "phase": "Juvenile Vegetative Growth",
+        "phase_ta": "இளம்பயிர் வளர்ச்சி பருவம்",
+        "days": "Years 2 - 4",
+        "days_ta": "ஆண்டுகள் 2 - 4",
+        "icon": "🌿",
+        "details": "Shading in summer, basin mulching with coconut coir pith, balanced NPK."
+      },
+      {
+        "phase": "Inflorescence & Bearing",
+        "phase_ta": "பாளை விடுதல் & காய்ப்பு தொடக்கம்",
+        "days": "Years 5 - 6",
+        "days_ta": "ஆண்டுகள் 5 - 6",
+        "icon": "🌾",
+        "details": "First flower spathe emergence. Micronutrient TNAU Coconut Tonic root feeding."
+      },
+      {
+        "phase": "Continuous Yield / Harvesting",
+        "phase_ta": "தொடர் காய்ப்பு & அறுவடை",
+        "days": "Years 6 onwards (Every 45 days)",
+        "days_ta": "ஆண்டு 6 முதல் (ஒவ்வொரு 45 நாட்களுக்கு ஒருமுறை)",
+        "icon": "✂️",
+        "details": "Harvest 11-12 month mature nuts for copra/oil or 7 month nuts for tender water."
+      }
+    ],
+    "calendar": [
+      {"month": "January", "month_ta": "ஜனவரி", "activity": "Harvest round 1 and basin cleaning"},
+      {"month": "March", "month_ta": "மார்ச்", "activity": "Summer drip irrigation and coir pith mulching"},
+      {"month": "June", "month_ta": "ஜூன்", "activity": "Monsoon organic manure and biofertilizer application"},
+      {"month": "September", "month_ta": "செப்டம்பர்", "activity": "TNAU Coconut tonic root feeding (200ml per palm)"},
+      {"month": "November", "month_ta": "நவம்பர்", "activity": "Rhinoceros beetle and red palm weevil monitoring"}
+    ],
+    "seasons": "Year-round bearing (Planting: Jun-Jul or Oct-Nov)",
+    "seasons_ta": "வருடம் முழுவதும் (நடவு: ஜூன்-ஜூலை அல்லது அக்-நவ)",
+    "cost_per_acre": {
+      "seed": 7500,
+      "labour": 8000,
+      "fertilizer": 5500,
+      "irrigation": 3500,
+      "machinery": 3000,
+      "other": 2500,
+      "total_estimate": 30000
+    },
+    "advisory_tips": [
+      "Apply TNAU Coconut Tonic (200ml in 200ml water) via root feeding twice a year to stop button shedding.",
+      "Coir pith mulching up to 2m radius conserves 40% soil moisture in summer.",
+      "Practice multi-tier intercropping (Cocoa, Banana, Pepper) to triple farm income."
+    ],
+    "advisory_tips_ta": [
+      "ஆண்டுக்கு இருமுறை தென்னை டானிக் வேர் மூலம் செலுத்தினால் குரும்பை உதிர்வது நின்று காய் எடை கூடும்.",
+      "மரத்தைச் சுற்றி 2 மீட்டர் சுற்றளவுக்கு தென்னை நார்க்கழிவு பரப்பினால் கோடையில் ஈரப்பதம் பாதுகாக்கப்படும்.",
+      "வாழை, கொக்கோ, மிளகு போன்ற ஊடுபயிர்களை பயிரிட்டு கூடுதல் வருமானம் பெறலாம்."
+    ]
+  },
+  "Coffee": {
+    "name": "Coffee",
+    "tamil_name": "காபி",
+    "scientific_name": "Coffea arabica / canephora",
+    "category": "Plantation / Beverage Crop",
+    "category_ta": "தோட்டப்பயிர் / பானப்பயிர்",
+    "description": "Coffee is an aromatic plantation beverage crop grown in cool tropical highlands under shade trees in well-drained acidic laterite/loamy soils.",
+    "description_ta": "காபி மலைப்பிரதேசங்களில் நிழல் தரும் மரங்களின் கீழ் அமிலத்தன்மை கொண்ட சரளை மற்றும் வண்டல் நிலங்களில் வளரும் தோட்டப்பயிராகும்.",
+    "ideal_soil": ["Laterite", "Loamy", "Red"],
+    "ideal_soil_ta": "சரளை மண், செம்மண், காட்டு வண்டல் மண்",
+    "ph_range": "5.0 - 6.5",
+    "temp_range": "15°C - 28°C",
+    "humidity_range": "65% - 90%",
+    "rainfall_range": "1200mm - 2500mm",
+    "water_requirement": "High",
+    "water_requirement_ta": "அதிகம்",
+    "water_mm_range": "1200 - 1800 mm",
+    "irrigation_methods": ["Overhead Sprinkler (Blossom Shower)", "Drip Irrigation", "Rainfed"],
+    "duration_days": "Perennial (Bearing 3-4 Years+)",
+    "stages": [
+      {
+        "phase": "Planting & Shade Regulation",
+        "phase_ta": "நடவு & நிழல் மேலாண்மை",
+        "days": "Years 1 - 2",
+        "days_ta": "ஆண்டுகள் 1 - 2",
+        "icon": "🌱",
+        "details": "Planting rootstocks in pits with silver oak/dadap shade trees. Contour planting."
+      },
+      {
+        "phase": "Pruning & Bush Training",
+        "phase_ta": "கவாத்து & செடி பராமரிப்பு",
+        "days": "Years 2 - 3",
+        "days_ta": "ஆண்டுகள் 2 - 3",
+        "icon": "🌿",
+        "details": "Topping at 1.0 to 1.5 m height to encourage productive secondary branches."
+      },
+      {
+        "phase": "Blossom & Berry Formation",
+        "phase_ta": "பூத்தல் & காய் உருவாக்கம்",
+        "days": "March - August (Annual)",
+        "days_ta": "மார்ச் - ஆகஸ்ட் (ஆண்டுதோறும்)",
+        "icon": "🌾",
+        "details": "Blossom shower triggers synchronized white flowering followed by berry setting."
+      },
+      {
+        "phase": "Berry Ripening & Picking",
+        "phase_ta": "பழம் பழுத்தல் & அறுவடை",
+        "days": "November - February (Annual)",
+        "days_ta": "நவம்பர் - பிப்ரவரி (ஆண்டுதோறும்)",
+        "icon": "✂️",
+        "details": "Selective hand-picking of deep red ripe cherries. Pulper processing."
+      }
+    ],
+    "calendar": [
+      {"month": "March", "month_ta": "மார்ச்", "activity": "Blossom sprinkler irrigation"},
+      {"month": "May", "month_ta": "மே", "activity": "Pre-monsoon fertilizer and Bordeaux mixture spray"},
+      {"month": "August", "month_ta": "ஆகஸ்ட்", "activity": "Weed clearing and shade tree lopping"},
+      {"month": "October", "month_ta": "அக்டோபர்", "activity": "Post-monsoon nutrition and berry borer scouting"},
+      {"month": "December", "month_ta": "டிசம்பர்", "activity": "Main fly picking and cherry drying on patios"}
+    ],
+    "seasons": "Harvest: Nov-Feb (Arabica), Jan-Mar (Robusta)",
+    "seasons_ta": "அறுவடை: நவ-பிப் (அராபிகா), ஜன-மார்ச் (ரோபஸ்டா)",
+    "cost_per_acre": {
+      "seed": 6000,
+      "labour": 15000,
+      "fertilizer": 7000,
+      "irrigation": 3500,
+      "machinery": 3000,
+      "other": 3500,
+      "total_estimate": 38000
+    },
+    "advisory_tips": [
+      "Provide 1 inch of sprinkler irrigation in March if blossom showers are delayed to ensure even flowering.",
+      "Prune criss-cross and dead branches annually after harvest.",
+      "Maintain a two-tier shade canopy for optimal bean density."
+    ],
+    "advisory_tips_ta": [
+      "மார்ச் மாதத்தில் பூக்கும் பருவத்தில் சரியான நேரத்தில் தெளிப்பு பாசனம் செய்தால் சீரான மகசூல் கிடைக்கும்.",
+      "அறுவடைக்கு பின் காய்ந்த மற்றும் பயனற்ற கிளைகளை கவாத்து செய்ய வேண்டும்.",
+      "மர நிழலை சரியாக சீரமைத்தால் சிறந்த தரமான காபி கொட்டைகள் உருவாகும்."
+    ]
+  },
+  "Tea": {
+    "name": "Tea",
+    "tamil_name": "தேயிலை",
+    "scientific_name": "Camellia sinensis",
+    "category": "Plantation / Beverage Crop",
+    "category_ta": "தோட்டப்பயிர் / பானப்பயிர்",
+    "description": "Tea is a high-altitude plantation bush crop thriving on misty, undulating hill slopes with acidic, well-drained laterite soils and heavy well-distributed rainfall.",
+    "description_ta": "தேயிலை மலைச்சரிவுகளில் பனிமூட்டமான சூழலில் அதிக மழைப்பொழிவும் அமிலத்தன்மை கொண்ட நிலங்களிலும் செழித்து வளரும் பணப்பயிராகும்.",
+    "ideal_soil": ["Laterite", "Loamy", "Red"],
+    "ideal_soil_ta": "சரளை மண், செம்மண், மலை வண்டல் மண்",
+    "ph_range": "4.5 - 5.8",
+    "temp_range": "13°C - 27°C",
+    "humidity_range": "75% - 95%",
+    "rainfall_range": "1500mm - 3000mm",
+    "water_requirement": "High",
+    "water_requirement_ta": "அதிகம்",
+    "water_mm_range": "1400 - 2200 mm",
+    "irrigation_methods": ["Overhead Sprinkler", "Rainfed Slope Terraces"],
+    "duration_days": "Perennial (Plucking every 7-12 days)",
+    "stages": [
+      {
+        "phase": "Contour Planting & Bush Frame",
+        "phase_ta": "சமவெளி நடவு & செடி கட்டமைப்பு",
+        "days": "Years 1 - 3",
+        "days_ta": "ஆண்டுகள் 1 - 3",
+        "icon": "🌱",
+        "details": "Terrace planting on slopes with mulch. Centering and formative pruning to create plucking table."
+      },
+      {
+        "phase": "Vegetative Flush",
+        "phase_ta": "தளிர் விடுதல் பருவம்",
+        "days": "Year-round flush cycles",
+        "days_ta": "ஆண்டு முழுவதும் தளிர் சுழற்சிகள்",
+        "icon": "🌿",
+        "details": "Regular application of UPASI tea fertilizer mixture and zinc foliar nutrition."
+      },
+      {
+        "phase": "Plucking (Two Leaves & A Bud)",
+        "phase_ta": "தேயிலை கொழுந்து பறித்தல்",
+        "days": "Every 7 - 12 days",
+        "days_ta": "ஒவ்வொரு 7 - 12 நாட்களுக்கு ஒருமுறை",
+        "icon": "✂️",
+        "details": "Fine harvesting of 'two leaves and a bud' to maintain tea quality."
+      },
+      {
+        "phase": "Pruning Cycle",
+        "phase_ta": "கவாத்து சுழற்சி",
+        "days": "Every 4 - 5 years",
+        "days_ta": "ஒவ்வொரு 4 - 5 ஆண்டுகளுக்கு ஒருமுறை",
+        "icon": "🌾",
+        "details": "Pruning to rejuvenate bush health and maintain accessible height."
+      }
+    ],
+    "calendar": [
+      {"month": "March", "month_ta": "மார்ச்", "activity": "Spring flush plucking begins"},
+      {"month": "May", "month_ta": "மே", "activity": "Peak flush plucking & zinc sulfate foliar spray"},
+      {"month": "July", "month_ta": "ஜூலை", "activity": "Monsoon drainage check & blister blight management"},
+      {"month": "October", "month_ta": "அக்டோபர்", "activity": "Autumn flush plucking"},
+      {"month": "December", "month_ta": "டிசம்பர்", "activity": "Winter maintenance & selective bush pruning"}
+    ],
+    "seasons": "Year-round plucking (Peak: Apr-Jun and Sep-Nov)",
+    "seasons_ta": "ஆண்டு முழுவதும் பறிப்பு (அதிக மகசூல்: ஏப்-ஜூன் மற்றும் செப்-நவ)",
+    "cost_per_acre": {
+      "seed": 5000,
+      "labour": 20000,
+      "fertilizer": 6500,
+      "irrigation": 2500,
+      "machinery": 2000,
+      "other": 3000,
+      "total_estimate": 39000
+    },
+    "advisory_tips": [
+      "Strictly pluck 'two leaves and a bud' for highest quality grade CTC/orthodox tea.",
+      "Apply Zinc Sulfate 1% with 500ppm Manganese spray 5 times a year to enhance leaf flush.",
+      "Ensure proper drainage channels to prevent water stagnation in root zones."
+    ],
+    "advisory_tips_ta": [
+      "உயர்தர தேயிலை பெற 'இரு இலை ஒரு கொழுந்து' என்ற முறையில் மட்டும் பறிக்கவும்.",
+      "துத்தநாக சத்து கரைசல் தெளித்தால் தளிர் உற்பத்தி பெருமளவு அதிகரிக்கும்.",
+      "மலைச்சரிவுகளில் நீர் தேங்காமல் வழிய உரிய வடிகால் வசதிகளை பராமரிக்கவும்."
+    ]
+  },
+  "Jute": {
+    "name": "Jute",
+    "tamil_name": "சணல்",
+    "scientific_name": "Corchorus olitorius",
+    "category": "Commercial / Bast Fiber",
+    "category_ta": "வணிகப் பயிர் / நார் பயிர்",
+    "description": "Jute ('Golden Fiber') is an eco-friendly natural fiber crop requiring standing water/high rainfall, hot humid climate, and fertile alluvial/clayey soils.",
+    "description_ta": "சணல் 'தங்க நார்' என அழைக்கப்படுகிறது. இது அதிக மழைப்பொழிவும் வெப்பமும் உள்ள வண்டல் மற்றும் களிமண் நிலங்களில் மிக வேகமாக வளரும்.",
+    "ideal_soil": ["Alluvial", "Clayey", "Loamy"],
+    "ideal_soil_ta": "வண்டல் மண், களிமண், ஆற்றுப்படுகை மண்",
+    "ph_range": "6.0 - 7.5",
+    "temp_range": "24°C - 38°C",
+    "humidity_range": "70% - 95%",
+    "rainfall_range": "1200mm - 2000mm",
+    "water_requirement": "High",
+    "water_requirement_ta": "அதிகம்",
+    "water_mm_range": "1000 - 1500 mm",
+    "irrigation_methods": ["Flood Irrigation", "Basin Irrigation", "Rainfed Wetland"],
+    "duration_days": "110 - 130 Days",
+    "stages": [
+      {
+        "phase": "Sowing & Germination",
+        "phase_ta": "விதைப்பு & முளைப்பு",
+        "days": "Days 1 - 15",
+        "days_ta": "நாட்கள் 1 - 15",
+        "icon": "🌱",
+        "details": "Broadcasting or line sowing at 25x7 cm spacing. Seed treatment."
+      },
+      {
+        "phase": "Vegetative Growth & Thinning",
+        "phase_ta": "வளர்ச்சி & பயிர் கலைத்தல்",
+        "days": "Days 16 - 60",
+        "days_ta": "நாட்கள் 16 - 60",
+        "icon": "🌿",
+        "details": "Two rounds of thinning to keep robust single stems. Top dressing with urea."
+      },
+      {
+        "phase": "Small Pod / Flowering Stage",
+        "phase_ta": "சிறிய காய் / பூத்தல் நிலை",
+        "days": "Days 61 - 110",
+        "days_ta": "நாட்கள் 61 - 110",
+        "icon": "🌾",
+        "details": "Best fiber quality stage. Harvest at 50% flowering to early pod."
+      },
+      {
+        "phase": "Retting & Fiber Extraction",
+        "phase_ta": "அழுக வைத்தல் & நார் உரித்தல்",
+        "days": "Days 111 - 130",
+        "days_ta": "நாட்கள் 111 - 130",
+        "icon": "✂️",
+        "details": "Steep bundles in clean slow-moving water for 12-15 days. Extract and sun-dry fiber."
+      }
+    ],
+    "calendar": [
+      {"month": "March", "month_ta": "மார்ச்", "activity": "Pre-monsoon early sowing in lowlands"},
+      {"month": "April", "month_ta": "ஏப்ரல்", "activity": "Main field sowing & first weeding"},
+      {"month": "May", "month_ta": "மே", "activity": "Thinning and basal fertilizer top dressing"},
+      {"month": "July", "month_ta": "ஜூலை", "activity": "Harvesting at small pod stage"},
+      {"month": "August", "month_ta": "ஆகஸ்ட்", "activity": "Water retting and golden fiber extraction"}
+    ],
+    "seasons": "Kharif Pre-Monsoon (Mar-Apr to Jul-Aug)",
+    "seasons_ta": "காரீப் முன் பருவ விதைப்பு (மார்ச்-ஏப் முதல் ஜூலை-ஆகஸ்ட்)",
+    "cost_per_acre": {
+      "seed": 1100,
+      "labour": 7500,
+      "fertilizer": 3000,
+      "irrigation": 2000,
+      "machinery": 2400,
+      "other": 1500,
+      "total_estimate": 17500
+    },
+    "advisory_tips": [
+      "Harvest exactly at 50% flowering to early pod stage to obtain silky, high tensile strength fiber.",
+      "Use clean slow-moving water for retting to achieve bright golden color.",
+      "Incorporate root stubbles back into the soil as green manure."
+    ],
+    "advisory_tips_ta": [
+      "50% பூக்கும் தருணத்தில் அறுவடை செய்தால் பளபளப்பான உறுதியான நார் கிடைக்கும்.",
+      "தெளிவான ஓடும் நீரில் சணல் கட்டுகளை ஊற வைத்தால் தங்க நிற நார் பெறலாம்.",
+      "அறுவடைக்கு பின் வேர்களை நிலத்திலேயே மக்கச் செய்து உரமாக மாற்றலாம்."
+    ]
+  }
+}

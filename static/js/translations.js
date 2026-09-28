@@ -1,0 +1,819 @@
+/**
+ * CROPWISE AI - Bilingual Translation Engine (English & தமிழ்)
+ * Provides comprehensive translations across the entire application.
+ */
+
+const translations = {
+  en: {
+    // Brand & Taglines
+    "brand.name": "CROPWISE AI",
+    "brand.title": "Smart Crop Recommendation System",
+    "brand.tagline": "Smart Farming. Better Crop Decisions.",
+    "brand.subtagline": "Make better crop decisions using soil and environmental conditions.",
+    
+    // Navigation
+    "nav.home": "Home",
+    "nav.about": "About CROPWISE AI",
+    "nav.how_it_works": "How It Works",
+    "nav.dashboard": "Dashboard",
+    "nav.recommend": "Recommend Crop",
+    "nav.alternatives": "Alternative Crops",
+    "nav.duration": "Crop Duration",
+    "nav.comparison": "Crop Comparison",
+    "nav.budget": "Budget Calculator",
+    "nav.calendar": "Crop Calendar",
+    "nav.water": "Water Need",
+    "nav.history": "History",
+    "nav.expenses": "Farm Expenses & Notes",
+    "nav.login": "Farmer Login",
+    "nav.register": "Register",
+    "nav.profile": "Profile",
+    "nav.logout": "Logout",
+    "nav.back_dashboard": "← Back to Dashboard",
+
+    // Home Page Hero
+    "hero.badge": "🌱 Practical guidance for your farm",
+    "hero.heading": "Smart Crop Recommendation System",
+    "hero.tamil_title": "ஸ்மார்ட் பயிர் பரிந்துரை அமைப்பு",
+    "hero.desc": "Get suitable crop recommendations based on your soil and farm conditions.",
+    "hero.cta_start": "Get Started",
+    "hero.cta_how": "Explore How It Works",
+    "hero.stats_accuracy": "Farm guidance",
+    "hero.stats_crops": "Supported Crops",
+    "hero.stats_soils": "Soil Profiles",
+    "hero.stats_inputs": "Manual Parameters",
+
+    // Home Feature Cards
+    "feat.heading": "Core Features & Agronomic Intelligence",
+    "feat.subheading": "Simple tools for practical farm decisions.",
+    "feat.soil.title": "🌱 Soil Analysis",
+    "feat.soil.desc": "Understand the entered soil texture, alkalinity, and acidity parameters.",
+    "feat.env.title": "🌦️ Environmental Conditions",
+    "feat.env.desc": "Analyze pH, temperature, humidity, and annual rainfall tolerances.",
+    "feat.tree.title": "🌾 Crop Suitability",
+    "feat.tree.desc": "Review crop options that fit the conditions of your field.",
+    "feat.rec.title": "🌾 Smart Recommendation",
+    "feat.rec.desc": "Receive the most optimal crop suited for your specific soil and climate profile.",
+
+    // How It Works Section
+    "how.heading": "How CROPWISE AI Works",
+    "how.subheading": "4 simple steps from soil inputs to comprehensive agricultural advisory.",
+    "how.step1.title": "1. Enter Farm Conditions",
+    "how.step1.desc": "Manually input your farm's Soil Type, pH Level, Temperature, Humidity, and Rainfall.",
+    "how.step2.title": "2. Check Field Conditions",
+    "how.step2.desc": "Your details are compared with suitable growing conditions for each crop.",
+    "how.step3.title": "3. Crop Recommendation",
+    "how.step3.desc": "Get the primary recommended crop with authentic suitability rationale and alternatives.",
+    "how.step4.title": "4. Complete Farm Advisory",
+    "how.step4.desc": "Access growth duration timelines, water guides, monthly calendars, and budget calculators.",
+
+    // Auth Pages
+    "auth.welcome_back": "Welcome Back, Farmer",
+    "auth.login_subtitle": "Sign in to access your crop recommendations and farm records.",
+    "auth.create_account": "Create Your Farmer Account",
+    "auth.register_subtitle": "Join CROPWISE AI to make informed agricultural decisions.",
+    "auth.identifier": "Mobile Number / Email Address",
+    "auth.identifier_placeholder": "Enter mobile number or email",
+    "auth.password": "Password",
+    "auth.password_placeholder": "Enter your password",
+    "auth.confirm_password": "Confirm Password",
+    "auth.confirm_password_placeholder": "Re-enter your password",
+    "auth.name": "Full Name",
+    "auth.name_placeholder": "e.g. Ramasamy / Murugan",
+    "auth.mobile": "Mobile Number",
+    "auth.mobile_placeholder": "10-digit mobile number",
+    "auth.email": "Email Address",
+    "auth.email_placeholder": "farmer@example.com",
+    "auth.location": "Farm Location / District",
+    "auth.location_placeholder": "e.g. Thanjavur, Madurai, Coimbatore",
+    "auth.land_area": "Land Area",
+    "auth.land_unit": "Unit",
+    "auth.btn_login": "Login to Farm Portal",
+    "auth.btn_register": "Send OTP",
+    "auth.no_account": "Don't have an account?",
+    "auth.have_account": "Already have an account?",
+    "auth.register_link": "Register here",
+    "auth.login_link": "Login here",
+
+    // OTP Verification
+    "otp.heading": "Verify Your Email",
+    "otp.subtitle_prefix": "We've sent a 6-digit verification code to",
+    "otp.subtitle_suffix": ". Enter it below to complete your farmer registration.",
+    "otp.your_email": "your email address",
+    "otp.label": "6-Digit Verification Code",
+    "otp.placeholder": "• • • • • •",
+    "otp.validity": "Valid for 5 minutes",
+    "otp.btn_verify": "Verify OTP",
+    "otp.no_code": "Didn't receive the code?",
+    "otp.resend": "Resend OTP",
+    "otp.restart": "← Restart Registration",
+    "otp.alert_incomplete": "Please enter the complete 6-digit OTP code.",
+
+    // Dashboard
+    "dash.welcome": "Welcome, ",
+    "dash.greeting_suffix": " 👨🌾",
+    "dash.badge_farmer": "Verified Farmer",
+    "dash.stat_location": "Farm Location",
+    "dash.stat_land": "Land Area",
+    "dash.stat_total_rec": "Total Recommendations",
+    "dash.stat_total_exp": "Total Farm Expenses",
+    "dash.quick_rec": "🌱 Quick Crop Recommendation",
+    "dash.modules_heading": "Farmer Decision-Support Modules",
+    "dash.modules_subheading": "Comprehensive agricultural tools to plan, calculate, and manage your crop cycle.",
+    "dash.overview_label": "FARM OVERVIEW",
+    "dash.welcome_message": "Manage your crops, expenses and farm activities in one place.",
+    "dash.tools_label": "FARM TOOLS",
+    "dash.summary_crop": "Recommended Crop",
+    "dash.summary_task": "Next Farm Task",
+    "dash.summary_expenses": "Total Farm Expenses",
+    "dash.summary_water": "Water Requirement",
+    "dash.summary_profit": "Estimated Profit",
+    "dash.empty_crop": "No crop recommendation available yet.",
+    "dash.empty_tasks": "No upcoming farm tasks.",
+    "dash.empty_expenses": "No expenses recorded yet.",
+    "dash.empty_water": "No crop recommendation available yet.",
+    "dash.empty_profit": "Profit estimate not available yet.",
+    "dash.expense_entries": "entries recorded",
+    "dash.water_available": "Crop guide available",
+    "dash.tasks_label": "FIELD PLANNER",
+    "dash.tasks_heading": "Upcoming Farm Tasks",
+    "dash.view_calendar": "View Crop Calendar",
+    "dash.expenses_label": "FARM FINANCES",
+    "dash.expenses_heading": "Expense Overview",
+    "dash.overall_expenses": "Overall expenses",
+    "dash.empty_month_expenses": "No expenses recorded for this month.",
+    "dash.open_expenses": "Open Expenses",
+    "dash.recommendations_label": "CROP RECORDS",
+    "dash.recent_heading": "Recent Crop Recommendation",
+    "dash.view_history": "View History",
+    "dash.recommended_crop_label": "Recommended crop",
+    "dash.record_date": "Date",
+    "dash.record_soil": "Soil",
+    "dash.record_temperature": "Temperature",
+    "dash.record_humidity": "Humidity",
+    "dash.record_rainfall": "Rainfall",
+    "dash.empty_recommendations": "No crop recommendations available yet.",
+    "dash.start_recommendation": "Start a Recommendation",
+    "dash.module_rec_desc": "Find a suitable crop using your farm conditions.",
+    "dash.module_alt_desc": "Review other crop options for your current selection.",
+    "dash.module_dur_desc": "Follow the crop journey from sowing to harvest.",
+    "dash.module_comp_desc": "Compare crop duration, water needs and costs.",
+    "dash.module_budg_desc": "Plan expected cultivation costs before you begin.",
+    "dash.module_cal_desc": "Plan seasonal work with a month-by-month guide.",
+    "dash.module_wat_desc": "Choose practical irrigation methods and save water.",
+    "dash.module_hist_desc": "Review your past crop choices and farm conditions.",
+    "dash.module_exp_desc": "Record daily spending and keep useful field notes.",
+    "dash.module_rep_desc": "Create a clear report for your farm records.",
+
+    // Module Cards
+    "mod.rec.title": "🌾 Crop Recommendation",
+    "mod.rec.desc": "Predict optimal crops based on Soil Type, pH, Temperature, Humidity & Rainfall.",
+    "mod.alt.title": "🔄 Alternative Crops",
+    "mod.alt.desc": "Explore suitable alternative crops for your farm.",
+    "mod.dur.title": "⏱️ Crop Duration",
+    "mod.dur.desc": "Visual 4-stage lifecycle timeline from sowing to harvesting.",
+    "mod.comp.title": "📊 Crop Comparison",
+    "mod.comp.desc": "Compare duration, water needs, soil tolerance, and cultivation costs.",
+    "mod.budg.title": "💰 Budget Calculator",
+    "mod.budg.desc": "Estimate seeds, labour, fertilizer, irrigation, and machinery expenses per acre.",
+    "mod.cal.title": "📅 Crop Calendar",
+    "mod.cal.desc": "Month-by-month agricultural activity schedule and seasonal cropping windows.",
+    "mod.wat.title": "💧 Water Requirement",
+    "mod.wat.desc": "Crop water needs, irrigation methods (drip/sprinkler), and conservation tips.",
+    "mod.hist.title": "📜 Recommendation History",
+    "mod.hist.desc": "View, filter, and print your past crop recommendation logs.",
+    "mod.exp.title": "📝 Farm Expenses & Notes",
+    "mod.exp.desc": "Track day-to-day farm expenditure and maintain field notes.",
+    "mod.rep.title": "🖨️ Print Advisory Report",
+    "mod.rep.desc": "Generate high-resolution printable reports for viva and field reference.",
+
+    // Crop Recommendation Form
+    "rec.page_label": "CROP RECOMMENDATION",
+    "rec.heading": "Crop Recommendation",
+    "rec.subheading": "Enter your farm details to get a suitable crop recommendation.",
+    "rec.form_heading": "Farm Details",
+    "rec.form_helper": "Share a few details about your field.",
+    "rec.soil_label": "Soil Type",
+    "rec.soil_hint": "Select the soil type of your field.",
+    "rec.ph_label": "Soil pH Level",
+    "rec.ph_hint": "Move the slider to set your soil pH value.",
+    "rec.temp_label": "Temperature (°C)",
+    "rec.temp_hint": "Enter the temperature in °C.",
+    "rec.hum_label": "Humidity (%)",
+    "rec.hum_hint": "Enter the humidity percentage.",
+    "rec.rain_label": "Annual Rainfall (mm)",
+    "rec.rain_hint": "Enter the rainfall value in millimetres.",
+    "rec.btn_submit": "🌱 Get Crop Recommendation",
+
+    // Result Screen
+    "res.heading": "Recommended Crop",
+    "res.subheading": "A crop suited to your farm details",
+    "res.duration": "Crop Duration",
+    "res.suitable_soil": "Suitable Soil",
+    "res.water": "Water Requirement",
+    "res.season": "Growing Season",
+    "res.variety": "Crop Variety",
+    "res.variety_unavailable": "Variety information is not available for this crop.",
+    "res.growth_timeline": "Crop Growth Timeline",
+    "res.your_conditions": "Your Farm Conditions",
+    "res.why_heading": "Why this recommendation?",
+    "res.btn_alt": "🔄 View Alternative Crops",
+    "res.btn_comp": "📊 Compare Crops",
+    "res.btn_dur": "⏱️ View Crop Duration",
+    "res.btn_wat": "💧 Water Requirement",
+    "res.btn_cal": "📅 Crop Calendar",
+    "res.btn_budg": "💰 Calculate Budget",
+    "res.btn_print": "🖨️ Print Advisory Report",
+    "res.btn_again": "🌱 New Recommendation",
+
+    // Alternative Crops
+    "alt.heading": "Alternative Crop Options",
+    "alt.subheading": "Explore other crop options that suit your soil and growing conditions.",
+    "alt.primary_badge": "Primary Recommendation",
+    "alt.secondary_badge": "Alternative Option",
+
+    // Crop Duration
+    "dur.heading": "Crop Growth Duration & Lifecycle",
+    "dur.subheading": "Detailed 4-stage agronomic timeline from seed sowing to grain harvest.",
+    "dur.approx_duration": "Approximate Total Duration",
+    "dur.sowing": "Sowing & Nursery",
+    "dur.vegetative": "Vegetative Growth",
+    "dur.flowering": "Flowering & Podding",
+    "dur.harvest": "Maturity & Harvest",
+
+    // Crop Comparison
+    "comp.heading": "Interactive Multi-Crop Comparison",
+    "comp.subheading": "Compare key agronomic parameters and financial requirements across crops.",
+    "comp.col_crop": "Crop",
+    "comp.col_duration": "Duration",
+    "comp.col_water": "Water Need",
+    "comp.col_soil": "Ideal Soil",
+    "comp.col_ph": "pH Range",
+    "comp.col_temp": "Temperature",
+    "comp.col_rain": "Rainfall",
+    "comp.col_cost": "Estimated Cost / Acre",
+
+    // Budget Calculator
+    "budg.heading": "Farm Cultivation Budget Calculator",
+    "budg.subheading": "Calculate estimated input and operational costs for your land area.",
+    "budg.land_area": "Land Area (Acres)",
+    "budg.seed_cost": "Seed / Sapling Cost (₹)",
+    "budg.labour_cost": "Labour Cost (₹)",
+    "budg.fert_cost": "Fertilizer & Manure Cost (₹)",
+    "budg.irrig_cost": "Irrigation & Power Cost (₹)",
+    "budg.mach_cost": "Machinery & Tillage Cost (₹)",
+    "budg.other_cost": "Other / Miscellaneous Cost (₹)",
+    "budg.total_cost": "Total Estimated Cultivation Cost",
+    "budg.cost_per_acre": "Estimated Cost Per Acre",
+    "budg.formula_note": "Formula: Total Cost = Land Area × (Seed + Labour + Fertilizer + Irrigation + Machinery + Other)",
+    "budg.btn_save_exp": "💾 Save as Farm Expense",
+
+    // Crop Calendar
+    "cal.heading": "Visual Crop Cultivation Calendar",
+    "cal.subheading": "Month-by-month agricultural operations and agro-climatic seasons.",
+    "cal.select_crop": "Select Crop:",
+    "cal.season_info": "Cropping Seasons",
+
+    // Water Requirement
+    "wat.heading": "Crop Water Requirement & Irrigation Guide",
+    "wat.subheading": "Water volume estimates, suitable irrigation methods, and water conservation guidelines.",
+    "wat.level": "Water Requirement Level",
+    "wat.volume": "Seasonal Water Need",
+    "wat.methods": "Recommended Irrigation Methods",
+    "wat.disclaimer": "⚠️ Manual Advisory Notice: Water requirements are agronomic estimates based on ICAR standards, not live soil moisture sensors.",
+    "wat.land_area": "Land Area",
+    "wat.land_area_reference": "1 Acre (100 Cent)",
+    "wat.enter_land_area": "Enter land area",
+    "wat.enter_area_prompt": "Please enter land area.",
+    "wat.req_label": "Water Requirement",
+
+    // History
+    "hist.heading": "Farmer Recommendation History",
+    "hist.subheading": "Chronological log of all crop predictions generated for your farm.",
+    "hist.empty": "No past recommendations found. Click 'Recommend Crop' to get started.",
+    "hist.col_date": "Date & Time",
+    "hist.col_soil": "Soil Type",
+    "hist.col_ph": "pH",
+    "hist.col_temp": "Temp",
+    "hist.col_hum": "Humidity",
+    "hist.col_rain": "Rainfall",
+    "hist.col_crop": "Recommended Crop",
+    "hist.col_actions": "Actions",
+
+    // Expenses & Notes
+    "exp.heading": "Farm Expense Tracker & Notebook",
+    "exp.subheading": "Manage farm expenditure and maintain day-to-day agricultural field records.",
+    "exp.add_expense": "Add New Expense",
+    "exp.date": "Date",
+    "exp.time": "Time",
+    "exp.category": "Category",
+    "exp.amount": "Amount (₹)",
+    "exp.desc": "Description",
+    "exp.btn_add": "➕ Log Expense",
+    "exp.history": "Expense History Log",
+    "exp.entries_recorded": "total expense entries recorded",
+    "exp.empty": "No expense records logged yet.",
+    "exp.total_expenses": "Total Logged Expenses",
+    "exp.cat_seeds": "Seeds & Saplings",
+    "exp.cat_labour": "Farm Labour",
+    "exp.cat_fert": "Fertilizer & Manure",
+    "exp.cat_irrig": "Irrigation & Electricity",
+    "exp.cat_mach": "Machinery & Fuel",
+    "exp.cat_other": "Other Expenses",
+    "notes.heading": "Farm Notes & Field Log",
+    "notes.title": "Note Title",
+    "notes.tag": "Tag / Category",
+    "notes.content": "Note Content",
+    "notes.btn_save": "📌 Save Field Note",
+    "notes.saved_heading": "Saved Field Notes & Reminders",
+    "notes.empty": "No field notes recorded yet.",
+    "notes.empty_combined": "No field notes or reminders recorded yet.",
+    "reminders.heading": "Add Farm Reminder",
+    "reminders.date": "Reminder Date",
+    "reminders.time": "Reminder Time",
+    "reminders.title": "Reminder Title",
+    "reminders.description": "Reminder Description",
+    "reminders.btn_save": "Save Farm Reminder",
+    "reminders.saved_heading": "Saved Field Notes & Reminders",
+    "reminders.enable_notifications": "Enable Notifications",
+    "reminders.mark_complete": "Mark Complete",
+    "reminders.empty": "No farm reminders recorded yet.",
+
+    // Print Report
+    "rep.heading": "Crop Advisory Report",
+    "rep.btn_print": "🖨️ Print / Save as PDF",
+    "rep.generated_by": "Generated by CROPWISE AI • Smart Crop Recommendation System",
+    "rep.viva_notice": "Farm advisory record",
+
+    // About & Future Scope
+    "abt.badge": "🌱 Smart Agriculture Platform",
+    "abt.heading": "About CROPWISE AI",
+    "abt.subheading": "Smart farming insights for better crop decisions.",
+    "abt.how_heading": "How CROPWISE AI Works",
+    "abt.project_title": "Project Title",
+    "abt.domain": "Domain",
+    "abt.domain_val": "Practical farm guidance",
+    "abt.algorithm": "Guidance",
+    "abt.algo_val": "Soil and climate suitability",
+    "abt.why_dt_title": "How recommendations are prepared",
+    "abt.why_dt_desc": "CROPWISE AI considers the soil and climate details entered for your farm and presents crop options with practical cultivation information.",
+    "abt.future_heading": "More Smart Farming Features",
+    "abt.future_intro": "Explore more tools that can make day-to-day farm planning easier:",
+    "abt.future1": "📡 Live Weather API & Satellite Telemetry Integration",
+    "abt.future2": "💹 Agricultural Market Mandi Live Price Forecasting",
+    "abt.future3": "🌱 Soil Nutrient & Fertilizer Dosage Recommendation (NPK)",
+    "abt.future4": "📱 Native Android / iOS Mobile Application",
+    "abt.future5": "🗣️ Tamil Voice Assistant for Vernacular Farmer Accessibility",
+    "abt.future6": "💧 IoT Soil Moisture Sensor Integration in future hardware releases",
+
+    // General UI
+    "btn.view_details": "View Details",
+    "btn.print": "Print Report",
+    "btn.delete": "Delete",
+    "btn.save": "Save Changes",
+    "btn.cancel": "Cancel",
+    "msg.confirm_delete": "Are you sure you want to delete this record?",
+    "msg.success": "Success",
+    "msg.error": "Error",
+    "footer.copyright": "© 2026 CROPWISE AI. Smart farming made simpler."
+  },
+  
+  ta: {
+    // Brand & Taglines
+    "brand.name": "CROPWISE AI",
+    "brand.title": "ஸ்மார்ட் பயிர் பரிந்துரை அமைப்பு",
+    "brand.tagline": "சிறந்த விவசாயம் • சிறந்த பயிர் தேர்வு",
+    "brand.subtagline": "மண் மற்றும் சுற்றுச்சூழல் நிலைகளின் அடிப்படையில் சிறந்த பயிர் முடிவுகளை எடுக்க உதவும் அமைப்பு.",
+
+    // Navigation
+    "nav.home": "முகப்பு",
+    "nav.about": "CROPWISE AI பற்றி",
+    "nav.how_it_works": "செயல்படும் முறை",
+    "nav.dashboard": "முகப்புப்பலகை",
+    "nav.recommend": "பயிர் பரிந்துரை",
+    "nav.alternatives": "மாற்று பயிர்கள்",
+    "nav.duration": "பயிர் கால அளவு",
+    "nav.comparison": "பயிர் ஒப்பீடு",
+    "nav.budget": "செலவு கணிப்பான்",
+    "nav.calendar": "பயிர் கால அட்டவணை",
+    "nav.water": "நீர் தேவை",
+    "nav.history": "பரிந்துரை வரலாறு",
+    "nav.expenses": "பண்ணை செலவு & குறிப்புகள்",
+    "nav.login": "விவசாயி உள்நுழைவு",
+    "nav.register": "பதிவு செய்க",
+    "nav.profile": "சுயவிவரம்",
+    "nav.logout": "வெளியேறு",
+    "nav.back_dashboard": "← முகப்புப்பலகைக்கு திரும்பு",
+
+    // Home Page Hero
+    "hero.badge": "🌱 உங்கள் பண்ணைக்கான நடைமுறை வழிகாட்டுதல்",
+    "hero.heading": "ஸ்மார்ட் பயிர் பரிந்துரை அமைப்பு",
+    "hero.tamil_title": "ஸ்மார்ட் பயிர் பரிந்துரை அமைப்பு",
+    "hero.desc": "உங்கள் மண் மற்றும் பண்ணை நிலைகளின் அடிப்படையில் பொருத்தமான பயிர் பரிந்துரைகளைப் பெறுங்கள்.",
+    "hero.cta_start": "தொடங்குங்கள்",
+    "hero.cta_how": "செயல்முறையை அறிக",
+    "hero.stats_accuracy": "பண்ணை வழிகாட்டுதல்",
+    "hero.stats_crops": "ஆதரவு பயிர்கள்",
+    "hero.stats_soils": "மண் வகைகள்",
+    "hero.stats_inputs": "உள்ளீட்டு காரணிகள்",
+
+    // Home Feature Cards
+    "feat.heading": "முக்கிய அம்சங்கள் & விவசாய நுண்ணறிவு",
+    "feat.subheading": "நடைமுறை விவசாய முடிவுகளுக்கான எளிய கருவிகள்.",
+    "feat.soil.title": "🌱 மண் பகுப்பாய்வு",
+    "feat.soil.desc": "உள்ளீடு செய்யப்பட்ட மண்ணின் தன்மை, கார-அமில தன்மைகளை துல்லியமாக பகுப்பாய்வு செய்தல்.",
+    "feat.env.title": "🌦️ சுற்றுச்சூழல் காரணிகள்",
+    "feat.env.desc": "pH அளவு, வெப்பநிலை, ஈரப்பதம் மற்றும் மழைப்பொழிவு ஆகியவற்றை மதிப்பீடு செய்தல்.",
+    "feat.tree.title": "🌾 பயிர் பொருத்தம்",
+    "feat.tree.desc": "உங்கள் வயலின் நிலைகளுக்கு ஏற்ற பயிர் விருப்பங்களைப் பாருங்கள்.",
+    "feat.rec.title": "🌾 ஸ்மார்ட் பயிர் பரிந்துரை",
+    "feat.rec.desc": "உங்கள் நிலத்தின் மண் மற்றும் காலநிலைக்கு மிகவும் பொருத்தமான பயிரை பெறுங்கள்.",
+
+    // How It Works Section
+    "how.heading": "CROPWISE AI செயல்படும் முறை",
+    "how.subheading": "மண் விவரங்கள் முதல் முழுமையான விவசாய வழிகாட்டுதல் வரை 4 எளிய படிகள்.",
+    "how.step1.title": "1. நில விவரங்களை உள்ளிடுக",
+    "how.step1.desc": "உங்கள் நிலத்தின் மண் வகை, pH அளவு, வெப்பநிலை, ஈரப்பதம் மற்றும் மழைப்பொழிவு ஆகியவற்றை உள்ளிடவும்.",
+    "how.step2.title": "2. வயல் நிலைகளைச் சரிபார்க்கவும்",
+    "how.step2.desc": "ஒவ்வொரு பயிருக்கும் ஏற்ற வளர்ச்சி நிலைகளுடன் உங்கள் விவரங்கள் ஒப்பிடப்படுகின்றன.",
+    "how.step3.title": "3. சிறந்த பயிர் பரிந்துரை",
+    "how.step3.desc": "மண்ணிற்கு மிகப்பொருத்தமான முதன்மை பயிர் மற்றும் மாற்று பயிர்களை பெறவும்.",
+    "how.step4.title": "4. முழுமையான விவசாய ஆலோசனை",
+    "how.step4.desc": "வளர்ச்சி கால அளவு, நீர் மேலாண்மை, மாதாந்திர அட்டவணை மற்றும் செலவு கணக்கீடுகளை காணவும்.",
+
+    // Auth Pages
+    "auth.welcome_back": "மீண்டும் வரவேற்கிறோம், விவசாயி",
+    "auth.login_subtitle": "உங்கள் பயிர் பரிந்துரைகள் மற்றும் பதிவுகளை அணுக உள்நுழைக.",
+    "auth.create_account": "உங்கள் விவசாயி கணக்கை உருவாக்குங்கள்",
+    "auth.register_subtitle": "சிறந்த பயிர் முடிவுகளை எடுக்க CROPWISE AI-ல் இணையுங்கள்.",
+    "auth.identifier": "அலைபேசி எண் / மின்னஞ்சல் முகவரி",
+    "auth.identifier_placeholder": "அலைபேசி எண் அல்லது மின்னஞ்சல்",
+    "auth.password": "கடவுச்சொல்",
+    "auth.password_placeholder": "கடவுச்சொல்லை உள்ளிடவும்",
+    "auth.confirm_password": "கடவுச்சொல்லை உறுதிப்படுத்துக",
+    "auth.confirm_password_placeholder": "கடவுச்சொல்லை மீண்டும் உள்ளிடவும்",
+    "auth.name": "முழு பெயர்",
+    "auth.name_placeholder": "எ.கா: ராமசாமி / முருகன்",
+    "auth.mobile": "அலைபேசி எண்",
+    "auth.mobile_placeholder": "10 இலக்க அலைபேசி எண்",
+    "auth.email": "மின்னஞ்சல் முகவரி",
+    "auth.email_placeholder": "farmer@example.com",
+    "auth.location": "பண்ணை அமைவிடம் / மாவட்டம்",
+    "auth.location_placeholder": "எ.கா: தஞ்சாவூர், மதுரை, கோயம்புத்தூர்",
+    "auth.land_area": "நிலப்பரப்பு",
+    "auth.land_unit": "அலகு",
+    "auth.btn_login": "உள்நுழைக",
+    "auth.btn_register": "OTP அனுப்புக",
+    "auth.no_account": "கணக்கு இல்லையா?",
+    "auth.have_account": "ஏற்கனவே கணக்கு உள்ளதா?",
+    "auth.register_link": "இங்கே பதிவு செய்க",
+    "auth.login_link": "இங்கே உள்நுழைக",
+
+    // OTP Verification
+    "otp.heading": "உங்கள் மின்னஞ்சலை சரிபார்க்கவும்",
+    "otp.subtitle_prefix": "உங்கள் மின்னஞ்சலுக்கு 6 இலக்க சரிபார்ப்பு குறியீடு அனுப்பப்பட்டுள்ளது (",
+    "otp.subtitle_suffix": "). பதிவை முடிக்க கீழே உள்ளிடவும்.",
+    "otp.your_email": "உங்கள் மின்னஞ்சல் முகவரிக்கு",
+    "otp.label": "6 இலக்க சரிபார்ப்பு குறியீடு",
+    "otp.placeholder": "• • • • • •",
+    "otp.validity": "5 நிமிடங்களுக்கு செல்லுபடியாகும்",
+    "otp.btn_verify": "OTP சரிபார்க்கவும்",
+    "otp.no_code": "குறியீடு கிடைக்கவில்லையா?",
+    "otp.resend": "OTP மீண்டும் அனுப்பவும்",
+    "otp.restart": "← பதிவை மீண்டும் தொடங்கவும்",
+    "otp.alert_incomplete": "முழுமையான 6-இலக்க OTP எண்ணை உள்ளிடவும்.",
+
+    // Dashboard
+    "dash.welcome": "வணக்கம், ",
+    "dash.greeting_suffix": " 👨🌾",
+    "dash.badge_farmer": "பதிவுபெற்ற விவசாயி",
+    "dash.stat_location": "பண்ணை அமைவிடம்",
+    "dash.stat_land": "நிலப்பரப்பு",
+    "dash.stat_total_rec": "மொத்த பரிந்துரைகள்",
+    "dash.stat_total_exp": "மொத்த பண்ணை செலவுகள்",
+    "dash.quick_rec": "🌱 புதிய பயிர் பரிந்துரை பெறுங்கள்",
+    "dash.modules_heading": "விவசாய முடிவு வழிகாட்டு தொகுதிகள்",
+    "dash.modules_subheading": "பயிர் சாகுபடியை திட்டமிடவும் செலவுகளை கணக்கிடவும் உதவும் கருவிகள்.",
+    "dash.overview_label": "பண்ணை மேலோட்டம்",
+    "dash.welcome_message": "உங்கள் பயிர்கள், செலவுகள் மற்றும் பண்ணை பணிகளை ஒரே இடத்தில் நிர்வகிக்கவும்.",
+    "dash.tools_label": "பண்ணை கருவிகள்",
+    "dash.summary_crop": "பரிந்துரைக்கப்பட்ட பயிர்",
+    "dash.summary_task": "அடுத்த பண்ணை பணி",
+    "dash.summary_expenses": "மொத்த பண்ணை செலவுகள்",
+    "dash.summary_water": "நீர் தேவை",
+    "dash.summary_profit": "எதிர்பார்க்கப்படும் லாபம்",
+    "dash.empty_crop": "இதுவரை பயிர் பரிந்துரை இல்லை.",
+    "dash.empty_tasks": "வரவிருக்கும் பண்ணை பணிகள் இல்லை.",
+    "dash.empty_expenses": "இதுவரை செலவுகள் பதிவு செய்யப்படவில்லை.",
+    "dash.empty_water": "இதுவரை பயிர் பரிந்துரை இல்லை.",
+    "dash.empty_profit": "லாப மதிப்பீடு இன்னும் இல்லை.",
+    "dash.expense_entries": "பதிவுகள்",
+    "dash.water_available": "பயிர் வழிகாட்டி உள்ளது",
+    "dash.tasks_label": "வயல் திட்டமிடல்",
+    "dash.tasks_heading": "வரவிருக்கும் பண்ணை பணிகள்",
+    "dash.view_calendar": "பயிர் கால அட்டவணையை காண்க",
+    "dash.expenses_label": "பண்ணை நிதி",
+    "dash.expenses_heading": "செலவு மேலோட்டம்",
+    "dash.overall_expenses": "மொத்த செலவுகள்",
+    "dash.empty_month_expenses": "இந்த மாதத்திற்கு செலவுகள் பதிவு செய்யப்படவில்லை.",
+    "dash.open_expenses": "செலவுகளைத் திறக்கவும்",
+    "dash.recommendations_label": "பயிர் பதிவுகள்",
+    "dash.recent_heading": "சமீபத்திய பயிர் பரிந்துரை",
+    "dash.view_history": "வரலாற்றைக் காண்க",
+    "dash.recommended_crop_label": "பரிந்துரைக்கப்பட்ட பயிர்",
+    "dash.record_date": "தேதி",
+    "dash.record_soil": "மண்",
+    "dash.record_temperature": "வெப்பநிலை",
+    "dash.record_humidity": "ஈரப்பதம்",
+    "dash.record_rainfall": "மழையளவு",
+    "dash.empty_recommendations": "இதுவரை பயிர் பரிந்துரைகள் இல்லை.",
+    "dash.start_recommendation": "பரிந்துரையைத் தொடங்கவும்",
+    "dash.module_rec_desc": "உங்கள் பண்ணை நிலைமைகளுக்கு ஏற்ற பயிரை கண்டறியவும்.",
+    "dash.module_alt_desc": "தற்போதைய தேர்விற்கான பிற பயிர் விருப்பங்களைப் பார்க்கவும்.",
+    "dash.module_dur_desc": "விதைப்பு முதல் அறுவடை வரையிலான பயிர் பயணத்தைப் பின்பற்றவும்.",
+    "dash.module_comp_desc": "பயிர் காலம், நீர் தேவை மற்றும் செலவுகளை ஒப்பிடவும்.",
+    "dash.module_budg_desc": "தொடங்குவதற்கு முன் சாகுபடி செலவுகளைத் திட்டமிடவும்.",
+    "dash.module_cal_desc": "மாதாந்திர வழிகாட்டியுடன் பருவகால பணிகளைத் திட்டமிடவும்.",
+    "dash.module_wat_desc": "நடைமுறை பாசன முறைகளைத் தேர்ந்தெடுத்து நீரைச் சேமிக்கவும்.",
+    "dash.module_hist_desc": "முந்தைய பயிர் தேர்வுகள் மற்றும் பண்ணை நிலைமைகளைப் பார்க்கவும்.",
+    "dash.module_exp_desc": "தினசரி செலவுகளைப் பதிவு செய்து வயல் குறிப்புகளைப் பராமரிக்கவும்.",
+    "dash.module_rep_desc": "உங்கள் பண்ணை பதிவுகளுக்குத் தெளிவான அறிக்கையை உருவாக்கவும்.",
+
+    // Module Cards
+    "mod.rec.title": "🌾 பயிர் பரிந்துரை",
+    "mod.rec.desc": "மண் வகை, pH, வெப்பநிலை, ஈரப்பதம் & மழையளவின் அடிப்படையில் சிறந்த பயிரை கணிக்கவும்.",
+    "mod.alt.title": "🔄 மாற்று பயிர்கள்",
+    "mod.alt.desc": "டெசிஷன் ட்ரீ மாதிரி பரிந்துரைக்கும் மாற்று பயிர் தேர்வுகளை காண்க.",
+    "mod.dur.title": "⏱️ பயிர் கால அளவு",
+    "mod.dur.desc": "விதைப்பு முதல் அறுவடை வரையிலான 4-நிலை வளர்ச்சி காலவரிசை.",
+    "mod.comp.title": "📊 பயிர் ஒப்பீடு",
+    "mod.comp.desc": "கால அளவு, நீர் தேவை, மண் பொருத்தம் மற்றும் சாகுபடி செலவுகளை ஒப்பிடுக.",
+    "mod.budg.title": "💰 செலவு கணிப்பான்",
+    "mod.budg.desc": "விதை, உழைப்பு, உரம், பாசனம் மற்றும் இயந்திர செலவுகளை நிலப்பரப்பிற்கு ஏற்ப கணிக்கவும்.",
+    "mod.cal.title": "📅 பயிர் கால அட்டவணை",
+    "mod.cal.desc": "மாதாந்திர விவசாய பணிகள் மற்றும் பருவகால சாகுபடி கால அட்டவணை.",
+    "mod.wat.title": "💧 நீர் தேவை",
+    "mod.wat.desc": "பயிரின் நீர் தேவை அளவு, சொட்டுநீர்/தெளிப்புநீர் பாசன வழிகாட்டுதல்.",
+    "mod.hist.title": "📜 பரிந்துரை வரலாறு",
+    "mod.hist.desc": "உங்கள் முந்தைய பயிர் பரிந்துரை பதிவுகளை காண்க மற்றும் அச்சிடுக.",
+    "mod.exp.title": "📝 பண்ணை செலவு & குறிப்புகள்",
+    "mod.exp.desc": "பண்ணை செலவுகளை பதிவு செய்து வயல் குறிப்புகளை பராமரிக்கவும்.",
+    "mod.rep.title": "🖨️ அறிக்கையை அச்சிடுக",
+    "mod.rep.desc": "கல்லூரி செயல்முறை மற்றும் விவசாய ஆவணத்திற்கான தெளிவான அறிக்கை.",
+
+    // Crop Recommendation Form
+    "rec.page_label": "பயிர் பரிந்துரை",
+    "rec.heading": "பயிர் பரிந்துரை",
+    "rec.subheading": "உங்கள் பண்ணை விவரங்களை உள்ளிட்டு பொருத்தமான பயிரைப் பெறுங்கள்.",
+    "rec.form_heading": "பண்ணை விவரங்கள்",
+    "rec.form_helper": "உங்கள் வயலைப் பற்றிய சில விவரங்களைப் பகிரவும்.",
+    "rec.soil_label": "மண் வகை",
+    "rec.soil_hint": "உங்கள் வயலின் மண் வகையைத் தேர்ந்தெடுக்கவும்.",
+    "rec.ph_label": "மண் pH அளவு",
+    "rec.ph_hint": "உங்கள் மண் pH மதிப்பை அமைக்க ஸ்லைடரை நகர்த்தவும்.",
+    "rec.temp_label": "வெப்பநிலை (°C)",
+    "rec.temp_hint": "வெப்பநிலையை °C-ல் உள்ளிடவும்.",
+    "rec.hum_label": "ஈரப்பதம் (%)",
+    "rec.hum_hint": "ஈரப்பத சதவீதத்தை உள்ளிடவும்.",
+    "rec.rain_label": "மழைப்பொழிவு (mm)",
+    "rec.rain_hint": "மழையளவை மில்லிமீட்டரில் உள்ளிடவும்.",
+    "rec.btn_submit": "🌱 பயிர் பரிந்துரையைப் பெறுங்கள்",
+
+    // Result Screen
+    "res.heading": "பரிந்துரைக்கப்படும் பயிர்",
+    "res.subheading": "உங்கள் பண்ணை விவரங்களுக்கு ஏற்ற பயிர்",
+    "res.duration": "பயிர் கால அளவு",
+    "res.suitable_soil": "பொருத்தமான மண்",
+    "res.water": "நீர் தேவை",
+    "res.season": "சாகுபடி பருவம்",
+    "res.variety": "பயிர் வகை",
+    "res.variety_unavailable": "இந்த பயிருக்கான வகை தகவல் இல்லை.",
+    "res.growth_timeline": "பயிர் வளர்ச்சி காலவரிசை",
+    "res.your_conditions": "உங்கள் நிலத்தின் சூழல் விவரங்கள்",
+    "res.why_heading": "ஏன் இந்த பரிந்துரை?",
+    "res.btn_alt": "🔄 மாற்று பயிர்களை காண்க",
+    "res.btn_comp": "📊 பயிர்களை ஒப்பிடுக",
+    "res.btn_dur": "⏱️ பயிர் கால அளவு",
+    "res.btn_wat": "💧 நீர் தேவை விபரம்",
+    "res.btn_cal": "📅 பயிர் கால அட்டவணை",
+    "res.btn_budg": "💰 செலவு கணக்கிடுக",
+    "res.btn_print": "🖨️ அறிக்கையை அச்சிடுக",
+    "res.btn_again": "🌱 புதிய பரிந்துரை",
+
+    // Alternative Crops
+    "alt.heading": "மாற்று பயிர் தேர்வுகள்",
+    "alt.subheading": "டெசிஷன் ட்ரீ மாதிரியின் மூலம் கண்டறியப்பட்ட மாற்று சாகுபடி வாய்ப்புகள்.",
+    "alt.primary_badge": "முதன்மை பரிந்துரை",
+    "alt.secondary_badge": "மாற்று தேர்வு",
+
+    // Crop Duration
+    "dur.heading": "பயிர் வளர்ச்சி கால அளவு & வாழ்க்கை சுழற்சி",
+    "dur.subheading": "விதைப்பு முதல் அறுவடை வரையிலான 4 படிநிலைகள் கொண்ட கால அட்டவணை.",
+    "dur.approx_duration": "தோராயமான மொத்த கால அளவு",
+    "dur.sowing": "விதைப்பு & நாற்றங்கால்",
+    "dur.vegetative": "பயிர் வளர்ச்சி நிலை",
+    "dur.flowering": "பூத்தல் & காய் உருவாக்கம்",
+    "dur.harvest": "முதிர்ச்சி & அறுவடை",
+
+    // Crop Comparison
+    "comp.heading": "ஊடாடும் பயிர் ஒப்பீட்டு பலகை",
+    "comp.subheading": "பயிர்களின் கால அளவு, நீர் தேவை, மண் மற்றும் செலவு காரணிகளை ஒப்பிடுக.",
+    "comp.col_crop": "பயிர்",
+    "comp.col_duration": "கால அளவு",
+    "comp.col_water": "நீர் தேவை",
+    "comp.col_soil": "பொருத்தமான மண்",
+    "comp.col_ph": "pH அளவு",
+    "comp.col_temp": "வெப்பநிலை",
+    "comp.col_rain": "மழைப்பொழிவு",
+    "comp.col_cost": "தோராய செலவு / ஏக்கர்",
+
+    // Budget Calculator
+    "budg.heading": "பண்ணை சாகுபடி செலவு கணிப்பான்",
+    "budg.subheading": "உங்கள் நிலப்பரப்பிற்கான உத்தேச செலவுகளை தானாக கணக்கிடுங்கள்.",
+    "budg.land_area": "நிலப்பரப்பு (ஏக்கர்)",
+    "budg.seed_cost": "விதை / நாற்று செலவு (₹)",
+    "budg.labour_cost": "கூலி / உழைப்பு செலவு (₹)",
+    "budg.fert_cost": "உரம் & எரு செலவு (₹)",
+    "budg.irrig_cost": "பாசனம் & மின் கட்டணம் (₹)",
+    "budg.mach_cost": "உழவு & இயந்திர செலவு (₹)",
+    "budg.other_cost": "இதர செலவுகள் (₹)",
+    "budg.total_cost": "மொத்த மதிப்பிடப்பட்ட சாகுபடி செலவு",
+    "budg.cost_per_acre": "ஏக்கருக்கு மதிப்பிடப்பட்ட செலவு",
+    "budg.formula_note": "சூத்திரம்: மொத்த செலவு = நிலப்பரப்பு × (விதை + கூலி + உரம் + பாசனம் + உழவு + இதர)",
+    "budg.btn_save_exp": "💾 பண்ணை செலவாக சேமிக்க",
+
+    // Crop Calendar
+    "cal.heading": "பயிர் சாகுபடி கால அட்டவணை",
+    "cal.subheading": "மாதாந்திர விவசாய பணிகள் மற்றும் பருவகால சாகுபடி காலங்கள்.",
+    "cal.select_crop": "பயிரை தேர்வு செய்க:",
+    "cal.season_info": "சாகுபடி பட்டங்கள் / பருவங்கள்",
+
+    // Water Requirement
+    "wat.heading": "பயிர் நீர் தேவை & பாசன வழிகாட்டி",
+    "wat.subheading": "நீர் தேவை மதிப்பீடு, சிறந்த பாசன முறைகள் மற்றும் நீர் மேலாண்மை குறிப்புகள்.",
+    "wat.level": "நீர் தேவை அளவு",
+    "wat.volume": "பருவத்திற்கான நீர் தேவை",
+    "wat.methods": "பரிந்துரைக்கப்படும் பாசன முறைகள்",
+    "wat.disclaimer": "⚠️ அறிவிப்பு: நீர் தேவைகள் ICAR வேளாண் தரநிலைகளின்படியான மதிப்பீடுகள் மட்டுமே, சென்சார் தரவு அல்ல.",
+    "wat.land_area": "நிலப்பரப்பு",
+    "wat.land_area_reference": "1 ஏக்கர் (100 சென்ட்)",
+    "wat.enter_land_area": "நிலப்பரப்பை உள்ளிடவும்",
+    "wat.enter_area_prompt": "நிலப்பரப்பை உள்ளிடவும்.",
+    "wat.req_label": "நீர் தேவை",
+
+    // History
+    "hist.heading": "பரிந்துரை வரலாறு",
+    "hist.subheading": "உங்கள் பண்ணைக்காக கணிக்கப்பட்ட முந்தைய பயிர் பரிந்துரை பதிவுகள்.",
+    "hist.empty": "முந்தைய பரிந்துரைகள் எதுவும் இல்லை. 'பயிர் பரிந்துரை' பொத்தானை அழுத்தவும்.",
+    "hist.col_date": "தேதி & நேரம்",
+    "hist.col_soil": "மண் வகை",
+    "hist.col_ph": "pH",
+    "hist.col_temp": "வெப்பநிலை",
+    "hist.col_hum": "ஈரப்பதம்",
+    "hist.col_rain": "மழையளவு",
+    "hist.col_crop": "பரிந்துரைக்கப்பட்ட பயிர்",
+    "hist.col_actions": "செயல்கள்",
+
+    // Expenses & Notes
+    "exp.heading": "பண்ணை செலவு பதிவேடு & குறிப்புகள்",
+    "exp.subheading": "பண்ணை செலவுகளை பதிவு செய்யவும் தினசரி வயல் குறிப்புகளை பராமரிக்கவும்.",
+    "exp.add_expense": "புதிய செலவு சேர்க்கவும்",
+    "exp.date": "தேதி",
+    "exp.time": "நேரம்",
+    "exp.category": "வகை",
+    "exp.amount": "தொகை (₹)",
+    "exp.desc": "விளக்கம்",
+    "exp.btn_add": "➕ செலவை பதிவு செய்",
+    "exp.history": "செலவு வரலாறு",
+    "exp.entries_recorded": "மொத்த செலவு பதிவுகள்",
+    "exp.empty": "செலவு பதிவுகள் எதுவும் இல்லை.",
+    "exp.total_expenses": "மொத்த பதிவு செய்யப்பட்ட செலவு",
+    "exp.cat_seeds": "விதை & நாற்று",
+    "exp.cat_labour": "பண்ணை கூலி",
+    "exp.cat_fert": "உரம் & பூச்சிக்கொல்லி",
+    "exp.cat_irrig": "பாசனம் & மின்சாரம்",
+    "exp.cat_mach": "இயந்திர உழவு & எரிபொருள்",
+    "exp.cat_other": "இதர செலவுகள்",
+    "notes.heading": "பண்ணை குறிப்புகள் & வயல் பதிவு",
+    "notes.title": "குறிப்பு தலைப்பு",
+    "notes.tag": "குறிச்சொல் / வகை",
+    "notes.content": "குறிப்பு உள்ளடக்கம்",
+    "notes.btn_save": "📌 வயல் குறிப்பை சேமி",
+    "notes.saved_heading": "சேமிக்கப்பட்ட வயல் குறிப்புகள் & நினைவூட்டல்கள்",
+    "notes.empty": "வயல் குறிப்புகள் எதுவும் இல்லை.",
+    "notes.empty_combined": "வயல் குறிப்புகள் அல்லது நினைவூட்டல்கள் எதுவும் இல்லை.",
+    "reminders.heading": "பண்ணை நினைவூட்டலைச் சேர்க்கவும்",
+    "reminders.date": "நினைவூட்டல் தேதி",
+    "reminders.time": "நினைவூட்டல் நேரம்",
+    "reminders.title": "நினைவூட்டல் தலைப்பு",
+    "reminders.description": "நினைவூட்டல் விளக்கம்",
+    "reminders.btn_save": "பண்ணை நினைவூட்டலைச் சேமி",
+    "reminders.saved_heading": "சேமிக்கப்பட்ட வயல் குறிப்புகள் & நினைவூட்டல்கள்",
+    "reminders.enable_notifications": "அறிவிப்புகளை இயக்கு",
+    "reminders.mark_complete": "முடிந்ததாகக் குறிக்கவும்",
+    "reminders.empty": "பண்ணை நினைவூட்டல்கள் எதுவும் இல்லை.",
+
+    // Print Report
+    "rep.heading": "அதிகாரப்பூர்வ பயிர் ஆலோசனை & திட்ட அறிக்கை",
+    "rep.btn_print": "🖨️ அச்சிடுக / PDF ஆக சேமி",
+    "rep.generated_by": "CROPWISE AI மூலம் உருவாக்கப்பட்டது • ஸ்மார்ட் பயிர் பரிந்துரை அமைப்பு",
+    "rep.viva_notice": "கல்லூரி இறுதி ஆண்டு செயல்முறை விளக்க ஆவணம் • பொறியியல் மற்றும் தொழில்நுட்பக் கல்லூரி",
+
+    // About & Future Scope
+    "abt.badge": "🌱 ஸ்மார்ட் விவசாய தளம்",
+    "abt.heading": "CROPWISE AI பற்றி",
+    "abt.subheading": "சிறந்த பயிர் முடிவுகளுக்கான ஸ்மார்ட் விவசாய நுண்ணறிவுகள்.",
+    "abt.how_heading": "CROPWISE AI எவ்வாறு செயல்படுகிறது",
+    "abt.project_title": "திட்ட தலைப்பு",
+    "abt.domain": "துறை",
+    "abt.domain_val": "விவசாயத்தில் இயந்திர கற்றல் / முடிவு ஆதரவு அமைப்புகள்",
+    "abt.algorithm": "இயந்திர கற்றல் அல்காரிதம்",
+    "abt.algo_val": "மண் மற்றும் காலநிலை பொருத்தம்",
+    "abt.why_dt_title": "பரிந்துரைகள் எவ்வாறு தயாரிக்கப்படுகின்றன",
+    "abt.why_dt_desc": "உங்கள் பண்ணைக்காக உள்ளிடப்பட்ட மண் மற்றும் காலநிலை விவரங்களை CROPWISE AI கருத்தில் கொண்டு, நடைமுறை சாகுபடி தகவல்களுடன் பயிர் விருப்பங்களை வழங்குகிறது.",
+    "abt.future_heading": "மேலும் ஸ்மார்ட் விவசாய அம்சங்கள்",
+    "abt.future_intro": "தற்போதைய கையேடு உள்ளீட்டு முறைக்கு அப்பால் எதிர்காலத்தில் சேர்க்கப்படவுள்ள அம்சங்கள்:",
+    "abt.future1": "📡 நேரடி வானிலை செயற்கைக்கோள் தரவு இணைப்பு",
+    "abt.future2": "💹 வேளாண் சந்தை (Mandi) நேரடி விலை நிலவர கணிப்பு",
+    "abt.future3": "🌱 மண் ஊட்டச்சத்து & உர அளவு பரிந்துரை (NPK)",
+    "abt.future4": "📱 ஆண்ட்ராய்டு / iOS மொபைல் செயலி உருவாக்கம்",
+    "abt.future5": "🗣️ விவசாயிகளுக்கு தமிழ் குரல் வழி உதவி (Tamil Voice Assistant)",
+    "abt.future6": "💧 எதிர்கால பதிப்புகளில் IoT மண் ஈரப்பதம் சென்சார் ஒருங்கிணைப்பு",
+
+    // General UI
+    "btn.view_details": "விவரங்களை காண்க",
+    "btn.print": "அறிக்கை அச்சிடுக",
+    "btn.delete": "நீக்கு",
+    "btn.save": "சேமிக்க",
+    "btn.cancel": "ரத்து செய்",
+    "msg.confirm_delete": "இந்த பதிவை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",
+    "msg.success": "வெற்றி",
+    "msg.error": "பிழை",
+    "footer.copyright": "© 2026 CROPWISE AI. எளிமையான சிறந்த விவசாயம்."
+  }
+};
+
+// Language Engine Functions
+function getCurrentLanguage() {
+  return localStorage.getItem("cropwise_lang") || "en";
+}
+
+function setLanguage(lang) {
+  if (lang !== "en" && lang !== "ta") lang = "en";
+  localStorage.setItem("cropwise_lang", lang);
+  document.cookie = "cropwise_lang=" + lang + ";path=/;max-age=31536000";
+  
+  // Update HTML lang attribute
+  document.documentElement.lang = lang === "ta" ? "ta" : "en";
+
+  // Translate all marked DOM elements
+  const dict = translations[lang] || translations.en;
+  
+  document.querySelectorAll("[data-i18n]").forEach(elem => {
+    const key = elem.getAttribute("data-i18n");
+    if (dict[key]) {
+      elem.textContent = dict[key];
+    }
+  });
+
+  document.querySelectorAll("[data-i18n-html]").forEach(elem => {
+    const key = elem.getAttribute("data-i18n-html");
+    if (dict[key]) {
+      elem.innerHTML = dict[key];
+    }
+  });
+
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(elem => {
+    const key = elem.getAttribute("data-i18n-placeholder");
+    if (dict[key]) {
+      elem.setAttribute("placeholder", dict[key]);
+    }
+  });
+
+  // Update switcher buttons UI
+  document.querySelectorAll(".lang-btn").forEach(btn => {
+    if (btn.getAttribute("data-lang") === lang) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
+
+  // Dispatch event for specialized components
+  window.dispatchEvent(new CustomEvent("languageChanged", { detail: { lang: lang } }));
+}
+
+// Global Initialization
+document.addEventListener("DOMContentLoaded", () => {
+  const savedLang = getCurrentLanguage();
+  setLanguage(savedLang);
+
+  // Setup click listeners for language switcher buttons
+  document.querySelectorAll(".lang-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const targetLang = btn.getAttribute("data-lang");
+      setLanguage(targetLang);
+    });
+  });
+});

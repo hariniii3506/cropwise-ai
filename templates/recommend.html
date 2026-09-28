@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Crop Recommendation - CROPWISE AI | பயிர் பரிந்துரை{% endblock %}
+
+{% block content %}
+<div class="container recommend-page">
+  <div class="recommend-back-link">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline" data-i18n="nav.back_dashboard">← Back to Dashboard</a>
+  </div>
+
+  <div class="recommend-layout">
+    <div class="recommend-left-column">
+      <section class="recommend-intro-panel">
+        <div class="crop-image-container">
+          <img src="{{ url_for('static', filename='images/pngtree-thai-farmer-transplanting-rice-seedlings-in-paddy-field-image_15911646.jpg') }}" alt="Thai farmer transplanting rice seedlings in a paddy field" class="crop-recommendation-image">
+        </div>
+        <div class="crop-recommendation-content">
+          <p class="recommend-eyebrow" data-i18n="rec.page_label">CROP RECOMMENDATION</p>
+          <h1 class="recommend-page-title" data-i18n="rec.heading">Crop Recommendation</h1>
+          <div class="recommend-tamil-title">பயிர் பரிந்துரை</div>
+          <p data-i18n="rec.subheading">Enter your farm details to get a suitable crop recommendation.</p>
+        </div>
+      </section>
+
+      <section class="recommend-how-card" aria-labelledby="recommendHowTitle">
+        <h2 id="recommendHowTitle">🌱 How Crop Recommendation Works</h2>
+        <div class="recommend-how-steps">
+          <article class="recommend-how-step">
+            <div class="recommend-step-marker"><span>1</span><strong>📝</strong></div>
+            <div>
+              <h3>Enter Farm Details</h3>
+              <p>Provide your soil type, pH, temperature, humidity and rainfall.</p>
+            </div>
+          </article>
+          <article class="recommend-how-step">
+            <div class="recommend-step-marker"><span>2</span><strong>🧠</strong></div>
+            <div>
+              <h3>AI Analyzes Conditions</h3>
+              <p>The system analyzes the entered soil and environmental conditions.</p>
+            </div>
+          </article>
+          <article class="recommend-how-step">
+            <div class="recommend-step-marker"><span>3</span><strong>🌱</strong></div>
+            <div>
+              <h3>Get Suitable Crop</h3>
+              <p>The system provides a suitable crop recommendation.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="recommend-info-card" aria-labelledby="recommendInfoTitle">
+        <h2 id="recommendInfoTitle">Information Needed</h2>
+        <div class="recommend-info-items">
+          <div class="recommend-info-item"><span class="recommend-info-icon">🌱</span><span class="recommend-info-label">Soil Type</span></div>
+          <div class="recommend-info-item"><span class="recommend-info-icon">🧪</span><span class="recommend-info-label">Soil pH</span></div>
+          <div class="recommend-info-item"><span class="recommend-info-icon">🌡️</span><span class="recommend-info-label">Temperature</span></div>
+          <div class="recommend-info-item"><span class="recommend-info-icon">💧</span><span class="recommend-info-label">Humidity</span></div>
+          <div class="recommend-info-item"><span class="recommend-info-icon">🌧️</span><span class="recommend-info-label">Annual Rainfall</span></div>
+        </div>
+      </section>
+    </div>
+
+    <section class="card recommend-form-card">
+      <div class="recommend-form-heading">
+        <span class="recommend-section-icon">🌱</span>
+        <div>
+          <h2 data-i18n="rec.form_heading">Farm Details</h2>
+          <p data-i18n="rec.form_helper">Share a few details about your field.</p>
+        </div>
+      </div>
+
+      <form action="{{ url_for('recommend') }}" method="POST" id="cropRecommendForm">
+        <div class="form-group">
+          <label class="form-label" for="soilTypeSelect" data-i18n="rec.soil_label">Soil Type</label>
+          <select id="soilTypeSelect" name="soil_type" class="form-control" required>
+            {% for st in soil_types %}
+              <option value="{{ st }}" {% if current_user and (current_user.preferred_soil == st or (st == 'Clay' and current_user.preferred_soil == 'Clayey')) %}selected{% endif %}>
+                {{ st }}
+                {%- if st == 'Alluvial' %} (ஆற்று வண்டல் மண்)
+                {%- elif st == 'Black' %} (கரிசல் மண்)
+                {%- elif st == 'Clay' or st == 'Clayey' %} (களிமண்)
+                {%- elif st == 'Laterite' %} (சரளை மண்)
+                {%- elif st == 'Loamy' %} (வண்டல் / பொறை மண்)
+                {%- elif st == 'Red' %} (செம்மண்)
+                {%- elif st == 'Sandy' %} (மணற்பாங்கான மண்)
+                {%- endif %}
+              </option>
+            {% endfor %}
+          </select>
+          <div class="form-hint" data-i18n="rec.soil_hint">Select the soil type of your field.</div>
+        </div>
+
+        <div class="form-group recommend-ph-field">
+          <div class="form-label">
+            <span data-i18n="rec.ph_label">Soil pH Level</span>
+            <span id="phValDisplay" class="form-label-val">6.5</span>
+          </div>
+          <div class="range-slider-wrapper">
+            <span class="range-min">0.0</span>
+            <input type="range" id="phRange" name="ph" class="range-slider" min="0.0" max="14.0" step="0.1" value="6.5" required>
+            <span class="range-max">14.0</span>
+          </div>
+          <div id="phStatusText" class="recommend-ph-status">Neutral / Ideal</div>
+          <div class="form-hint" data-i18n="rec.ph_hint">Move the slider to set your soil pH value.</div>
+        </div>
+
+        <div class="form-grid recommend-input-grid">
+          <div class="form-group">
+            <label class="form-label" for="inputTemp" data-i18n="rec.temp_label">Temperature (°C)</label>
+            <input type="number" step="0.1" min="5.0" max="55.0" id="inputTemp" name="temperature" class="form-control" placeholder="e.g. 28" required>
+            <div class="form-hint" data-i18n="rec.temp_hint">Enter the temperature in °C.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inputHumidity" data-i18n="rec.hum_label">Humidity (%)</label>
+            <input type="number" step="0.1" min="10.0" max="100.0" id="inputHumidity" name="humidity" class="form-control" placeholder="e.g. 75" required>
+            <div class="form-hint" data-i18n="rec.hum_hint">Enter the humidity percentage.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="inputRainfall" data-i18n="rec.rain_label">Annual Rainfall (mm)</label>
+          <input type="number" step="0.1" min="100.0" max="3500.0" id="inputRainfall" name="rainfall" class="form-control" placeholder="e.g. 1400" required>
+          <div class="form-hint" data-i18n="rec.rain_hint">Enter the rainfall value in millimetres.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg recommend-submit" data-i18n="rec.btn_submit" id="btnSubmitRecommend">🌱 Get Crop Recommendation</button>
+      </form>
+    </section>
+  </div>
+</div>
+{% endblock %}

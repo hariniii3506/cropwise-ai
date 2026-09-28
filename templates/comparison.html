@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Crop Comparison - CROPWISE AI | பயிர் ஒப்பீடு{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 30px; padding-bottom: 50px;">
+  <div style="margin-bottom: 24px;">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline" data-i18n="nav.back_dashboard">← Back to Dashboard</a>
+  </div>
+
+  <div class="comparison-heading-wrapper">
+    <h1 class="section-title" data-i18n="comp.heading">Interactive Multi-Crop Comparison</h1>
+    <h2 class="tamil-subtitle">ஊடாடும் பயிர் ஒப்பீட்டு பலகை</h2>
+    <p class="section-subtitle" data-i18n="comp.subheading">
+      Compare key agronomic parameters and financial requirements across crops based on authentic agricultural benchmark data.
+    </p>
+  </div>
+
+  <!-- Multi-Crop Selector Checkboxes -->
+  <div class="card" style="padding: 20px; margin-bottom: 24px;">
+    <form method="GET" action="{{ url_for('comparison') }}">
+      <div style="font-size: 0.95rem; font-weight: 700; color: var(--color-primary-dark); margin-bottom: 12px;">
+        Select Crops to Compare:
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+        {% for c_name, c_data in all_crops.items() %}
+          <label style="display: inline-flex; align-items: center; gap: 6px; background: var(--color-bg-alt); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.88rem; cursor: pointer; border: 1px solid var(--color-card-border);">
+            <input 
+              type="checkbox" 
+              name="crops" 
+              value="{{ c_name }}"
+              {% if c_data in compared_crops %}checked{% endif %}
+            >
+            <span>{{ c_name }} ({{ c_data.tamil_name }})</span>
+          </label>
+        {% endfor %}
+      </div>
+      <div style="margin-top: 14px;">
+        <button type="submit" class="btn btn-sm btn-primary">Update Comparison Table</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Comparison Matrix Table -->
+  <div class="table-responsive">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th data-i18n="comp.col_crop">Crop</th>
+          <th data-i18n="comp.col_duration">Duration</th>
+          <th data-i18n="comp.col_water">Water Need</th>
+          <th data-i18n="comp.col_soil">Ideal Soil</th>
+          <th data-i18n="comp.col_ph">pH Range</th>
+          <th data-i18n="comp.col_temp">Temperature</th>
+          <th data-i18n="comp.col_rain">Rainfall</th>
+          <th data-i18n="comp.col_cost">Estimated Cost / Acre</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in compared_crops %}
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.4rem;">🌾</span>
+                <div>
+                  <strong>{{ c.name }}</strong>
+                  <div style="font-size: 0.8rem; color: var(--color-primary); font-weight: 600;">{{ c.tamil_name }}</div>
+                </div>
+              </div>
+            </td>
+            <td><strong>{{ c.duration_days }}</strong></td>
+            <td>
+              <span style="display: inline-block; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 0.8rem; font-weight: 700; background: {% if c.water_requirement == 'High' %}#FFEBEB; color: #C92A2A;{% elif c.water_requirement == 'Moderate' %}#E8F5E9; color: #2D6A4F;{% else %}#D8F3DC; color: #1B4332;{% endif %}">
+                {{ c.water_requirement }}
+              </span>
+              <div style="font-size: 0.78rem; color: var(--color-text-muted);">{{ c.water_mm_range }}</div>
+            </td>
+            <td>{{ c.ideal_soil|join(', ') }}</td>
+            <td>{{ c.ph_range }}</td>
+            <td>{{ c.temp_range }}</td>
+            <td>{{ c.rainfall_range }}</td>
+            <td>
+              <strong style="color: var(--color-primary-dark);">
+                ₹{{ "{:,.0f}".format(c.cost_per_acre.total_estimate) }}
+              </strong>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

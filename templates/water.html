@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Water Requirement: {{ crop.name }} - CROPWISE AI | நீர் தேவை{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 30px; padding-bottom: 50px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px;">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline" data-i18n="nav.back_dashboard">← Back to Dashboard</a>
+
+    <!-- Crop Selector Form -->
+    <form method="GET" action="{{ url_for('water') }}" style="display: flex; align-items: center; gap: 10px;">
+      <label for="waterCropSelect" style="font-weight: 600; font-size: 0.9rem;">Select Crop:</label>
+      <select id="waterCropSelect" name="crop" class="form-control" onchange="this.form.submit()" style="padding: 6px 14px; width: auto;">
+        {% for c_name, c_data in all_crops.items() %}
+          <option value="{{ c_name }}" {% if c_name == crop.name %}selected{% endif %}>
+            {{ c_name }} ({{ c_data.tamil_name }})
+          </option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  <div class="water-heading-wrapper">
+    <h1 class="section-title" data-i18n="wat.heading">Crop Water Requirement &amp; Irrigation Guide</h1>
+    <h2 class="tamil-subtitle">பயிர் நீர் தேவை &amp; பாசன வழிகாட்டி</h2>
+    <p class="section-subtitle" data-i18n="wat.subheading">
+      Water volume estimates, suitable irrigation methods, and water conservation guidelines for <strong>{{ crop.name }} ({{ crop.tamil_name }})</strong>.
+    </p>
+  </div>
+
+  <!-- Disclaimer Notice -->
+  <div style="background-color: var(--color-leaf-subtle); border-left: 4px solid var(--color-primary); padding: 12px 16px; border-radius: 4px; margin-bottom: 28px; font-size: 0.88rem; color: var(--color-primary-dark);" data-i18n="wat.disclaimer">
+    ⚠️ Manual Advisory Notice: Water requirements are agronomic estimates based on ICAR standards, not live soil moisture sensors.
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 30px;">
+    <!-- Water Requirement Rating -->
+    <div class="card" id="waterNeedCard" data-water-range="{{ crop.water_mm_range }}">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+        <div style="width: 50px; height: 50px; border-radius: 12px; background: var(--color-leaf-subtle); display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
+          💧
+        </div>
+        <div>
+          <div style="font-size: 0.85rem; color: var(--color-text-muted);" data-i18n="wat.level">Water Requirement Level</div>
+          <h3 style="font-size: 1.6rem; color: var(--color-primary-dark); font-weight: 800;">
+            {{ crop.water_requirement }} ({{ crop.water_requirement_ta }})
+          </h3>
+        </div>
+      </div>
+
+      <div style="background: var(--color-bg-alt); padding: 14px; border-radius: var(--radius-sm); font-size: 0.92rem; margin-bottom: 18px;">
+        <span data-i18n="wat.volume">Seasonal Water Need:</span>
+        <strong style="color: var(--color-primary); font-size: 1.1rem; margin-left: 6px;">{{ crop.water_mm_range }}</strong>
+        <div style="margin-top: 10px; color: var(--color-text-main);">
+          <span data-i18n="wat.land_area">Land Area</span>
+          <strong style="display: block; color: var(--color-primary-dark); margin-top: 2px;" data-i18n="wat.land_area_reference">1 Acre (100 Cent)</strong>
+        </div>
+      </div>
+
+      <!-- Land Area Section -->
+      <div class="water-land-area-section" style="border-top: 1px solid var(--color-card-border); padding-top: 16px;">
+        <label class="form-label" style="font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--color-text-main); display: block;" data-i18n="wat.land_area">Land Area</label>
+        <div class="unit-selector-wrapper" style="display: flex; gap: 8px; margin-bottom: 10px;">
+          <button type="button" class="btn-unit active" id="unitAcreBtn" data-unit="Acre">Acre</button>
+          <button type="button" class="btn-unit" id="unitCentBtn" data-unit="Cent">Cent</button>
+        </div>
+        <input 
+          type="number" 
+          step="any" 
+          min="0" 
+          id="waterLandAreaInput" 
+          name="land_area" 
+          class="form-control" 
+          placeholder="Enter land area" 
+          data-i18n-placeholder="wat.enter_land_area"
+          value=""
+          autocomplete="off"
+          style="width: 100%;"
+        >
+
+        <!-- Dynamic Land Area Water Requirement Calculation Display -->
+        <div id="waterCalcResult" class="water-calc-result" style="margin-top: 14px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--color-bg-alt); border: 1px solid var(--color-card-border); font-size: 0.88rem;">
+          <div id="waterCalcPrompt" style="color: var(--color-text-muted); display: flex; align-items: center; gap: 8px;">
+            <span>💧</span> <span data-i18n="wat.enter_area_prompt">Please enter land area.</span>
+          </div>
+          <div id="waterCalcOutput" style="display: none;">
+            <div style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 2px;" data-i18n="wat.req_label">Water Requirement</div>
+            <strong id="waterCalcVolumeText" style="color: var(--color-primary); font-size: 1.15rem; font-weight: 800; display: block;">{{ crop.water_mm_range }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommended Irrigation Methods -->
+    <div class="card">
+      <h3 class="card-title" style="margin-bottom: 14px;" data-i18n="wat.methods">
+        Recommended Irrigation Methods
+      </h3>
+      <ul style="list-style-type: disc; margin-left: 20px; color: var(--color-text-main); font-size: 0.92rem; line-height: 1.8;">
+        {% for method in crop.irrigation_methods %}
+          <li><strong>{{ method }}</strong></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Water Conservation Advisory -->
+  <div class="card">
+    <h3 class="card-title" style="margin-bottom: 16px;">💡 Water Saving &amp; Critical Stage Recommendations</h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--color-primary-dark); margin-bottom: 8px;">English Recommendations:</h4>
+        <ul style="list-style-type: square; margin-left: 20px; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.7;">
+          {% for tip in crop.advisory_tips %}
+            <li>{{ tip }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--color-primary-dark); margin-bottom: 8px;">நீர்ப்பாசன பரிந்துரைகள் (தமிழ்):</h4>
+        <ul style="list-style-type: square; margin-left: 20px; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.7;">
+          {% for tip in crop.advisory_tips_ta %}
+            <li>{{ tip }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

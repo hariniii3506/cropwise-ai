@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}CROPWISE AI - Smart Crop Recommendation System | ஸ்மார்ட் பயிர் பரிந்துரை அமைப்பு{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-grid">
+      <!-- Left Column: Copy & Actions -->
+      <div class="hero-content">
+        <div class="hero-badge" data-i18n="hero.badge">
+          🌱 Practical guidance for your farm
+        </div>
+        
+        <h1 class="hero-title" data-i18n="hero.heading">
+          CROPWISE AI
+        </h1>
+        
+        <div class="hero-tamil-title" data-i18n="hero.tamil_title">
+          ஸ்மார்ட் பயிர் பரிந்துரை அமைப்பு
+        </div>
+        
+        <p class="hero-desc" data-i18n="hero.desc">
+          Get suitable crop recommendations based on your soil and farm conditions.
+        </p>
+
+        <div class="hero-actions">
+          {% if session.get('user_id') %}
+            <a href="{{ url_for('recommend') }}" class="btn btn-primary btn-lg" data-i18n="rec.btn_submit" id="heroBtnRecommend">
+              🌱 Recommend Optimal Crop
+            </a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-lg" data-i18n="nav.dashboard" id="heroBtnDash">
+              🏡 Farmer Dashboard
+            </a>
+          {% else %}
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg" data-i18n="hero.cta_start" id="heroBtnGetStarted">
+              Get Started
+            </a>
+            <a href="#how-it-works" class="btn btn-secondary btn-lg" data-i18n="hero.cta_how" id="heroBtnHow">
+              Explore How It Works
+            </a>
+          {% endif %}
+        </div>
+
+        <div class="hero-input-strip" aria-label="Farm details used for guidance">
+          <span>Soil</span>
+          <span>pH</span>
+          <span>Temperature</span>
+          <span>Humidity</span>
+          <span>Rainfall</span>
+        </div>
+      </div>
+
+      <!-- Right Column: Visual Artwork -->
+      <div class="hero-visual">
+        <img src="{{ url_for('static', filename='images/pngtree-thai-farmer-transplanting-rice-seedlings-in-paddy-field-image_15911646.jpg') }}" alt="Modern Agricultural Decision Support" class="hero-art-img">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Core Features Section -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title" data-i18n="feat.heading">Core Features &amp; Agronomic Intelligence</h2>
+      <p class="section-subtitle" data-i18n="feat.subheading">Simple tools for practical farm decisions.</p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Feature 1: Soil Analysis -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">🌱</div>
+        <h3 class="feature-title" data-i18n="feat.soil.title">🌱 Soil Analysis</h3>
+        <p class="feature-desc" data-i18n="feat.soil.desc">
+          Understand the entered soil texture (Clayey, Sandy, Loamy, Black, Red, Alluvial, Laterite) and alkalinity/acidity profile.
+        </p>
+      </div>
+
+      <!-- Feature 2: Environmental Conditions -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">🌦️</div>
+        <h3 class="feature-title" data-i18n="feat.env.title">🌦️ Environmental Conditions</h3>
+        <p class="feature-desc" data-i18n="feat.env.desc">
+          Analyze pH levels (0-14), ambient temperature, relative humidity, and annual rainfall tolerances.
+        </p>
+      </div>
+
+      <!-- Feature 3: Crop suitability -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">🌾</div>
+        <h3 class="feature-title" data-i18n="feat.tree.title">🌾 Crop Suitability</h3>
+        <p class="feature-desc" data-i18n="feat.tree.desc">
+          Review crop options that fit the conditions of your field.
+        </p>
+      </div>
+
+      <!-- Feature 4: Smart Recommendation -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">🌾</div>
+        <h3 class="feature-title" data-i18n="feat.rec.title">🌾 Smart Recommendation</h3>
+        <p class="feature-desc" data-i18n="feat.rec.desc">
+          Receive the most optimal crop suited for your farm conditions alongside realistic alternatives and complete cultivation guides.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="section" id="how-it-works" style="background-color: var(--color-bg-alt);">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title" data-i18n="how.heading">How CROPWISE AI Works</h2>
+      <p class="section-subtitle" data-i18n="how.subheading">4 simple steps from soil inputs to comprehensive agricultural advisory.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card" style="background: #FFFFFF;">
+        <div class="feature-icon-wrapper" style="background-color: #E8F5E9; color: #2D6A4F; font-weight: 800; font-size: 1.2rem;">1</div>
+        <h3 class="feature-title" data-i18n="how.step1.title">1. Enter Farm Conditions</h3>
+        <p class="feature-desc" data-i18n="how.step1.desc">
+          Manually input your farm's Soil Type, pH Level, Temperature, Humidity, and Rainfall.
+        </p>
+      </div>
+
+      <div class="feature-card" style="background: #FFFFFF;">
+        <div class="feature-icon-wrapper" style="background-color: #E8F5E9; color: #2D6A4F; font-weight: 800; font-size: 1.2rem;">2</div>
+        <h3 class="feature-title" data-i18n="how.step2.title">2. Check Field Conditions</h3>
+        <p class="feature-desc" data-i18n="how.step2.desc">
+          Your details are compared with suitable growing conditions for each crop.
+        </p>
+      </div>
+
+      <div class="feature-card" style="background: #FFFFFF;">
+        <div class="feature-icon-wrapper" style="background-color: #E8F5E9; color: #2D6A4F; font-weight: 800; font-size: 1.2rem;">3</div>
+        <h3 class="feature-title" data-i18n="how.step3.title">3. Crop Recommendation</h3>
+        <p class="feature-desc" data-i18n="how.step3.desc">
+          Get the primary recommended crop with authentic suitability rationale and alternatives.
+        </p>
+      </div>
+
+      <div class="feature-card" style="background: #FFFFFF;">
+        <div class="feature-icon-wrapper" style="background-color: #E8F5E9; color: #2D6A4F; font-weight: 800; font-size: 1.2rem;">4</div>
+        <h3 class="feature-title" data-i18n="how.step4.title">4. Complete Farm Advisory</h3>
+        <p class="feature-desc" data-i18n="how.step4.desc">
+          Access growth duration timelines, water guides, monthly calendars, and budget calculators.
+        </p>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px;">
+      <a href="{{ url_for('register' if not session.get('user_id') else 'recommend') }}" class="btn btn-primary btn-lg" id="btnExploreAppNow">
+        🌱 Try Recommendation Now
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

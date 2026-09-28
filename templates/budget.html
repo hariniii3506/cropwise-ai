@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Farm Budget Calculator - CROPWISE AI | செலவு கணிப்பான்{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 30px; padding-bottom: 50px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px;">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline" data-i18n="nav.back_dashboard">← Back to Dashboard</a>
+
+    <!-- Crop Selector Form -->
+    <form method="GET" action="{{ url_for('budget') }}" style="display: flex; align-items: center; gap: 10px;">
+      <label for="budgetCropSelect" style="font-weight: 600; font-size: 0.9rem;">Pre-fill Crop Costs:</label>
+      <select id="budgetCropSelect" name="crop" class="form-control" onchange="this.form.submit()" style="padding: 6px 14px; width: auto;">
+        {% for c in all_crops %}
+          <option value="{{ c }}" {% if c == crop.name %}selected{% endif %}>{{ c }} ({{ crop_database[c].tamil_name if c in crop_database else '' }})</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  <div class="budget-heading-wrapper">
+    <h1 class="section-title" data-i18n="budg.heading">Farm Cultivation Budget Calculator</h1>
+    <h2 class="tamil-subtitle">பண்ணை சாகுபடி செலவு கணிப்பான்</h2>
+    <p class="section-subtitle" data-i18n="budg.subheading">
+      Calculate estimated input and operational costs for your land area based on baseline agronomic cost models for <strong>{{ crop.name }} ({{ crop.tamil_name }})</strong>.
+    </p>
+  </div>
+
+  <div class="grid-2-col" style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; align-items: start;">
+    <!-- Left: Input Form -->
+    <div class="card" style="padding: 30px;">
+      <h3 class="card-title" style="margin-bottom: 20px;">Cost Inputs (Per Acre Baseline)</h3>
+
+      <form id="budgetCalcForm" action="{{ url_for('add_new_expense') }}" method="POST">
+        <!-- Land Area -->
+        <div class="form-group">
+          <label class="form-label" for="calcLandArea" data-i18n="budg.land_area">Land Area (Acres)</label>
+          <input 
+            type="number" 
+            step="0.1" 
+            min="0.1" 
+            id="calcLandArea" 
+            class="form-control" 
+            value="{{ user.land_area if user else 2.0 }}" 
+            required
+          >
+        </div>
+
+        <div class="form-grid">
+          <!-- Seed Cost -->
+          <div class="form-group">
+            <label class="form-label" for="calcSeed" data-i18n="budg.seed_cost">Seed / Sapling Cost (₹)</label>
+            <input 
+              type="number" 
+              step="50" 
+              id="calcSeed" 
+              class="form-control" 
+              value="{{ crop.cost_per_acre.seed }}" 
+              required
+            >
+          </div>
+
+          <!-- Labour Cost -->
+          <div class="form-group">
+            <label class="form-label" for="calcLabour" data-i18n="budg.labour_cost">Labour Cost (₹)</label>
+            <input 
+              type="number" 
+              step="100" 
+              id="calcLabour" 
+              class="form-control" 
+              value="{{ crop.cost_per_acre.labour }}" 
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Fertilizer Cost -->
+          <div class="form-group">
+            <label class="form-label" for="calcFert" data-i18n="budg.fert_cost">Fertilizer &amp; Manure (₹)</label>
+            <input 
+              type="number" 
+              step="100" 
+              id="calcFert" 
+              class="form-control" 
+              value="{{ crop.cost_per_acre.fertilizer }}" 
+              required
+            >
+          </div>
+
+          <!-- Irrigation Cost -->
+          <div class="form-group">
+            <label class="form-label" for="calcIrrig" data-i18n="budg.irrig_cost">Irrigation &amp; Power (₹)</label>
+            <input 
+              type="number" 
+              step="50" 
+              id="calcIrrig" 
+              class="form-control" 
+              value="{{ crop.cost_per_acre.irrigation }}" 
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Machinery / Tillage Cost -->
+          <div class="form-group">
+            <label class="form-label" for="calcMach" data-i18n="budg.mach_cost">Machinery &amp; Tillage (₹)</label>
+            <input 
+              type="number" 
+              step="100" 
+              id="calcMach" 
+              class="form-control" 
+              value="{{ crop.cost_per_acre.machinery }}" 
+              required
+            >
+          </div>
+
+          <!-- Other Expenses -->
+          <div class="form-group">
+            <label class="form-label" for="calcOther" data-i18n="budg.other_cost">Other / Misc Expenses (₹)</label>
+            <input 
+              type="number" 
+              step="50" 
+              id="calcOther" 
+              class="form-control" 
+              value="{{ crop.cost_per_acre.other }}" 
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-hint" style="margin-top: 10px;" data-i18n="budg.formula_note">
+          Formula: Total Cost = Land Area × (Seed + Labour + Fertilizer + Irrigation + Machinery + Other)
+        </div>
+      </form>
+    </div>
+
+    <!-- Right: Calculation Summary Box -->
+    <div>
+      <div class="budget-summary-box">
+        <span style="font-size: 0.9rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; color: #D8F3DC;" data-i18n="budg.total_cost">
+          Total Estimated Cultivation Cost
+        </span>
+        <div id="calcTotalCost" class="budget-total-val">₹0</div>
+        <div id="calcCostPerAcre" class="budget-acre-val">₹0 / acre</div>
+      </div>
+
+      <!-- Quick Save to Farm Expenses Card -->
+      <div class="card" style="margin-top: 20px; padding: 24px;">
+        <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--color-primary-dark); margin-bottom: 8px;">
+          Log to Farm Ledger
+        </h4>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 16px;">
+          Save this cultivation estimate into your farm expenses log.
+        </p>
+
+        <form action="{{ url_for('add_new_expense') }}" method="POST">
+          <input type="hidden" name="category" value="Seeds">
+          <input type="hidden" name="amount" value="{{ crop.cost_per_acre.total_estimate }}">
+          <input type="hidden" name="description" value="Estimated cultivation budget for {{ crop.name }} ({{ user.land_area if user else 1 }} Acres)">
+          
+          <button type="submit" class="btn btn-sm btn-primary" style="width: 100%;" data-i18n="budg.btn_save_exp">
+            💾 Save as Farm Expense
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

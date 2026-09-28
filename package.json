@@ -1,0 +1,21 @@
+
+{
+  "name": "farmer",
+  "version": "1.0.0",
+  "description": "**Academic Project Title:** Smart Crop Recommendation System using Decision Tree Machine Learning   **Tagline:** Smart Farming. Better Crop Decisions. (சிறந்த விவசாயம் • சிறந்த பயிர் தேர்வு)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.0"
+  }
+}

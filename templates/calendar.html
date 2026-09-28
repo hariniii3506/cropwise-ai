@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Crop Calendar: {{ crop.name }} - CROPWISE AI | பயிர் கால அட்டவணை{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 30px; padding-bottom: 50px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px;">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline" data-i18n="nav.back_dashboard">← Back to Dashboard</a>
+
+    <!-- Crop Selector Form -->
+    <form method="GET" action="{{ url_for('calendar') }}" style="display: flex; align-items: center; gap: 10px;">
+      <label for="calCropSelect" style="font-weight: 600; font-size: 0.9rem;" data-i18n="cal.select_crop">Select Crop:</label>
+      <select id="calCropSelect" name="crop" class="form-control" onchange="this.form.submit()" style="padding: 6px 14px; width: auto;">
+        {% for c_name, c_data in all_crops.items() %}
+          <option value="{{ c_name }}" {% if c_name == crop.name %}selected{% endif %}>
+            {{ c_name }} ({{ c_data.tamil_name }})
+          </option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  <div class="calendar-heading-wrapper">
+    <h1 class="section-title" data-i18n="cal.heading">Visual Crop Cultivation Calendar</h1>
+    <h2 class="tamil-subtitle">பயிர் சாகுபடி கால அட்டவணை</h2>
+    <p class="section-subtitle" data-i18n="cal.subheading">
+      Month-by-month agricultural operations and agro-climatic seasons for <strong>{{ crop.name }} ({{ crop.tamil_name }})</strong>.
+    </p>
+  </div>
+
+  <!-- Seasonal Information Banner -->
+  <div class="card" style="background-color: var(--color-leaf-subtle); border-color: var(--color-leaf-light); margin-bottom: 30px;">
+    <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 6px;" data-i18n="cal.season_info">
+      Cropping Seasons &amp; Agro-Climatic Windows
+    </h3>
+    <div style="font-size: 0.95rem; color: var(--color-text-main);">
+      <strong>English:</strong> {{ crop.seasons }}
+    </div>
+    <div style="font-size: 0.95rem; color: var(--color-primary); font-weight: 600; margin-top: 4px;">
+      <strong>தமிழ்:</strong> {{ crop.seasons_ta }}
+    </div>
+  </div>
+
+  <!-- Month by Month Activities Grid -->
+  <div class="features-grid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));">
+    {% for cal in crop.calendar %}
+      <div class="feature-card" style="padding: 20px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid var(--color-card-border); padding-bottom: 8px;">
+          <h4 style="font-size: 1.15rem; font-weight: 800; color: var(--color-primary-dark);">
+            {{ cal.month }}
+          </h4>
+          <span style="font-size: 0.85rem; font-weight: 700; color: var(--color-primary); background: var(--color-leaf-subtle); padding: 2px 8px; border-radius: var(--radius-sm);">
+            {{ cal.month_ta }}
+          </span>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--color-text-main); line-height: 1.5;">
+          {{ cal.activity }}
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 200" width="260" height="200">
+          <rect width="260" height="200" rx="18" fill="#F0F9F4"/>
+          <!-- Soft Background Badge -->
+          <circle cx="130" cy="82" r="54" fill="#FFFFFF" filter="drop-shadow(0 6px 14px rgba(0,0,0,0.06))"/>
+          <text x="130" y="98" text-anchor="middle" font-size="54">☁️</text>
+          <!-- Crop Names -->
+          <text x="130" y="156" text-anchor="middle" font-family="'Outfit', 'Inter', sans-serif" font-size="18" font-weight="800" fill="#52B788">Cotton</text>
+          <text x="130" y="176" text-anchor="middle" font-family="'Inter', sans-serif" font-size="13" font-weight="600" fill="#606C38">பருத்தி • <tspan font-size="11" font-weight="500">White Gold</tspan></text>
+        </svg>

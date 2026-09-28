@@ -1,0 +1,72 @@
+{
+  "model_type": "DecisionTreeClassifier",
+  "algorithm": "Decision Tree (CART Gini Criterion)",
+  "features": [
+    "Soil_Type",
+    "pH",
+    "Temperature",
+    "Humidity",
+    "Rainfall"
+  ],
+  "soil_types": [
+    "Alluvial",
+    "Black",
+    "Clayey",
+    "Laterite",
+    "Loamy",
+    "Red",
+    "Sandy"
+  ],
+  "crops": [
+    "Banana",
+    "Black Gram",
+    "Chickpea",
+    "Coconut",
+    "Coffee",
+    "Cotton",
+    "Groundnut",
+    "Jute",
+    "Maize",
+    "Millets",
+    "Paddy",
+    "Sugarcane",
+    "Tea",
+    "Wheat"
+  ],
+  "test_accuracy": 0.8922,
+  "cv_accuracy_mean": 0.8806,
+  "tree_depth": 12,
+  "total_leaves": 155,
+  "feature_importances": {
+    "Soil_Type": 0.1112,
+    "pH": 0.1177,
+    "Temperature": 0.2079,
+    "Humidity": 0.137,
+    "Rainfall": 0.4262
+  },
+  "soil_mapping": {
+    "Alluvial": 0,
+    "Black": 1,
+    "Clayey": 2,
+    "Laterite": 3,
+    "Loamy": 4,
+    "Red": 5,
+    "Sandy": 6
+  },
+  "crop_mapping": {
+    "Banana": 0,
+    "Black Gram": 1,
+    "Chickpea": 2,
+    "Coconut": 3,
+    "Coffee": 4,
+    "Cotton": 5,
+    "Groundnut": 6,
+    "Jute": 7,
+    "Maize": 8,
+    "Millets": 9,
+    "Paddy": 10,
+    "Sugarcane": 11,
+    "Tea": 12,
+    "Wheat": 13
+  }
+}

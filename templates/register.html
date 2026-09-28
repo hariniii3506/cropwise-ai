@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Farmer Registration - CROPWISE AI | விவசாயி பதிவு{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper register-page">
+  <div class="auth-container register-container">
+    <!-- Left: Agricultural photo side -->
+    <div class="auth-visual-side register-visual-side">
+      <img src="{{ url_for('static', filename='images/login-farmer.svg') }}"
+        alt="Indian farmer standing in a green crop field" class="auth-art-img register-art-img">
+    </div>
+
+    <!-- Right: Registration Form Side -->
+    <div class="auth-form-side register-form-side">
+      <h2 class="auth-heading" data-i18n="auth.create_account">Create Your Farmer Account</h2>
+      <div class="register-tamil-heading">உங்கள் விவசாயி கணக்கை உருவாக்குங்கள்</div>
+      <p class="auth-subtitle" data-i18n="auth.register_subtitle">Join CROPWISE AI to make informed agricultural
+        decisions.</p>
+
+      <form action="{{ url_for('register') }}" method="POST" id="registerForm">
+        <div class="form-grid">
+          <!-- Full Name -->
+          <div class="form-group">
+            <label class="form-label" for="regName" data-i18n="auth.name">Full Name</label>
+            <input type="text" id="regName" name="name" class="form-control" placeholder="e.g. Ramasamy / Murugan"
+              data-i18n-placeholder="auth.name_placeholder" pattern="[A-Za-z\s]+"
+              title="எழுத்துக்களை மட்டும் உள்ளிடவும் (Only letters and spaces)" required>
+          </div>
+
+          <!-- Mobile Number -->
+          <div class="form-group">
+            <label class="form-label" for="regMobile" data-i18n="auth.mobile">Mobile Number</label>
+            <input type="tel" id="regMobile" name="mobile" class="form-control" placeholder="10-digit mobile number"
+              data-i18n-placeholder="auth.mobile_placeholder" pattern="[6-9][0-9]{9}" maxlength="10"
+              title="சரியான 10 இலக்க இந்திய மொபைல் எண்ணை உள்ளிடவும்" required>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Email Address -->
+          <div class="form-group">
+            <label class="form-label" for="regEmail" data-i18n="auth.email">Email Address</label>
+            <input type="email" id="regEmail" name="email" class="form-control" placeholder="farmer@example.com"
+              data-i18n-placeholder="auth.email_placeholder" required>
+          </div>
+
+          <!-- Farm Location -->
+          <div class="form-group">
+            <label class="form-label" for="regLocation" data-i18n="auth.location">Farm Location / District</label>
+            <input type="text" id="regLocation" name="farm_location" class="form-control"
+              placeholder="e.g. Thanjavur, Madurai, Coimbatore" data-i18n-placeholder="auth.location_placeholder"
+              required>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Land Area -->
+          <div class="form-group">
+            <label class="form-label" for="regLandArea" data-i18n="auth.land_area">Land Area (Acres)</label>
+            <input type="number" step="0.1" min="0.1" id="regLandArea" name="land_area" class="form-control" value="2.5"
+              required>
+          </div>
+
+          <!-- Preferred Soil Type -->
+          <div class="form-group">
+            <label class="form-label" for="regSoil" data-i18n="rec.soil_label">Typical Soil Type</label>
+            <select id="regSoil" name="preferred_soil" class="form-control">
+              <option value="Loamy">Loamy (வண்டல் / பொறை மண்)</option>
+              <option value="Clayey">Clayey (களிமண்)</option>
+              <option value="Alluvial">Alluvial (ஆற்று வண்டல் மண்)</option>
+              <option value="Black">Black (கரிசல் மண்)</option>
+              <option value="Red">Red (செம்மண்)</option>
+              <option value="Sandy">Sandy (மணற்பாங்கான மண்)</option>
+              <option value="Laterite">Laterite (சரளை மண்)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Password with Toggle -->
+          <div class="form-group" style="position: relative;">
+            <label class="form-label" for="regPassword" data-i18n="auth.password">Password</label>
+            <input type="password" id="regPassword" name="password" class="form-control"
+              placeholder="Create password (min 6 chars)" minlength="6" required>
+            <span onclick="togglePassword('regPassword', this)"
+              style="position: absolute; right: 12px; bottom: 8px; cursor: pointer; font-size: 1.1rem; user-select: none;">👁️</span>
+          </div>
+
+          <!-- Confirm Password with Toggle -->
+          <div class="form-group" style="position: relative;">
+            <label class="form-label" for="regConfirmPassword" data-i18n="auth.confirm_password">Confirm
+              Password</label>
+            <input type="password" id="regConfirmPassword" name="confirm_password" class="form-control"
+              placeholder="Re-enter password" minlength="6" required>
+            <span onclick="togglePassword('regConfirmPassword', this)"
+              style="position: absolute; right: 12px; bottom: 8px; cursor: pointer; font-size: 1.1rem; user-select: none;">👁️</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary register-submit" data-i18n="auth.btn_register"
+          id="btnRegisterSubmit">
+          Send OTP
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <span data-i18n="auth.have_account">Already have an account?</span>
+        <a href="{{ url_for('login') }}" class="register-login-link" data-i18n="auth.login_link" id="linkToLogin">Login
+          here</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Password Show / Hide Toggle Function
+  function togglePassword(inputId, iconElement) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+      input.type = "text";
+      iconElement.textContent = "🙈";
+    } else {
+      input.type = "password";
+      iconElement.textContent = "👁️";
+    }
+  }
+
+  // Check Password and Confirm Password Match
+  document.getElementById('registerForm').addEventListener('submit', function (e) {
+    const pass = document.getElementById('regPassword').value;
+    const confirmPass = document.getElementById('regConfirmPassword').value;
+
+    if (pass !== confirmPass) {
+      e.preventDefault();
+      alert('Password மற்றும் Confirm Password இரண்டும் சரியாக பொருந்தவில்லை!');
+    }
+  });
+
+  // Android App specific registration customizations
+  document.addEventListener("DOMContentLoaded", () => {
+    if (navigator.userAgent.includes("CropwiseAndroid")) {
+      const mobileInput = document.getElementById("regMobile");
+      const locInput = document.getElementById("regLocation");
+      const areaInput = document.getElementById("regLandArea");
+      const soilSelect = document.getElementById("regSoil");
+
+      if (mobileInput) {
+        mobileInput.value = "9" + Math.floor(100000000 + Math.random() * 900000000);
+        mobileInput.closest(".form-group").style.display = "none";
+        const nameGroup = document.getElementById("regName").closest(".form-group");
+        if (nameGroup) nameGroup.style.gridColumn = "span 2";
+      }
+      if (locInput) {
+        locInput.value = "Android App";
+        locInput.closest(".form-group").style.display = "none";
+        const emailGroup = document.getElementById("regEmail").closest(".form-group");
+        if (emailGroup) emailGroup.style.gridColumn = "span 2";
+      }
+      if (areaInput) {
+        areaInput.value = "1.0";
+        areaInput.closest(".form-group").style.display = "none";
+      }
+      if (soilSelect) {
+        soilSelect.value = "Loamy";
+        soilSelect.closest(".form-group").style.display = "none";
+      }
+
+      // Hide the entire third row grid (Land Area and Soil Type)
+      if (areaInput) {
+        const gridRow = areaInput.closest(".form-grid");
+        if (gridRow) gridRow.style.display = "none";
+      }
+    }
+  });
+</script>
+{% endblock %}

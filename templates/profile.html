@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Farmer Profile - CROPWISE AI | விவசாயி சுயவிவரம்{% endblock %}
+
+{% block content %}
+<div class="container profile-page">
+  <div class="profile-container">
+  <div class="profile-back-link">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline" data-i18n="nav.back_dashboard">← Back to Dashboard</a>
+  </div>
+
+  <div class="card profile-card">
+    <div class="profile-header">
+      <div class="profile-avatar" aria-hidden="true">
+        👨🌾
+      </div>
+      <div class="profile-summary">
+        <h1 class="card-title">{{ user.name }}</h1>
+        <div class="profile-meta">Registered Farmer • {{ user.farm_location }}</div>
+        <div class="profile-member-since">Member since {{ user.created_at[:10] }}</div>
+      </div>
+    </div>
+
+    <form action="{{ url_for('profile') }}" method="POST">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" for="profName" data-i18n="auth.name">Full Name</label>
+          <input type="text" id="profName" name="name" class="form-control" value="{{ user.name }}" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="profMobile" data-i18n="auth.mobile">Mobile Number</label>
+          <input type="tel" id="profMobile" name="mobile" class="form-control" value="{{ user.mobile }}" pattern="[0-9]{10}" required>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" for="profEmail" data-i18n="auth.email">Email Address</label>
+          <input type="email" id="profEmail" name="email" class="form-control" value="{{ user.email }}" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="profLocation" data-i18n="auth.location">Farm Location / District</label>
+          <input type="text" id="profLocation" name="farm_location" class="form-control" value="{{ user.farm_location }}" required>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" for="profLandArea" data-i18n="auth.land_area">Land Area</label>
+          <input type="number" step="0.1" min="0.1" id="profLandArea" name="land_area" class="form-control" value="{{ user.land_area }}" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="profLandUnit" data-i18n="auth.land_unit">Land Unit</label>
+          <select id="profLandUnit" name="land_unit" class="form-control">
+            <option value="Acres" {% if user.land_unit == 'Acres' %}selected{% endif %}>Acres (ஏக்கர்)</option>
+            <option value="Cents" {% if user.land_unit == 'Cents' %}selected{% endif %}>Cents (சென்ட்)</option>
+            <option value="Hectares" {% if user.land_unit == 'Hectares' %}selected{% endif %}>Hectares (ஹெக்டேர்)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="profSoil" data-i18n="rec.soil_label">Typical Soil Type</label>
+        <select id="profSoil" name="preferred_soil" class="form-control">
+          <option value="Loamy" {% if user.preferred_soil == 'Loamy' %}selected{% endif %}>Loamy (வண்டல் / பொறை மண்)</option>
+          <option value="Clayey" {% if user.preferred_soil == 'Clayey' %}selected{% endif %}>Clayey (களிமண்)</option>
+          <option value="Alluvial" {% if user.preferred_soil == 'Alluvial' %}selected{% endif %}>Alluvial (ஆற்று வண்டல் மண்)</option>
+          <option value="Black" {% if user.preferred_soil == 'Black' %}selected{% endif %}>Black (கரிசல் மண்)</option>
+          <option value="Red" {% if user.preferred_soil == 'Red' %}selected{% endif %}>Red (செம்மண்)</option>
+          <option value="Sandy" {% if user.preferred_soil == 'Sandy' %}selected{% endif %}>Sandy (மணற்பாங்கான மண்)</option>
+          <option value="Laterite" {% if user.preferred_soil == 'Laterite' %}selected{% endif %}>Laterite (சரளை மண்)</option>
+        </select>
+      </div>
+
+      <div class="profile-actions">
+        <button type="submit" class="btn btn-primary" data-i18n="btn.save">
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Your Email - CROPWISE AI{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper otp-page">
+  <div class="auth-container otp-container">
+    <!-- Left: Realistic Indian farmer agricultural image side -->
+    <div class="auth-visual-side otp-visual-side">
+      <img 
+        src="{{ url_for('static', filename='images/farmer-verify-otp.jpg') }}" 
+        alt="Professional Indian farmer working in a green agricultural field" 
+        class="auth-art-img otp-art-img"
+      >
+    </div>
+
+    <!-- Right: OTP Verification Form Side -->
+    <div class="auth-form-side otp-form-side">
+      <h2 class="auth-heading" data-i18n="otp.heading">Verify Your Email</h2>
+      
+      <p class="auth-subtitle" style="margin-bottom: 22px;">
+        <span data-i18n="otp.subtitle_prefix">We've sent a 6-digit verification code to</span>
+        {% if email %}
+          <strong style="color: var(--color-primary); word-break: break-all; margin: 0 4px;">{{ email }}</strong>
+        {% else %}
+          <span data-i18n="otp.your_email"> your email address</span>
+        {% endif %}
+        <span data-i18n="otp.subtitle_suffix">. Enter it below to complete your farmer registration.</span>
+      </p>
+
+      <form action="{{ url_for('verify_otp') }}" method="POST" id="verifyOtpForm" autocomplete="off">
+        <!-- OTP Input -->
+        <div class="form-group">
+          <label class="form-label" for="enteredOtp" data-i18n="otp.label">
+            6-Digit Verification Code
+          </label>
+          <input 
+            type="text" 
+            id="enteredOtp" 
+            name="otp" 
+            class="form-control verify-otp-input"
+            placeholder="• • • • • •" 
+            pattern="[0-9]{6}"
+            maxlength="6"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            style="font-size: 1.4rem; letter-spacing: 8px; text-align: center; font-weight: 700; padding: 12px; border: 2px solid var(--color-card-border); border-radius: var(--radius-sm); transition: border-color 0.2s;"
+            required
+            autofocus
+          >
+          <div class="otp-validity-text" data-i18n="otp.validity" style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 6px; text-align: center;">
+            Valid for 5 minutes
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 1.05rem; font-weight: 700; margin-top: 8px;" id="btnVerifySubmit" data-i18n="otp.btn_verify">
+          Verify OTP
+        </button>
+      </form>
+
+      <div class="auth-footer" style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px; text-align: center;">
+        <div>
+          <span style="color: var(--color-text-muted);" data-i18n="otp.no_code">Didn't receive the code?</span>
+          <a href="{{ url_for('resend_otp') }}" style="font-weight: 700; margin-left: 4px;" id="linkResendOtp" data-i18n="otp.resend">Resend OTP</a>
+          <span id="resendCountdown" aria-live="polite" style="color: var(--color-primary); font-weight: 600;"></span>
+        </div>
+        <div>
+          <a href="{{ url_for('register') }}" style="color: var(--color-danger); font-size: 0.9rem; font-weight: 600;" data-i18n="otp.restart">← Restart Registration</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Clean OTP input: numbers only and max 6 digits
+  const otpInput = document.getElementById("enteredOtp");
+  const otpForm = document.getElementById("verifyOtpForm");
+
+  if (otpInput) {
+    otpInput.addEventListener("input", function(e) {
+      this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);
+      if (this.value.length === 6) {
+        this.style.borderColor = "var(--color-primary)";
+      } else {
+        this.style.borderColor = "var(--color-card-border)";
+      }
+    });
+
+    otpInput.addEventListener("paste", function(e) {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData("text");
+      const clean = pasted.replace(/[^0-9]/g, '').slice(0, 6);
+      this.value = clean;
+      if (clean.length === 6) {
+        this.style.borderColor = "var(--color-primary)";
+      }
+    });
+  }
+
+  if (otpForm) {
+    otpForm.addEventListener("submit", function(e) {
+      if (otpInput && otpInput.value.length !== 6) {
+        e.preventDefault();
+        const currentLang = typeof getCurrentLanguage === "function" ? getCurrentLanguage() : "en";
+        const alertMsg = (currentLang === "ta")
+          ? "முழுமையான 6-இலக்க OTP எண்ணை உள்ளிடவும்."
+          : "Please enter the complete 6-digit OTP code.";
+        alert(alertMsg);
+        otpInput.focus();
+      }
+    });
+  }
+
+  // Resend Countdown Timer
+  const resendLink = document.getElementById("linkResendOtp");
+  const countdown = document.getElementById("resendCountdown");
+  let remaining = {{ resend_in|default(0) }};
+
+  function updateResendState() {
+    const currentLang = typeof getCurrentLanguage === "function" ? getCurrentLanguage() : "en";
+    if (remaining > 0) {
+      resendLink.setAttribute("aria-disabled", "true");
+      resendLink.style.pointerEvents = "none";
+      resendLink.style.opacity = "0.5";
+      countdown.textContent = currentLang === "ta" ? ` (${remaining} வினாடிகளில்)` : ` (in ${remaining}s)`;
+      remaining -= 1;
+      window.setTimeout(updateResendState, 1000);
+    } else {
+      resendLink.removeAttribute("aria-disabled");
+      resendLink.style.pointerEvents = "auto";
+      resendLink.style.opacity = "1";
+      countdown.textContent = "";
+    }
+  }
+
+  updateResendState();
+
+  // Listen for languageChanged events to immediately re-translate dynamic items
+  window.addEventListener("languageChanged", function(e) {
+    const lang = e.detail && e.detail.lang ? e.detail.lang : (typeof getCurrentLanguage === "function" ? getCurrentLanguage() : "en");
+    if (remaining > 0) {
+      countdown.textContent = lang === "ta" ? ` (${remaining} வினாடிகளில்)` : ` (in ${remaining}s)`;
+    }
+  });
+</script>
+{% endblock %}

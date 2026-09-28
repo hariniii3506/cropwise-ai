@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}CROPWISE AI - Smart Crop Guidance{% endblock %}</title>
+  
+  <meta name="description" content="CROPWISE AI - Practical crop guidance based on soil and environmental conditions. சிறந்த விவசாயம் • சிறந்த பயிர் தேர்வு.">
+  <meta name="author" content="CROPWISE AI Team">
+
+  <!-- Favicon / Logo -->
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/logo.svg') }}">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/print.css') }}" media="print">
+  
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="container">
+      <div class="navbar-inner">
+        <!-- Brand Logo -->
+        <a href="{{ url_for('dashboard' if session.get('user_id') else 'index') }}" class="brand-link" id="navBrandLink">
+          <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="CROPWISE AI Logo" class="brand-logo-img">
+        </a>
+
+        <!-- Desktop / Mobile Nav Menu -->
+        <nav>
+          <ul class="nav-menu" id="navMenu">
+            <li class="nav-item">
+              <a href="{{ url_for('index') }}" data-i18n="nav.home" id="navLinkHome">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ url_for('about') }}" data-i18n="nav.about" id="navLinkAbout">About CROPWISE AI</a>
+            </li>
+
+            {% if session.get('user_id') %}
+              <li class="nav-item">
+                <a href="{{ url_for('dashboard') }}" data-i18n="nav.dashboard" id="navLinkDashboard">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('recommend') }}" data-i18n="nav.recommend" id="navLinkRecommend">Recommend Crop</a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('history') }}" data-i18n="nav.history" id="navLinkHistory">History</a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('expenses') }}" data-i18n="nav.expenses" id="navLinkExpenses">Farm Expenses</a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('schemes') }}" id="navLinkSchemes">Govt Schemes</a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('profile') }}" data-i18n="nav.profile" id="navLinkProfile">Profile ({{ session.get('user_name', 'Farmer') }})</a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('logout') }}" class="btn btn-sm btn-danger" data-i18n="nav.logout" id="navLinkLogout">Logout</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a href="{{ url_for('login') }}" data-i18n="nav.login" id="navLinkLogin">Farmer Login</a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('register') }}" class="btn btn-sm btn-primary" data-i18n="nav.register" id="navLinkRegister">Register</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+
+        <!-- Right Side: Language Switcher & Hamburger -->
+        <div class="nav-actions">
+          <div class="lang-switcher" aria-label="Language selection">
+            <button type="button" class="lang-btn active" data-lang="en" id="langBtnEn">English</button>
+            <button type="button" class="lang-btn" data-lang="ta" id="langBtnTa">தமிழ்</button>
+          </div>
+          
+          <button type="button" class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+            ☰
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Flash Notification Messages -->
+  <div class="container flash-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category if category != 'error' else 'danger' }}">
+            <span>{{ message }}</span>
+            <button type="button" onclick="this.parentElement.style.display='none'" style="background:none;border:none;cursor:pointer;font-weight:bold;font-size:1.1rem;">&times;</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Main Content Area -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Product Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3 data-i18n="brand.name">CROPWISE AI</h3>
+          <p data-i18n="brand.subtagline">Make better crop decisions using soil and environmental conditions.</p>
+          <p class="footer-tagline" data-i18n="brand.tagline">Smart Farming. Better Crop Decisions.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>FARM TOOLS</h4>
+          <ul class="footer-links">
+            <li><a href="{{ url_for('recommend') }}">🌱 Crop Recommendation</a></li>
+            <li><a href="{{ url_for('alternatives') }}">🔄 Alternative Crops</a></li>
+            <li><a href="{{ url_for('duration') }}">⏱️ Crop Duration</a></li>
+            <li><a href="{{ url_for('comparison') }}">📊 Crop Comparison</a></li>
+            <li><a href="{{ url_for('budget') }}">💰 Budget Calculator</a></li>
+            <li><a href="{{ url_for('calendar') }}">📅 Crop Calendar</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>FARM MANAGEMENT</h4>
+          <ul class="footer-links">
+            <li><a href="{{ url_for('water') }}">💧 Water Requirement</a></li>
+            <li><a href="{{ url_for('history') }}">📜 History</a></li>
+            <li><a href="{{ url_for('expenses') }}">💰 Farm Expenses &amp; Notes</a></li>
+            {% if last_rec is defined and last_rec %}
+              <li><a href="{{ url_for('print_report', rec_id=last_rec.id) }}">🖨️ Print Advisory Report</a></li>
+            {% endif %}
+            <li><a href="{{ url_for('profile') }}">👤 Profile</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>QUICK LINKS</h4>
+          <ul class="footer-links">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About CROPWISE AI</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('recommend') }}">Recommend Crop</a></li>
+            <li><a href="{{ url_for('history') }}">History</a></li>
+            <li><a href="{{ url_for('profile') }}">Profile</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p data-i18n="footer.copyright">© {{ current_year }} CROPWISE AI. Smart farming made simpler.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/translations.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/icon-system.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

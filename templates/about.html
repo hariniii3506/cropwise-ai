@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}About CROPWISE AI - Smart Agriculture Platform{% endblock %}
+
+{% block content %}
+<div class="container about-page-container">
+  <!-- Section Header -->
+  <div class="section-header about-hero-block">
+    <span class="hero-badge" data-i18n="abt.badge">🌱 Smart Agriculture Platform</span>
+    <h1 class="section-title" data-i18n="abt.heading">About CROPWISE AI</h1>
+    <div style="font-size: 1.2rem; font-weight: 700; color: var(--color-primary); margin-top: 4px;">ஸ்மார்ட் பயிர் பரிந்துரை அமைப்பு</div>
+    <p class="section-subtitle" data-i18n="abt.subheading">
+      Smart farming insights for better crop decisions.
+    </p>
+  </div>
+
+  <!-- Product Information Card -->
+  <div class="card" style="margin-bottom: 30px;">
+    <h3 class="card-title" style="margin-bottom: 16px;" data-i18n="abt.how_heading">How CROPWISE AI Works</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; font-size: 0.92rem;">
+      <div style="background: var(--color-bg-alt); padding: 14px; border-radius: var(--radius-sm);">
+        <strong style="color: var(--color-text-muted);">Product Name:</strong>
+        <div style="font-size: 1.05rem; font-weight: 700; color: var(--color-primary-dark); margin-top: 2px;">
+          Smart Crop Recommendation System
+        </div>
+      </div>
+      <div style="background: var(--color-bg-alt); padding: 14px; border-radius: var(--radius-sm);">
+        <strong style="color: var(--color-text-muted);">Focus:</strong>
+        <div style="font-size: 1.05rem; font-weight: 700; color: var(--color-primary-dark); margin-top: 2px;" data-i18n="abt.domain_val">
+          Practical farm guidance
+        </div>
+      </div>
+      <div style="background: var(--color-bg-alt); padding: 14px; border-radius: var(--radius-sm);">
+        <strong style="color: var(--color-text-muted);">Guidance:</strong>
+        <div style="font-size: 1.05rem; font-weight: 700; color: var(--color-primary); margin-top: 2px;" data-i18n="abt.algo_val">
+          Soil and climate suitability
+        </div>
+      </div>
+      <div style="background: var(--color-bg-alt); padding: 14px; border-radius: var(--radius-sm);">
+        <strong style="color: var(--color-text-muted);">Input Features:</strong>
+        <div style="font-size: 0.95rem; font-weight: 700; color: var(--color-primary-dark); margin-top: 2px;">
+          Soil Type, pH, Temp, Humidity, Rainfall
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Farm guidance card -->
+  <div class="card" style="margin-bottom: 30px;">
+    <h3 class="card-title" style="margin-bottom: 16px;" data-i18n="abt.why_dt_title">
+      How recommendations are prepared
+    </h3>
+    <p style="color: var(--color-text-main); font-size: 0.95rem; line-height: 1.7; margin-bottom: 18px;" data-i18n="abt.why_dt_desc">
+      CROPWISE AI considers the soil and climate details entered for your farm and presents crop options with practical cultivation information.
+    </p>
+  </div>
+
+  <!-- Future Scope Section -->
+  <div class="card" id="future-scope" style="border-left: 6px solid var(--color-primary);">
+    <h3 class="card-title" style="margin-bottom: 12px;" data-i18n="abt.future_heading">
+      More Smart Farming Features
+    </h3>
+    <p style="color: var(--color-text-muted); font-size: 0.92rem; margin-bottom: 20px;" data-i18n="abt.future_intro">
+      Explore more tools that can make day-to-day farm planning easier:
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+      <div style="background: var(--color-bg-alt); padding: 14px 18px; border-radius: var(--radius-sm); border: 1px solid var(--color-card-border);">
+        <strong style="color: var(--color-primary-dark);" data-i18n="abt.future1">📡 Live Weather API &amp; Satellite Telemetry</strong>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 4px;">Automated local meteorological retrieval for micro-climate forecasting.</p>
+      </div>
+
+      <div style="background: var(--color-bg-alt); padding: 14px 18px; border-radius: var(--radius-sm); border: 1px solid var(--color-card-border);">
+        <strong style="color: var(--color-primary-dark);" data-i18n="abt.future2">💹 Agricultural Market Mandi Live Prices</strong>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 4px;">Integration with e-NAM and APMC mandi market daily price tickers.</p>
+      </div>
+
+      <div style="background: var(--color-bg-alt); padding: 14px 18px; border-radius: var(--radius-sm); border: 1px solid var(--color-card-border);">
+        <strong style="color: var(--color-primary-dark);" data-i18n="abt.future3">🌱 Soil Nutrient &amp; Fertilizer Dosage (NPK)</strong>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 4px;">Automated fertilizer calculation and organic manure dosage guidance.</p>
+      </div>
+
+      <div style="background: var(--color-bg-alt); padding: 14px 18px; border-radius: var(--radius-sm); border: 1px solid var(--color-card-border);">
+        <strong style="color: var(--color-primary-dark);" data-i18n="abt.future4">📱 Native Android / iOS Mobile Application</strong>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 4px;">Offline-first hybrid mobile app with push notifications for farmers.</p>
+      </div>
+
+      <div style="background: var(--color-bg-alt); padding: 14px 18px; border-radius: var(--radius-sm); border: 1px solid var(--color-card-border);">
+        <strong style="color: var(--color-primary-dark);" data-i18n="abt.future5">🗣️ Tamil Voice Assistant (குரல் வழி உதவி)</strong>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 4px;">Speech-to-text conversational interface for rural farmer accessibility.</p>
+      </div>
+
+      <div style="background: var(--color-bg-alt); padding: 14px 18px; border-radius: var(--radius-sm); border: 1px solid var(--color-card-border);">
+        <strong style="color: var(--color-primary-dark);" data-i18n="abt.future6">💧 IoT Soil Moisture Sensor Integration</strong>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 4px;">Automated smart irrigation telemetry in future hardware releases.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

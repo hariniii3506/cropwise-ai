@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CROPWISE AI - Smart Crop Recommendation System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --color-primary: #2D6A4F;
+      --color-primary-dark: #1B4332;
+      --color-accent: #52B788;
+      --color-bg: #F4F9F4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, var(--color-bg) 0%, #E8F5E9 100%);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .splash-container {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .logo-wrapper {
+      width: 120px;
+      height: 120px;
+      background: white;
+      border-radius: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 15px 35px rgba(45, 106, 79, 0.15);
+      margin-bottom: 25px;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .logo-img {
+      width: 80px;
+      height: 80px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--color-primary-dark);
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-accent);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 40px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(45, 106, 79, 0.1);
+      border-left-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="splash-container">
+    <div class="logo-wrapper">
+      <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="CROPWISE AI Logo" class="logo-img">
+    </div>
+    <h1>CROPWISE AI</h1>
+    <div class="subtitle">SMART CROP RECOMMENDATION</div>
+    <div class="spinner"></div>
+  </div>
+
+  <script>
+    setTimeout(function() {
+      // Check if user is logged in (session variable passed from Flask)
+      const isLoggedIn = {{ 'true' if session.get('user_id') else 'false' }};
+      if (isLoggedIn) {
+        window.location.href = "{{ url_for('dashboard') }}";
+      } else {
+        window.location.href = "{{ url_for('login') }}";
+      }
+    }, 2500);
+  </script>
+</body>
+</html>

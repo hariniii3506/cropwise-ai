@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Recommendation History - CROPWISE AI | பரிந்துரை வரலாறு{% endblock %}
+
+{% block content %}
+<div class="container history-page">
+  <div class="history-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px;">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline" data-i18n="nav.back_dashboard">← Back to Dashboard</a>
+    <a href="{{ url_for('recommend') }}" class="btn btn-sm btn-primary" data-i18n="dash.quick_rec">🌱 New Recommendation</a>
+  </div>
+
+  <div class="section-header history-heading-block">
+    <h1 class="section-title" data-i18n="hist.heading">Farmer Recommendation History</h1>
+    <div class="history-tamil-heading">பரிந்துரை வரலாறு</div>
+    <p class="section-subtitle" data-i18n="hist.subheading">
+      Chronological log of all crop predictions generated for your farm.
+    </p>
+  </div>
+
+  {% if history and history|length > 0 %}
+    <div class="table-responsive history-table-wrapper">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th data-i18n="hist.col_date">Date &amp; Time</th>
+            <th data-i18n="hist.col_crop">Recommended Crop</th>
+            <th data-i18n="hist.col_soil">Soil Type</th>
+            <th data-i18n="hist.col_ph">pH</th>
+            <th data-i18n="hist.col_temp">Temp</th>
+            <th data-i18n="hist.col_hum">Humidity</th>
+            <th data-i18n="hist.col_rain">Rainfall</th>
+            <th data-i18n="hist.col_actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rec in history %}
+            <tr>
+              <td>{{ rec.created_at[:16] }}</td>
+              <td>
+                <strong style="color: var(--color-primary-dark); font-size: 1.05rem;">{{ rec.recommended_crop }}</strong>
+                <span style="font-size: 0.85rem; color: var(--color-primary); font-weight: 600;">
+                  ({{ crop_database[rec.recommended_crop].tamil_name if rec.recommended_crop in crop_database else '' }})
+                </span>
+              </td>
+              <td>{{ rec.soil_type }}</td>
+              <td>{{ rec.ph }}</td>
+              <td>{{ rec.temperature }}°C</td>
+              <td>{{ rec.humidity }}%</td>
+              <td>{{ rec.rainfall }} mm</td>
+              <td>
+                <div style="display: flex; gap: 6px;">
+                  <a href="{{ url_for('result', rec_id=rec.id) }}" class="btn btn-sm btn-outline" style="padding: 4px 8px; font-size: 0.8rem;" data-i18n="btn.view_details">
+                    View
+                  </a>
+                  <a href="{{ url_for('print_report', rec_id=rec.id) }}" class="btn btn-sm btn-secondary" style="padding: 4px 8px; font-size: 0.8rem;" data-i18n="btn.print">
+                    Print
+                  </a>
+                  <form action="{{ url_for('delete_history_item', rec_id=rec.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this recommendation record?');" style="display: inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" style="padding: 4px 8px; font-size: 0.8rem;" data-i18n="btn.delete">
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="card history-empty-card" style="text-align: center; padding: 50px;">
+      <div style="font-size: 3rem; margin-bottom: 12px;">📜</div>
+      <h3 style="color: var(--color-primary-dark); margin-bottom: 8px;">No Recommendation History</h3>
+      <p style="color: var(--color-text-muted); margin-bottom: 24px;" data-i18n="hist.empty">
+        No past recommendations found. Click 'Recommend Crop' to get started.
+      </p>
+      <a href="{{ url_for('recommend') }}" class="btn btn-primary" data-i18n="dash.quick_rec">
+        🌱 Make Your First Recommendation
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}Farmer Dashboard - CROPWISE AI | முகப்புப்பலகை{% endblock %}
+
+{% block content %}
+<div class="container dashboard-page">
+  <section class="dashboard-welcome" aria-labelledby="dashboardWelcomeTitle">
+    <div class="dashboard-welcome-copy">
+      <p class="dashboard-eyebrow" data-i18n="dash.overview_label">FARM OVERVIEW</p>
+      <h1 id="dashboardWelcomeTitle">
+        <span data-i18n="dash.welcome">Welcome, </span>{{ user.name }}
+      </h1>
+      <p class="dashboard-welcome-message" data-i18n="dash.welcome_message">Manage your crops, expenses and farm activities in one place.</p>
+      <div class="dashboard-farm-meta">
+        <span>📍 {{ user.farm_location }}</span>
+        <span>🌾 {{ user.land_area }} {{ user.land_unit }}</span>
+      </div>
+    </div>
+    <a href="{{ url_for('recommend') }}" class="btn btn-primary dashboard-primary-action" data-i18n="dash.quick_rec" id="btnDashQuickRecommend">🌱 Recommend a Crop</a>
+  </section>
+
+  <section class="dashboard-summary-grid" aria-label="Farm summary">
+    <article class="dashboard-summary-card summary-crop-card">
+      <div class="summary-card-icon">🌾</div>
+      <div class="summary-card-content">
+        <p class="summary-card-label" data-i18n="dash.summary_crop">Recommended Crop</p>
+        {% if last_rec %}
+          <strong class="summary-card-value">{{ last_rec.recommended_crop }}</strong>
+          <span class="summary-card-note">{{ last_rec.created_at[:10] }}</span>
+        {% else %}
+          <strong class="summary-card-empty" data-i18n="dash.empty_crop">No crop recommendation available yet.</strong>
+        {% endif %}
+      </div>
+    </article>
+
+    <article class="dashboard-summary-card">
+      <div class="summary-card-icon">📅</div>
+      <div class="summary-card-content">
+        <p class="summary-card-label" data-i18n="dash.summary_task">Next Farm Task</p>
+        <strong class="summary-card-empty" data-i18n="dash.empty_tasks">No upcoming farm tasks.</strong>
+      </div>
+    </article>
+
+    <article class="dashboard-summary-card">
+      <div class="summary-card-icon">₹</div>
+      <div class="summary-card-content">
+        <p class="summary-card-label" data-i18n="dash.summary_expenses">Total Farm Expenses</p>
+        {% if expense_summary.total_count > 0 %}
+          <strong class="summary-card-value">₹{{ "{:,.0f}".format(expense_summary.total_expenses) }}</strong>
+          <span class="summary-card-note">{{ expense_summary.total_count }} <span data-i18n="dash.expense_entries">entries recorded</span></span>
+        {% else %}
+          <strong class="summary-card-empty" data-i18n="dash.empty_expenses">No expenses recorded yet.</strong>
+        {% endif %}
+      </div>
+    </article>
+
+    <article class="dashboard-summary-card">
+      <div class="summary-card-icon">💧</div>
+      <div class="summary-card-content">
+        <p class="summary-card-label" data-i18n="dash.summary_water">Water Requirement</p>
+        {% if last_rec %}
+          <strong class="summary-card-value summary-card-value-small" data-i18n="dash.water_available">Crop guide available</strong>
+          <span class="summary-card-note">{{ last_rec.recommended_crop }}</span>
+        {% else %}
+          <strong class="summary-card-empty" data-i18n="dash.empty_water">No crop recommendation available yet.</strong>
+        {% endif %}
+      </div>
+    </article>
+
+    <article class="dashboard-summary-card">
+      <div class="summary-card-icon">📈</div>
+      <div class="summary-card-content">
+        <p class="summary-card-label" data-i18n="dash.summary_profit">Estimated Profit</p>
+        <strong class="summary-card-empty" data-i18n="dash.empty_profit">Profit estimate not available yet.</strong>
+      </div>
+    </article>
+  </section>
+
+  <section class="dashboard-content-grid">
+    <div class="dashboard-main-column">
+      <div class="dashboard-section-heading">
+        <div>
+          <p class="dashboard-eyebrow" data-i18n="dash.tools_label">FARM TOOLS</p>
+          <h2 data-i18n="dash.modules_heading">Farm Tools</h2>
+        </div>
+        <p data-i18n="dash.modules_subheading">Plan, monitor and manage your crop cycle.</p>
+      </div>
+
+      <div class="dash-modules-grid">
+    <!-- 1. Crop Recommendation -->
+    <div class="module-card">
+      <img src="{{ url_for('static', filename='images/modules/recommend.svg') }}" alt="Crop Recommendation" class="module-card-icon">
+      <h3 class="module-card-title" data-i18n="mod.rec.title">🌾 Crop Recommendation</h3>
+      <p class="module-card-desc" data-i18n="mod.rec.desc">
+        <span data-i18n="dash.module_rec_desc">Find a suitable crop using your farm conditions.</span>
+      </p>
+      <div class="module-card-action">
+        <a href="{{ url_for('recommend') }}" class="btn btn-sm btn-primary" style="width: 100%;" id="cardLinkRecommend">
+          Open Module →
+        </a>
+      </div>
+    </div>
+
+    <!-- 2. Alternative Crops -->
+    <div class="module-card">
+      <img src="{{ url_for('static', filename='images/modules/alternatives.svg') }}" alt="Alternative Crops" class="module-card-icon">
+      <h3 class="module-card-title" data-i18n="mod.alt.title">🔄 Alternative Crops</h3>
+      <p class="module-card-desc" data-i18n="mod.alt.desc">
+        <span data-i18n="dash.module_alt_desc">Review other crop options for your current selection.</span>
+      </p>
+      <div class="module-card-action">
+        <a href="{{ url_for('alternatives', crop=last_rec.recommended_crop if last_rec else 'Paddy') }}" class="btn btn-sm btn-secondary" style="width: 100%;" id="cardLinkAlternatives">
+          View Alternatives →
+        </a>
+      </div>
+    </div>
+
+    <!-- 3. Crop Duration -->
+    <div class="module-card">
+      <img src="{{ url_for('static', filename='images/modules/duration.svg') }}" alt="Crop Duration" class="module-card-icon">
+      <h3 class="module-card-title" data-i18n="mod.dur.title">⏱ Crop Duration</h3>
+      <p class="module-card-desc" data-i18n="mod.dur.desc">
+        <span data-i18n="dash.module_dur_desc">Follow the crop journey from sowing to harvest.</span>
+      </p>
+      <div class="module-card-action">
+        <a href="{{ url_for('duration', crop=last_rec.recommended_crop if last_rec else 'Paddy') }}" class="btn btn-sm btn-secondary" style="width: 100%;" id="cardLinkDuration">
+          View Timeline →
+        </a>
+      </div>
+    </div>
+
+    <!-- 4. Crop Comparison -->
+    <div class="module-card">
+      <img src="{{ url_for('static', filename='images/modules/comparison.svg') }}" alt="Crop Comparison" class="module-card-icon">
+      <h3 class="module-card-title" data-i18n="mod.comp.title">Crop Comparison</h3>
+      <p class="module-card-desc" data-i18n="mod.comp.desc">
+        <span data-i18n="dash.module_comp_desc">Compare crop duration, water needs and costs.</span>
+      </p>
+      <div class="module-card-action">
+        <a href="{{ url_for('comparison') }}" class="btn btn-sm btn-secondary" style="width: 100%;" id="cardLinkComparison">
+          Compare Crops →
+        </a>
+      </div>
+    </div>
+
+    <!-- 5. Budget Calculator -->
+    <div class="module-card">
+      <img src="{{ url_for('static', filename='images/modules/budget.svg') }}" alt="Budget Calculator" class="module-card-icon">
+      <h3 class="module-card-title" data-i18n="mod.budg.title"> Budget Calculator</h3>
+      <p class="module-card-desc" data-i18n="mod.budg.desc">
+        <span data-i18n="dash.module_budg_desc">Plan expected cultivation costs before you begin.</span>
+      </p>
+      <div class="module-card-action">
+        <a href="{{ url_for('budget', crop=last_rec.recommended_crop if last_rec else 'Paddy') }}" class="btn btn-sm btn-secondary" style="width: 100%;" id="cardLinkBudget">
+          Calculate Budget →
+        </a>
+      </div>
+    </div>
+
+    <!-- 6. Crop Calendar -->
+    <div class="module-card">
+      <img src="{{ url_for('static', filename='images/modules/calendar.svg') }}" alt="Crop Calendar" class="module-card-icon">
+      <h3 class="module-card-title" data-i18n="mod.cal.title"> Crop Calendar</h3>
+      <p class="module-card-desc" data-i18n="mod.cal.desc">
+        <span data-i18n="dash.module_cal_desc">Plan seasonal work with a month-by-month guide.</span>
+      </p>
+      <div class="module-card-action">
+        <a href="{{ url_for('calendar', crop=last_rec.recommended_crop if last_rec else 'Paddy') }}" class="btn btn-sm btn-secondary" style="width: 100%;" id="cardLinkCalendar">
+          View Calendar →
+        </a>
+      </div>
+    </div>
+
+    <!-- 7. Water Requirement -->
+    <div class="module-card">
+      <img src="{{ url_for('static', filename='images/modules/water.svg') }}" alt="Water Requirement" class="module-card-icon">
+      <h3 class="module-card-title" data-i18n="mod.wat.title">Water Requirement</h3>
+      <p class="module-card-desc" data-i18n="mod.wat.desc">
+        <span data-i18n="dash.module_wat_desc">Choose practical irrigation methods and save water.</span>
+      </p>
+      <div class="module-card-action">
+        <a href="{{ url_for('water', crop=last_rec.recommended_crop if last_rec else 'Paddy') }}" class="btn btn-sm btn-secondary" style="width: 100%;" id="cardLinkWater">
+          View Irrigation Guide →
+        </a>
+      </div>
+    </div>
+
+    <!-- 8. History -->
+    <div class="module-card">
+      <img src="{{ url_for('static', filename='images/modules/history.svg') }}" alt="Recommendation History" class="module-card-icon">
+      <h3 class="module-card-title" data-i18n="mod.hist.title">📜 Recommendation History</h3>
+      <p class="module-card-desc" data-i18n="mod.hist.desc">
+        <span data-i18n="dash.module_hist_desc">Review your past crop choices and farm conditions.</span>
+      </p>
+      <div class="module-card-action">
+        <a href="{{ url_for('history') }}" class="btn btn-sm btn-secondary" style="width: 100%;" id="cardLinkHistory">
+          View History →
+        </a>
+      </div>
+    </div>
+
+    <!-- 9. Farm Expenses & Notes -->
+    <div class="module-card">
+      <img src="{{ url_for('static', filename='images/modules/expenses.svg') }}" alt="Farm Expenses & Notes" class="module-card-icon">
+      <h3 class="module-card-title" data-i18n="mod.exp.title">📝 Farm Expenses &amp; Notes</h3>
+      <p class="module-card-desc" data-i18n="mod.exp.desc">
+        <span data-i18n="dash.module_exp_desc">Record daily spending and keep useful field notes.</span>
+      </p>
+      <div class="module-card-action">
+        <a href="{{ url_for('expenses') }}" class="btn btn-sm btn-secondary" style="width: 100%;" id="cardLinkExpenses">
+          Open Ledger →
+        </a>
+      </div>
+    </div>
+
+    <!-- 10. Print Report -->
+    <div class="module-card module-card-print">
+      <img src="{{ url_for('static', filename='images/modules/report.svg') }}" alt="Print Report" class="module-card-icon">
+      <h3 class="module-card-title" data-i18n="mod.rep.title">🖨️ Print Advisory Report</h3>
+      <p class="module-card-desc" data-i18n="mod.rep.desc">
+        <span data-i18n="dash.module_rep_desc">Create a clear report for your farm records.</span>
+      </p>
+      <div class="module-card-action">
+        {% if last_rec %}
+          <a href="{{ url_for('print_report', rec_id=last_rec.id) }}" class="btn btn-sm btn-secondary" style="width: 100%;" id="cardLinkPrintReport">
+            Generate Report →
+          </a>
+        {% else %}
+          <a href="{{ url_for('recommend') }}" class="btn btn-sm btn-secondary" style="width: 100%;">
+            Get Recommendation First →
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- 11. Government Schemes -->
+    <div class="module-card">
+      <svg class="module-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 21h18M5 18h14M4 9h16L12 3 4 9Zm3 2v4m5-4v4m5-4v4" />
+      </svg>
+      <h3 class="module-card-title">🏛️ Govt Schemes</h3>
+      <p class="module-card-desc">
+        <span>Find official government subsidies, assistance, and insurance schemes.</span>
+      </p>
+      <div class="module-card-action">
+        <a href="{{ url_for('schemes') }}" class="btn btn-sm btn-secondary" style="width: 100%;" id="cardLinkSchemes">
+          Find Schemes →
+        </a>
+      </div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <aside class="dashboard-side-column">
+      <section class="dashboard-panel dashboard-task-panel">
+        <div class="dashboard-panel-heading">
+          <div>
+            <p class="dashboard-eyebrow" data-i18n="dash.tasks_label">FIELD PLANNER</p>
+            <h2 data-i18n="dash.tasks_heading">Upcoming Farm Tasks</h2>
+          </div>
+          <span class="dashboard-panel-icon">📅</span>
+        </div>
+        <div class="dashboard-empty-state">
+          <span class="empty-state-icon">🌱</span>
+          <p data-i18n="dash.empty_tasks">No upcoming farm tasks.</p>
+          <a href="{{ url_for('calendar', crop=last_rec.recommended_crop if last_rec else 'Paddy') }}" class="btn btn-sm btn-secondary" data-i18n="dash.view_calendar">View Crop Calendar</a>
+        </div>
+      </section>
+
+      <section class="dashboard-panel">
+        <div class="dashboard-panel-heading">
+          <div>
+            <p class="dashboard-eyebrow" data-i18n="dash.expenses_label">FARM FINANCES</p>
+            <h2 data-i18n="dash.expenses_heading">Expense Overview</h2>
+          </div>
+          <span class="dashboard-panel-icon">₹</span>
+        </div>
+        {% if expense_summary.total_count > 0 %}
+          <div class="expense-total-block">
+            <span data-i18n="dash.overall_expenses">Overall expenses</span>
+            <strong>₹{{ "{:,.0f}".format(expense_summary.total_expenses) }}</strong>
+          </div>
+          <p class="dashboard-panel-note">{{ expense_summary.total_count }} <span data-i18n="dash.expense_entries">entries recorded</span></p>
+        {% else %}
+          <div class="dashboard-empty-state dashboard-empty-state-compact">
+            <p data-i18n="dash.empty_month_expenses">No expenses recorded for this month.</p>
+          </div>
+        {% endif %}
+        <a href="{{ url_for('expenses') }}" class="btn btn-sm btn-primary dashboard-panel-action" data-i18n="dash.open_expenses">Open Expenses</a>
+      </section>
+    </aside>
+  </section>
+
+  <section class="dashboard-panel dashboard-recommendation-panel">
+    <div class="dashboard-panel-heading">
+      <div>
+        <p class="dashboard-eyebrow" data-i18n="dash.recommendations_label">CROP RECORDS</p>
+        <h2 data-i18n="dash.recent_heading">Recent Crop Recommendation</h2>
+      </div>
+      <a href="{{ url_for('history') }}" class="btn btn-sm btn-secondary" data-i18n="dash.view_history">View History</a>
+    </div>
+    {% if last_rec %}
+      <div class="recommendation-record">
+        <div class="recommendation-record-crop">
+          <span class="recommendation-record-icon">🌾</span>
+          <div>
+            <span class="recommendation-record-label" data-i18n="dash.recommended_crop_label">Recommended crop</span>
+            <strong>{{ last_rec.recommended_crop }}</strong>
+          </div>
+        </div>
+        <dl class="recommendation-details">
+          <div><dt data-i18n="dash.record_date">Date</dt><dd>{{ last_rec.created_at[:10] }}</dd></div>
+          <div><dt data-i18n="dash.record_soil">Soil</dt><dd>{{ last_rec.soil_type }}</dd></div>
+          <div><dt>pH</dt><dd>{{ last_rec.ph }}</dd></div>
+          <div><dt data-i18n="dash.record_temperature">Temperature</dt><dd>{{ last_rec.temperature }}°C</dd></div>
+          <div><dt data-i18n="dash.record_humidity">Humidity</dt><dd>{{ last_rec.humidity }}%</dd></div>
+          <div><dt data-i18n="dash.record_rainfall">Rainfall</dt><dd>{{ last_rec.rainfall }} mm</dd></div>
+        </dl>
+        <div class="recommendation-record-actions">
+          <a href="{{ url_for('result', rec_id=last_rec.id) }}" class="btn btn-sm btn-primary" data-i18n="btn.view_details">View Details</a>
+          <a href="{{ url_for('print_report', rec_id=last_rec.id) }}" class="btn btn-sm btn-secondary" data-i18n="btn.print">Print Report</a>
+        </div>
+      </div>
+    {% else %}
+      <div class="dashboard-empty-state dashboard-empty-state-wide">
+        <span class="empty-state-icon">🌿</span>
+        <p data-i18n="dash.empty_recommendations">No crop recommendations available yet.</p>
+        <a href="{{ url_for('recommend') }}" class="btn btn-sm btn-primary" data-i18n="dash.start_recommendation">Start a Recommendation</a>
+      </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

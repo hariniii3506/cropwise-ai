@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Recommendation Result: {{ crop_name }} - CROPWISE AI{% endblock %}
+
+{% block content %}
+<div class="container result-page">
+  <div class="result-top-actions">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline" data-i18n="nav.back_dashboard">← Back to Dashboard</a>
+    <a href="{{ url_for('recommend') }}" class="btn btn-sm btn-secondary" data-i18n="res.btn_again">🌱 New Recommendation</a>
+  </div>
+
+  <!-- Hero Result Card -->
+  <div class="result-hero-card">
+    <div class="result-eyebrow" data-i18n="res.subheading">A crop suited to your farm details</div>
+    
+    <!-- Crop Visual SVG -->
+    {% set crop_slug = crop_name.lower().replace(' / ragi', '').replace(' ', '_') %}
+    <div class="result-crop-image" style="width: 180px; height: 140px; margin: 18px auto;">
+      <img src="{{ url_for('static', filename='images/crops/' + crop_slug + '.svg') }}" alt="{{ crop_name }}" style="width: 100%; height: 100%; object-fit: contain;">
+    </div>
+
+    <h1 class="result-crop-name">{{ crop_name }}</h1>
+    <div class="result-crop-tamil">
+      {{ crop_info.tamil_name if crop_info else '' }} 
+      <span style="font-size: 1.1rem; color: var(--color-text-muted); font-style: italic; font-weight: 500;">
+        ({{ crop_info.scientific_name if crop_info else '' }})
+      </span>
+    </div>
+
+    <p class="result-description">
+      {{ crop_info.description if crop_info else '' }}
+    </p>
+
+    <div class="result-subheading" data-i18n="res.your_conditions">
+      Your Farm Conditions
+    </div>
+    <div class="farm-conditions-badge-grid">
+      <div class="cond-badge">
+        <div class="cond-badge-label" data-i18n="rec.soil_label">Soil Type</div>
+        <div class="cond-badge-val">{{ rec.soil_type }}</div>
+      </div>
+      <div class="cond-badge">
+        <div class="cond-badge-label" data-i18n="rec.ph_label">pH Level</div>
+        <div class="cond-badge-val">{{ rec.ph }}</div>
+      </div>
+      <div class="cond-badge">
+        <div class="cond-badge-label" data-i18n="rec.temp_label">Temperature</div>
+        <div class="cond-badge-val">{{ rec.temperature }}°C</div>
+      </div>
+      <div class="cond-badge">
+        <div class="cond-badge-label" data-i18n="rec.hum_label">Humidity</div>
+        <div class="cond-badge-val">{{ rec.humidity }}%</div>
+      </div>
+      <div class="cond-badge">
+        <div class="cond-badge-label" data-i18n="rec.rain_label">Rainfall</div>
+        <div class="cond-badge-val">{{ rec.rainfall }} mm</div>
+      </div>
+    </div>
+
+    <div class="result-info-grid">
+      {% if crop_info.duration_days %}
+        <div class="result-info-card"><span class="result-info-icon">⏱️</span><span data-i18n="res.duration">Crop Duration</span><strong>{{ crop_info.duration_days }}</strong></div>
+      {% endif %}
+      {% if crop_info.ideal_soil %}
+        <div class="result-info-card"><span class="result-info-icon">🌱</span><span data-i18n="res.suitable_soil">Suitable Soil</span><strong>{{ crop_info.ideal_soil|join(', ') }}</strong></div>
+      {% endif %}
+      {% if crop_info.water_requirement %}
+        <div class="result-info-card"><span class="result-info-icon">💧</span><span data-i18n="res.water">Water Requirement</span><strong>{{ crop_info.water_requirement }}{% if crop_info.water_mm_range %} <small>({{ crop_info.water_mm_range }})</small>{% endif %}</strong></div>
+      {% endif %}
+      {% if crop_info.seasons %}
+        <div class="result-info-card"><span class="result-info-icon">📅</span><span data-i18n="res.season">Growing Season</span><strong>{{ crop_info.seasons }}</strong></div>
+      {% endif %}
+    </div>
+
+    <section class="result-variety-section" aria-labelledby="varietyHeading">
+      <div class="result-detail-heading">
+        <span class="result-detail-icon">🌾</span>
+        <h2 id="varietyHeading" data-i18n="res.variety">Crop Variety</h2>
+      </div>
+      <div class="result-unavailable-state" data-i18n="res.variety_unavailable">Variety information is not available for this crop.</div>
+    </section>
+
+    {% if crop_info.stages %}
+      <section class="result-timeline-section" aria-labelledby="timelineHeading">
+        <div class="result-detail-heading">
+          <span class="result-detail-icon">🌱</span>
+          <h2 id="timelineHeading" data-i18n="res.growth_timeline">Crop Growth Timeline</h2>
+        </div>
+        <div class="result-growth-timeline">
+          {% for stage in crop_info.stages %}
+            <article class="result-stage-card">
+              <span class="result-stage-number">{{ loop.index }}</span>
+              <span class="result-stage-icon">{{ stage.icon }}</span>
+              <h3>{{ stage.phase }}</h3>
+              <p class="result-stage-tamil">{{ stage.phase_ta }}</p>
+              <strong>{{ stage.days }}</strong>
+              <p class="result-stage-details">{{ stage.details }}</p>
+            </article>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% if alt_crops_data %}
+      <div class="result-alternatives">
+        <h4 data-i18n="alt.heading">
+          Alternative Crop Options
+        </h4>
+        <div class="result-alternative-grid">
+          {% for alt in alt_crops_data %}
+            <div class="result-alternative-card">
+              <div>
+                <strong>{{ alt.name }}</strong> ({{ alt.tamil_name }})
+                <div class="result-alternative-duration">{{ alt.duration_days }}</div>
+              </div>
+              <a href="{{ url_for('duration', crop=alt.name) }}" class="btn btn-sm btn-outline">Explore</a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="result-action-grid">
+      <a href="{{ url_for('alternatives', crop=crop_name) }}" class="btn btn-secondary" data-i18n="res.btn_alt" id="btnResAlt">
+        🔄 View Alternative Crops
+      </a>
+      <a href="{{ url_for('comparison') }}?crops={{ crop_name }}&crops=Paddy&crops=Maize&crops=Groundnut" class="btn btn-secondary" data-i18n="res.btn_comp" id="btnResComp">
+        📊 Compare Crops
+      </a>
+      <a href="{{ url_for('duration', crop=crop_name) }}" class="btn btn-secondary" data-i18n="res.btn_dur" id="btnResDur">
+        ⏱️ View Crop Duration
+      </a>
+      <a href="{{ url_for('water', crop=crop_name) }}" class="btn btn-secondary" data-i18n="res.btn_wat" id="btnResWat">
+        💧 Water Requirement
+      </a>
+      <a href="{{ url_for('calendar', crop=crop_name) }}" class="btn btn-secondary" data-i18n="res.btn_cal" id="btnResCal">
+        📅 Crop Calendar
+      </a>
+      <a href="{{ url_for('budget', crop=crop_name) }}" class="btn btn-secondary" data-i18n="res.btn_budg" id="btnResBudg">
+        💰 Calculate Budget
+      </a>
+      <a href="{{ url_for('print_report', rec_id=rec.id) }}" class="btn btn-primary" data-i18n="res.btn_print" id="btnResPrint">
+        🖨️ Print Advisory Report
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

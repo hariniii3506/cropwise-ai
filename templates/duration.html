@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Crop Growth Duration: {{ crop.name }} - CROPWISE AI | பயிர் கால அளவு{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 30px; padding-bottom: 50px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px;">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline" data-i18n="nav.back_dashboard">← Back to Dashboard</a>
+    
+    <!-- Crop Selector Form -->
+    <form method="GET" action="{{ url_for('duration') }}" style="display: flex; align-items: center; gap: 10px;">
+      <label for="cropSelect" style="font-weight: 600; font-size: 0.9rem;">Select Crop:</label>
+      <select id="cropSelect" name="crop" class="form-control" onchange="this.form.submit()" style="padding: 6px 14px; width: auto;">
+        {% for c in all_crops %}
+          <option value="{{ c }}" {% if c == crop.name %}selected{% endif %}>{{ c }} ({{ crop_database[c].tamil_name if c in crop_database else '' }})</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  <div class="section-header" style="text-align: center; margin-bottom: 30px;">
+    <h1 class="section-title" data-i18n="dur.heading">Crop Growth Duration &amp; Lifecycle</h1>
+    <div style="font-size: 1.1rem; font-weight: 700; color: var(--color-primary); margin-top: 2px;">பயிர் வளர்ச்சி கால அளவு &amp; வாழ்க்கை சுழற்சி</div>
+    <p class="section-subtitle" data-i18n="dur.subheading">
+      Detailed 4-stage agronomic timeline from seed sowing to grain harvest for <strong>{{ crop.name }} ({{ crop.tamil_name }})</strong>.
+    </p>
+  </div>
+
+  <!-- Duration Summary Card -->
+  <div class="card" style="background: linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%); color: #FFFFFF; padding: 32px; margin-bottom: 36px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+      <div>
+        <span style="font-size: 0.85rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; color: #D8F3DC;" data-i18n="dur.approx_duration">
+          Approximate Total Duration
+        </span>
+        <h2 style="font-size: 2.4rem; font-family: var(--font-heading); color: #74C69D; margin: 4px 0;">
+          {{ crop.duration_days }}
+        </h2>
+        <p style="color: #E8F5E9; font-size: 0.95rem; max-width: 600px;">
+          Category: {{ crop.category }} ({{ crop.category_ta }}) • {{ crop.seasons }}
+        </p>
+      </div>
+
+      <div style="background: rgba(255, 255, 255, 0.12); padding: 16px 24px; border-radius: var(--radius-md); text-align: center;">
+        <div style="font-size: 0.85rem; color: #D8F3DC;">Water Requirement</div>
+        <div style="font-size: 1.4rem; font-weight: 800; color: #FFFFFF;">{{ crop.water_requirement }}</div>
+        <div style="font-size: 0.8rem; color: #D8F3DC;">{{ crop.water_mm_range }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4-Stage Lifecycle Timeline -->
+  <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 20px;">
+    4-Stage Agronomic Growth Stages
+  </h3>
+
+  <div class="lifecycle-timeline">
+    {% for stage in crop.stages %}
+      <div class="lifecycle-step">
+        <div class="lifecycle-icon">{{ stage.icon }}</div>
+        <h4 class="lifecycle-phase">{{ stage.phase }}</h4>
+        <div style="font-size: 0.85rem; font-weight: 600; color: var(--color-primary); margin-bottom: 8px;">{{ stage.phase_ta }}</div>
+        <div class="lifecycle-days">{{ stage.days }}</div>
+        <p class="lifecycle-desc">{{ stage.details }}</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Agronomic Advisory Tips -->
+  <div class="card" style="margin-top: 36px;">
+    <h3 class="card-title" style="margin-bottom: 16px;">🌾 Field Management &amp; Best Practices</h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--color-primary-dark); margin-bottom: 8px;">English Advisory Guidelines:</h4>
+        <ul style="list-style-type: square; margin-left: 20px; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.7;">
+          {% for tip in crop.advisory_tips %}
+            <li>{{ tip }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--color-primary-dark); margin-bottom: 8px;">வேளாண் வழிகாட்டுதல்கள் (தமிழ்):</h4>
+        <ul style="list-style-type: square; margin-left: 20px; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.7;">
+          {% for tip in crop.advisory_tips_ta %}
+            <li>{{ tip }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
