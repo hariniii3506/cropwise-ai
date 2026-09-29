@@ -10,15 +10,88 @@ import json
 import time
 from werkzeug.security import generate_password_hash, check_password_hash
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "cropwise.db")
-SCHEMA_PATH = os.path.join(os.path.dirname(__file__), "schema.sql")
+import shutil
+import tempfile
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_LOCAL_DB = os.path.join(BASE_DIR, "cropwise.db")
+SCHEMA_PATH = os.path.join(BASE_DIR, "schema.sql")
+
+def get_db_path():
+    """
+    Resolves the appropriate SQLite database file path.
+    On serverless platforms like Vercel (read-only filesystem), uses /tmp/cropwise.db
+    and seeds it from the bundled database or schema.
+    """
+    if os.environ.get("DB_PATH"):
+        return os.environ.get("DB_PATH")
+
+    is_serverless = bool(
+        os.environ.get("VERCEL")
+        or os.environ.get("AWS_LAMBDA_FUNCTION_NAME")
+        or os.environ.get("LAMBDA_TASK_ROOT")
+    )
+
+    if is_serverless:
+        tmp_dir = "/tmp" if os.name != "nt" else tempfile.gettempdir()
+        tmp_db = os.path.join(tmp_dir, "cropwise.db")
+        if not os.path.exists(tmp_db):
+            os.makedirs(tmp_dir, exist_ok=True)
+            if os.path.exists(DEFAULT_LOCAL_DB) and os.path.getsize(DEFAULT_LOCAL_DB) > 0:
+                try:
+                    shutil.copy2(DEFAULT_LOCAL_DB, tmp_db)
+                except Exception as e:
+                    print(f"[WARN] Could not copy bundled DB to temp directory: {e}")
+        return tmp_db
+
+    try:
+        test_file = os.path.join(BASE_DIR, ".write_test")
+        with open(test_file, "a") as f:
+            pass
+        if os.path.exists(test_file):
+            os.remove(test_file)
+        return DEFAULT_LOCAL_DB
+    except (OSError, IOError, PermissionError):
+        tmp_dir = "/tmp" if os.name != "nt" else tempfile.gettempdir()
+        tmp_db = os.path.join(tmp_dir, "cropwise.db")
+        if not os.path.exists(tmp_db):
+            os.makedirs(tmp_dir, exist_ok=True)
+            if os.path.exists(DEFAULT_LOCAL_DB):
+                try:
+                    shutil.copy2(DEFAULT_LOCAL_DB, tmp_db)
+                except Exception:
+                    pass
+        return tmp_db
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
+    db_path = get_db_path()
+    is_new = not os.path.exists(db_path)
+    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
+    if is_new and os.path.exists(SCHEMA_PATH):
+        try:
+            with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
+                conn.executescript(f.read())
+            conn.commit()
+        except Exception as e:
+            print(f"[WARN] Auto-schema execution note: {e}")
     return conn
 
 def init_db():
+    db_path = get_db_path()
+    is_serverless = bool(
+        os.environ.get("VERCEL")
+        or os.environ.get("AWS_LAMBDA_FUNCTION_NAME")
+        or os.environ.get("LAMBDA_TASK_ROOT")
+    )
+    if is_serverless and not os.path.exists(db_path) and os.path.exists(DEFAULT_LOCAL_DB):
+        try:
+            os.makedirs(os.path.dirname(db_path), exist_ok=True)
+            shutil.copy2(DEFAULT_LOCAL_DB, db_path)
+        except Exception as e:
+            print(f"[WARN] Could not copy bundled DB to temp during init: {e}")
+
     conn = get_db()
     with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
         conn.executescript(f.read())
@@ -75,7 +148,7 @@ def init_db():
 
     conn.commit()
     conn.close()
-    print("[OK] Initialized CROPWISE AI database with all tables.")
+    print(f"[OK] Initialized CROPWISE AI database at {db_path} with all tables.")
 
 # User Management
 def create_user(name, mobile, email, password, farm_location, land_area, land_unit="Acres", preferred_soil="Loamy", avatar="farmer1", is_verified=0):

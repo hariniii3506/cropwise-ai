@@ -19,10 +19,10 @@ __pycache__/
 .Python
 
 # SQLite Database / Local runtime data
-database/cropwise.db
 *.db
 *.sqlite
 *.sqlite3
+!database/cropwise.db
 
 # Node & Frontend dependencies
 node_modules/
