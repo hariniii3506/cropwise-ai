@@ -63,10 +63,10 @@ from database.db import (
 
 app = Flask(__name__)
 
-app.secret_key = os.environ.get(
-    "SECRET_KEY",
-    "cropwise_ai_secret_super_key_2026_final_year"
-)
+# Ensure SECRET_KEY is never empty or falsy
+secret = (os.environ.get("SECRET_KEY") or "").strip() or "cropwise_ai_secret_super_key_2026_final_year"
+app.secret_key = secret
+app.config["SECRET_KEY"] = secret
 
 # Initialize database tables on startup
 try:
@@ -74,13 +74,6 @@ try:
 except Exception as e:
     print(f"[WARN] Database initialization notice: {e}")
 
-@app.errorhandler(Exception)
-def handle_unexpected_exception(e):
-    import traceback
-    tb = traceback.format_exc()
-    print(f"[500 ERROR TRACEBACK]:\n{tb}")
-    # In production/debug, return traceback info for diagnosis
-    return f"<h3>500 Internal Server Error (Diagnosis)</h3><pre style='background:#f8d7da;padding:15px;border-radius:6px;border:1px solid #f5c6cb;'>{tb}</pre>", 500
 
 
 # -------------------------------------------------------------
