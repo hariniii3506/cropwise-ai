@@ -17,6 +17,80 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_LOCAL_DB = os.path.join(BASE_DIR, "cropwise.db")
 SCHEMA_PATH = os.path.join(BASE_DIR, "schema.sql")
 
+SCHEMA_SQL = """
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    mobile TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    farm_location TEXT NOT NULL,
+    land_area REAL NOT NULL,
+    land_unit TEXT DEFAULT 'Acres',
+    preferred_soil TEXT DEFAULT 'Loamy',
+    avatar TEXT DEFAULT 'farmer1',
+    is_verified INTEGER DEFAULT 1,
+    otp_hash TEXT DEFAULT NULL,
+    otp_expiry REAL DEFAULT NULL,
+    otp_attempts INTEGER DEFAULT 0,
+    otp_sent_at REAL DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS recommendations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    soil_type TEXT NOT NULL,
+    ph REAL NOT NULL,
+    temperature REAL NOT NULL,
+    humidity REAL NOT NULL,
+    rainfall REAL NOT NULL,
+    recommended_crop TEXT NOT NULL,
+    variety TEXT DEFAULT 'Standard',
+    alternative_crops TEXT DEFAULT '[]',
+    decision_notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS expenses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    expense_date DATE NOT NULL,
+    category TEXT NOT NULL,
+    amount REAL NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS notes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    tag TEXT DEFAULT 'General',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS reminders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    reminder_date DATE NOT NULL,
+    reminder_time TIME NOT NULL DEFAULT '00:00',
+    description TEXT DEFAULT '',
+    crop TEXT DEFAULT '',
+    variety TEXT DEFAULT '',
+    category TEXT DEFAULT 'General',
+    is_completed INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+"""
+
 def is_serverless_environment():
     """Check if running in a serverless / read-only runtime like Vercel or AWS Lambda."""
     if (
@@ -29,6 +103,19 @@ def is_serverless_environment():
     if "/var/task" in BASE_DIR or "/var/runtime" in BASE_DIR:
         return True
     return False
+
+def find_seed_db():
+    """Find bundled seed database across possible serverless filesystem locations."""
+    candidates = [
+        DEFAULT_LOCAL_DB,
+        os.path.join(os.getcwd(), "database", "cropwise.db"),
+        os.path.join(os.path.dirname(BASE_DIR), "database", "cropwise.db"),
+        "/var/task/database/cropwise.db",
+    ]
+    for p in candidates:
+        if os.path.exists(p) and os.path.isfile(p) and os.path.getsize(p) > 0:
+            return p
+    return None
 
 def get_db_path():
     """
@@ -44,9 +131,10 @@ def get_db_path():
         tmp_db = os.path.join(tmp_dir, "cropwise.db")
         if not os.path.exists(tmp_db):
             os.makedirs(tmp_dir, exist_ok=True)
-            if os.path.exists(DEFAULT_LOCAL_DB) and os.path.getsize(DEFAULT_LOCAL_DB) > 0:
+            seed_db = find_seed_db()
+            if seed_db:
                 try:
-                    shutil.copyfile(DEFAULT_LOCAL_DB, tmp_db)
+                    shutil.copyfile(seed_db, tmp_db)
                     try:
                         os.chmod(tmp_db, 0o666)
                     except Exception:
@@ -72,9 +160,10 @@ def get_db_path():
         tmp_db = os.path.join(tmp_dir, "cropwise.db")
         if not os.path.exists(tmp_db):
             os.makedirs(tmp_dir, exist_ok=True)
-            if os.path.exists(DEFAULT_LOCAL_DB):
+            seed_db = find_seed_db()
+            if seed_db:
                 try:
-                    shutil.copyfile(DEFAULT_LOCAL_DB, tmp_db)
+                    shutil.copyfile(seed_db, tmp_db)
                     try:
                         os.chmod(tmp_db, 0o666)
                     except Exception:
@@ -90,14 +179,20 @@ def get_db_path():
 
 def get_db():
     db_path = get_db_path()
-    is_new = not os.path.exists(db_path)
     os.makedirs(os.path.dirname(db_path), exist_ok=True)
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
-    if is_new and os.path.exists(SCHEMA_PATH):
+
+    # Ensure tables exist
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
+    if not cursor.fetchone():
         try:
-            with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
-                conn.executescript(f.read())
+            if os.path.exists(SCHEMA_PATH):
+                with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
+                    conn.executescript(f.read())
+            else:
+                conn.executescript(SCHEMA_SQL)
             conn.commit()
             try:
                 os.chmod(db_path, 0o666)
@@ -105,14 +200,16 @@ def get_db():
                 pass
         except Exception as e:
             print(f"[WARN] Auto-schema execution note: {e}")
+
     return conn
 
 def init_db():
     db_path = get_db_path()
-    if is_serverless_environment() and not os.path.exists(db_path) and os.path.exists(DEFAULT_LOCAL_DB):
+    seed_db = find_seed_db()
+    if is_serverless_environment() and not os.path.exists(db_path) and seed_db:
         try:
             os.makedirs(os.path.dirname(db_path), exist_ok=True)
-            shutil.copyfile(DEFAULT_LOCAL_DB, db_path)
+            shutil.copyfile(seed_db, db_path)
             try:
                 os.chmod(db_path, 0o666)
             except Exception:
