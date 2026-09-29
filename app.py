@@ -74,6 +74,15 @@ try:
 except Exception as e:
     print(f"[WARN] Database initialization notice: {e}")
 
+@app.errorhandler(Exception)
+def handle_unexpected_exception(e):
+    import traceback
+    tb = traceback.format_exc()
+    print(f"[500 ERROR TRACEBACK]:\n{tb}")
+    # In production/debug, return traceback info for diagnosis
+    return f"<h3>500 Internal Server Error (Diagnosis)</h3><pre style='background:#f8d7da;padding:15px;border-radius:6px;border:1px solid #f5c6cb;'>{tb}</pre>", 500
+
+
 # -------------------------------------------------------------
 # EMAILJS CONFIGURATION (FOR REGISTRATION OTP)
 # -------------------------------------------------------------
