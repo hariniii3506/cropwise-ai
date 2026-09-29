@@ -17,31 +17,47 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_LOCAL_DB = os.path.join(BASE_DIR, "cropwise.db")
 SCHEMA_PATH = os.path.join(BASE_DIR, "schema.sql")
 
+def is_serverless_environment():
+    """Check if running in a serverless / read-only runtime like Vercel or AWS Lambda."""
+    if (
+        os.environ.get("VERCEL")
+        or os.environ.get("AWS_LAMBDA_FUNCTION_NAME")
+        or os.environ.get("LAMBDA_TASK_ROOT")
+        or os.environ.get("AWS_EXECUTION_ENV")
+    ):
+        return True
+    if "/var/task" in BASE_DIR or "/var/runtime" in BASE_DIR:
+        return True
+    return False
+
 def get_db_path():
     """
     Resolves the appropriate SQLite database file path.
     On serverless platforms like Vercel (read-only filesystem), uses /tmp/cropwise.db
-    and seeds it from the bundled database or schema.
+    and seeds it from the bundled database or schema with full write permissions.
     """
     if os.environ.get("DB_PATH"):
         return os.environ.get("DB_PATH")
 
-    is_serverless = bool(
-        os.environ.get("VERCEL")
-        or os.environ.get("AWS_LAMBDA_FUNCTION_NAME")
-        or os.environ.get("LAMBDA_TASK_ROOT")
-    )
-
-    if is_serverless:
+    if is_serverless_environment():
         tmp_dir = "/tmp" if os.name != "nt" else tempfile.gettempdir()
         tmp_db = os.path.join(tmp_dir, "cropwise.db")
         if not os.path.exists(tmp_db):
             os.makedirs(tmp_dir, exist_ok=True)
             if os.path.exists(DEFAULT_LOCAL_DB) and os.path.getsize(DEFAULT_LOCAL_DB) > 0:
                 try:
-                    shutil.copy2(DEFAULT_LOCAL_DB, tmp_db)
+                    shutil.copyfile(DEFAULT_LOCAL_DB, tmp_db)
+                    try:
+                        os.chmod(tmp_db, 0o666)
+                    except Exception:
+                        pass
                 except Exception as e:
                     print(f"[WARN] Could not copy bundled DB to temp directory: {e}")
+        else:
+            try:
+                os.chmod(tmp_db, 0o666)
+            except Exception:
+                pass
         return tmp_db
 
     try:
@@ -58,9 +74,18 @@ def get_db_path():
             os.makedirs(tmp_dir, exist_ok=True)
             if os.path.exists(DEFAULT_LOCAL_DB):
                 try:
-                    shutil.copy2(DEFAULT_LOCAL_DB, tmp_db)
+                    shutil.copyfile(DEFAULT_LOCAL_DB, tmp_db)
+                    try:
+                        os.chmod(tmp_db, 0o666)
+                    except Exception:
+                        pass
                 except Exception:
                     pass
+        else:
+            try:
+                os.chmod(tmp_db, 0o666)
+            except Exception:
+                pass
         return tmp_db
 
 def get_db():
@@ -74,21 +99,24 @@ def get_db():
             with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
                 conn.executescript(f.read())
             conn.commit()
+            try:
+                os.chmod(db_path, 0o666)
+            except Exception:
+                pass
         except Exception as e:
             print(f"[WARN] Auto-schema execution note: {e}")
     return conn
 
 def init_db():
     db_path = get_db_path()
-    is_serverless = bool(
-        os.environ.get("VERCEL")
-        or os.environ.get("AWS_LAMBDA_FUNCTION_NAME")
-        or os.environ.get("LAMBDA_TASK_ROOT")
-    )
-    if is_serverless and not os.path.exists(db_path) and os.path.exists(DEFAULT_LOCAL_DB):
+    if is_serverless_environment() and not os.path.exists(db_path) and os.path.exists(DEFAULT_LOCAL_DB):
         try:
             os.makedirs(os.path.dirname(db_path), exist_ok=True)
-            shutil.copy2(DEFAULT_LOCAL_DB, db_path)
+            shutil.copyfile(DEFAULT_LOCAL_DB, db_path)
+            try:
+                os.chmod(db_path, 0o666)
+            except Exception:
+                pass
         except Exception as e:
             print(f"[WARN] Could not copy bundled DB to temp during init: {e}")
 
