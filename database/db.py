@@ -298,10 +298,13 @@ def create_user(name, mobile, email, password, farm_location, land_area, land_un
     finally:
         conn.close()
 
-def delete_unverified_user(email):
+def delete_unverified_user(email, mobile=None):
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM users WHERE email = ? AND is_verified = 0", (email.strip().lower(),))
+    if mobile and str(mobile).strip():
+        cursor.execute("DELETE FROM users WHERE (email = ? OR mobile = ?) AND is_verified = 0", (email.strip().lower(), str(mobile).strip()))
+    else:
+        cursor.execute("DELETE FROM users WHERE email = ? AND is_verified = 0", (email.strip().lower(),))
     conn.commit()
     conn.close()
 
@@ -359,7 +362,7 @@ def verify_user_otp(email, entered_code):
         conn.close()
         return False, "Too many invalid attempts. Please request a new OTP."
         
-    if check_password_hash(saved_code, entered_code):
+    if check_password_hash(saved_code, str(entered_code).strip()):
         # Mark as verified and clear OTP
         cursor.execute("""
             UPDATE users
@@ -439,7 +442,7 @@ def verify_reset_otp(email, entered_code):
         conn.close()
         return False, "Too many invalid attempts. Please request a new OTP."
         
-    if check_password_hash(saved_code, entered_code):
+    if check_password_hash(saved_code, str(entered_code).strip()):
         # Clear OTP columns upon successful verification
         cursor.execute("""
             UPDATE users
