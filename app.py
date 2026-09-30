@@ -85,7 +85,8 @@ except Exception as e:
 
 EMAILJS_SERVICE_ID = os.environ.get("EMAILJS_SERVICE_ID", "service_was0ejd")
 EMAILJS_TEMPLATE_ID = os.environ.get("EMAILJS_TEMPLATE_ID", "template_wz05yvm")
-EMAILJS_PUBLIC_KEY = os.environ.get("EMAILJS_PUBLIC_KEY", "Zo1Xd1EKRmdPIgtnV")
+EMAILJS_PUBLIC_KEY = os.environ.get("EMAILJS_PUBLIC_KEY", "U4lSN1hFTXTfz7mMV")
+EMAILJS_PRIVATE_KEY = os.environ.get("EMAILJS_PRIVATE_KEY", "")
 
 def send_otp_email(recipient_email, otp_code, origin_url=None):
     """
@@ -108,6 +109,9 @@ def send_otp_email(recipient_email, otp_code, origin_url=None):
             "time": time_str
         }
     }
+
+    if EMAILJS_PRIVATE_KEY and EMAILJS_PRIVATE_KEY.strip():
+        payload["accessToken"] = EMAILJS_PRIVATE_KEY.strip()
 
     base_origin = (origin_url or "http://localhost:5000").rstrip("/")
     headers = {
