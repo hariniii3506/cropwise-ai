@@ -94,6 +94,18 @@ const translations = {
     "auth.have_account": "Already have an account?",
     "auth.register_link": "Register here",
     "auth.login_link": "Login here",
+    "auth.forgot_password": "Forgot Password?",
+    "auth.forgot_password_title": "Reset Your Password",
+    "auth.forgot_password_subtitle": "Enter your registered email address and we will send a 6-digit OTP to reset your password.",
+    "auth.btn_send_reset_otp": "Send OTP",
+    "auth.reset_password_heading": "Set New Password",
+    "auth.reset_password_subtitle": "Create a new secure password for your farmer account.",
+    "auth.new_password": "New Password",
+    "auth.new_password_placeholder": "Create password (min 6 chars)",
+    "auth.confirm_new_password": "Confirm New Password",
+    "auth.confirm_new_password_placeholder": "Re-enter new password",
+    "auth.btn_reset_password": "Reset Password",
+    "auth.back_to_login": "← Back to Login",
 
     // OTP Verification
     "otp.heading": "Verify Your Email",
@@ -108,6 +120,10 @@ const translations = {
     "otp.resend": "Resend OTP",
     "otp.restart": "← Restart Registration",
     "otp.alert_incomplete": "Please enter the complete 6-digit OTP code.",
+    "otp.reset_heading": "Verify Password Reset Code",
+    "otp.reset_subtitle_prefix": "We've sent a 6-digit verification code to",
+    "otp.reset_subtitle_suffix": ". Enter it below to reset your password.",
+    "otp.restart_reset": "← Start Over",
 
     // Dashboard
     "dash.welcome": "Welcome, ",
@@ -468,6 +484,18 @@ const translations = {
     "auth.have_account": "ஏற்கனவே கணக்கு உள்ளதா?",
     "auth.register_link": "இங்கே பதிவு செய்க",
     "auth.login_link": "இங்கே உள்நுழைக",
+    "auth.forgot_password": "கடவுச்சொல் மறந்துவிட்டதா?",
+    "auth.forgot_password_title": "கடவுச்சொல்லை மீட்டமைக்கவும்",
+    "auth.forgot_password_subtitle": "6 இலக்க சரிபார்ப்பு குறியீட்டைப் பெற உங்கள் பதிவுசெய்த மின்னஞ்சல் முகவரியை உள்ளிடவும்.",
+    "auth.btn_send_reset_otp": "OTP அனுப்புக",
+    "auth.reset_password_heading": "புதிய கடவுச்சொல்லை அமைக்கவும்",
+    "auth.reset_password_subtitle": "உங்கள் விவசாயி கணக்கிற்கு புதிய பாதுகாப்பான கடவுச்சொல்லை உருவாக்கவும்.",
+    "auth.new_password": "புதிய கடவுச்சொல்",
+    "auth.new_password_placeholder": "புதிய கடவுச்சொல் (குறைந்தது 6 எழுத்துக்கள்)",
+    "auth.confirm_new_password": "புதிய கடவுச்சொல்லை உறுதிப்படுத்துக",
+    "auth.confirm_new_password_placeholder": "புதிய கடவுச்சொல்லை மீண்டும் உள்ளிடவும்",
+    "auth.btn_reset_password": "கடவுச்சொல்லை மாற்றுக",
+    "auth.back_to_login": "← உள்நுழைவு பக்கத்திற்குச் செல்லவும்",
 
     // OTP Verification
     "otp.heading": "உங்கள் மின்னஞ்சலை சரிபார்க்கவும்",
@@ -482,6 +510,10 @@ const translations = {
     "otp.resend": "OTP மீண்டும் அனுப்பவும்",
     "otp.restart": "← பதிவை மீண்டும் தொடங்கவும்",
     "otp.alert_incomplete": "முழுமையான 6-இலக்க OTP எண்ணை உள்ளிடவும்.",
+    "otp.reset_heading": "கடவுச்சொல் மீட்டமைப்பு OTP சரிபார்ப்பு",
+    "otp.reset_subtitle_prefix": "உங்கள் மின்னஞ்சலுக்கு 6 இலக்க சரிபார்ப்பு குறியீடு அனுப்பப்பட்டுள்ளது (",
+    "otp.reset_subtitle_suffix": "). கடவுச்சொல்லை மீட்டமைக்க கீழே உள்ளிடவும்.",
+    "otp.restart_reset": "← மீண்டும் தொடங்கவும்",
 
     // Dashboard
     "dash.welcome": "வணக்கம், ",

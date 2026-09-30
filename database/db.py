@@ -400,6 +400,74 @@ def get_user_by_id(user_id):
     conn.close()
     return dict(user) if user else None
 
+def get_user_by_email(email):
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE email = ?", (email.strip().lower(),))
+    user = cursor.fetchone()
+    conn.close()
+    return dict(user) if user else None
+
+def verify_reset_otp(email, entered_code):
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT id, otp_hash, otp_expiry, otp_attempts FROM users WHERE email = ?
+    """, (email.strip().lower(),))
+    user = cursor.fetchone()
+    
+    if not user:
+        conn.close()
+        return False, "User not found."
+    
+    saved_code = user["otp_hash"]
+    expiry = user["otp_expiry"]
+    attempts = user["otp_attempts"] or 0
+    
+    if not saved_code or not expiry:
+        conn.close()
+        return False, "No active OTP found. Please request a new OTP."
+        
+    if time.time() > expiry:
+        # Clear expired OTP
+        cursor.execute("UPDATE users SET otp_hash = NULL, otp_expiry = NULL, otp_attempts = 0, otp_sent_at = NULL WHERE id = ?", (user["id"],))
+        conn.commit()
+        conn.close()
+        return False, "OTP has expired. Please request a new OTP."
+
+    if attempts >= 5:
+        conn.close()
+        return False, "Too many invalid attempts. Please request a new OTP."
+        
+    if check_password_hash(saved_code, entered_code):
+        # Clear OTP columns upon successful verification
+        cursor.execute("""
+            UPDATE users
+            SET otp_hash = NULL, otp_expiry = NULL, otp_attempts = 0, otp_sent_at = NULL
+            WHERE id = ?
+        """, (user["id"],))
+        conn.commit()
+        conn.close()
+        return True, user["id"]
+    else:
+        attempts += 1
+        cursor.execute("UPDATE users SET otp_attempts = ? WHERE id = ?", (attempts, user["id"]))
+        conn.commit()
+        conn.close()
+        if attempts >= 5:
+            return False, "Too many invalid attempts. Please request a new OTP."
+        return False, "Invalid OTP. Please try again."
+
+def update_user_password(user_id, new_password):
+    conn = get_db()
+    cursor = conn.cursor()
+    password_hash = generate_password_hash(new_password)
+    cursor.execute("UPDATE users SET password_hash = ? WHERE id = ?", (password_hash, user_id))
+    conn.commit()
+    success = cursor.rowcount > 0
+    conn.close()
+    return success
+
 def update_user_profile(user_id, name, mobile, email, farm_location, land_area, land_unit, preferred_soil, avatar):
     conn = get_db()
     cursor = conn.cursor()

@@ -39,6 +39,9 @@ from database.db import (
     verify_user_otp,
     authenticate_user,
     get_user_by_id,
+    get_user_by_email,
+    verify_reset_otp,
+    update_user_password,
     update_user_profile,
     save_recommendation,
     get_recommendation_history,
@@ -910,10 +913,172 @@ def logout():
     flash("You have been logged out successfully.", "info")
     return redirect(url_for("login"))
 
-@app.route("/forgot-password")
+@app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
-    """Forgot password support guidance page."""
+    """Handle password reset request by validating registered email and sending 6-digit OTP."""
+    if session.get("user_id"):
+        return redirect(url_for("dashboard"))
+
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+
+        if not email:
+            flash("Please enter your registered email address.", "danger")
+            return render_template("forgot_password.html")
+
+        user = get_user_by_email(email)
+        if not user:
+            flash("No account is registered with this email address. Please check your email or register.", "danger")
+            return render_template("forgot_password.html", entered_email=email)
+
+        # Generate ONE 6-digit OTP
+        otp_code = f"{random.randint(100000, 999999)}"
+        otp_hash = generate_password_hash(otp_code)
+        expiry = time.time() + 300  # 5 minutes validity
+
+        update_user_otp(user["id"], otp_hash, expiry, time.time())
+
+        # Store reset session state
+        session["reset_email"] = user["email"]
+        session["reset_user_id"] = user["id"]
+        session["reset_name"] = user.get("name", "")
+        session["reset_otp_sent_at"] = time.time()
+        session["reset_otp_verified"] = False
+
+        # Send OTP via EmailJS
+        origin_url = request.host_url
+        email_sent, send_err = send_otp_email(user["email"], otp_code, origin_url=origin_url)
+
+        if not email_sent:
+            flash("We couldn't send the reset OTP to your email. Please try again in a moment.", "danger")
+            return render_template("forgot_password.html", entered_email=email)
+
+        flash("A 6-digit password reset OTP has been sent to your email. Please enter it below.", "success")
+        return redirect(url_for("reset_password_verify"))
+
     return render_template("forgot_password.html")
+
+@app.route("/reset-password-verify", methods=["GET", "POST"])
+def reset_password_verify():
+    """Verify OTP sent for password reset."""
+    if session.get("user_id"):
+        return redirect(url_for("dashboard"))
+
+    reset_email = session.get("reset_email")
+    reset_user_id = session.get("reset_user_id")
+    if not reset_email or not reset_user_id:
+        flash("Password reset session expired or not found. Please start again.", "warning")
+        return redirect(url_for("forgot_password"))
+
+    # Calculate resend countdown
+    otp_sent_at = session.get("reset_otp_sent_at", time.time())
+    elapsed = int(time.time() - otp_sent_at)
+    resend_in = max(0, 45 - elapsed)
+
+    if request.method == "POST":
+        entered_otp = request.form.get("otp", "").strip()
+
+        if not entered_otp or len(entered_otp) != 6 or not entered_otp.isdigit():
+            flash("Please enter the complete 6-digit OTP.", "danger")
+            return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email)
+
+        success, result = verify_reset_otp(reset_email, entered_otp)
+
+        if success:
+            session["reset_otp_verified"] = True
+            flash("OTP verified successfully! Please set your new password.", "success")
+            return redirect(url_for("reset_password"))
+        else:
+            if "expired" in str(result).lower():
+                flash("Your OTP has expired. Please request a new OTP.", "danger")
+            elif "too many" in str(result).lower():
+                flash("Too many invalid attempts. Please request a new OTP.", "danger")
+            else:
+                flash("Incorrect OTP. Please try again.", "danger")
+            return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email)
+
+    return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email)
+
+@app.route("/resend-reset-otp")
+def resend_reset_otp():
+    """Resend a new 6-digit OTP to the farmer's reset email."""
+    reset_email = session.get("reset_email")
+    reset_user_id = session.get("reset_user_id")
+
+    if not reset_email or not reset_user_id:
+        flash("Password reset session expired. Please start again.", "warning")
+        return redirect(url_for("forgot_password"))
+
+    otp_sent_at = session.get("reset_otp_sent_at", 0)
+    if time.time() - otp_sent_at < 30:
+        flash("Please wait before requesting another OTP.", "warning")
+        return redirect(url_for("reset_password_verify"))
+
+    # Generate NEW 6-digit OTP
+    otp_code = f"{random.randint(100000, 999999)}"
+    otp_hash = generate_password_hash(otp_code)
+    expiry = time.time() + 300
+
+    update_user_otp(reset_user_id, otp_hash, expiry, time.time())
+    session["reset_otp_sent_at"] = time.time()
+
+    origin_url = request.host_url
+    email_sent, send_err = send_otp_email(reset_email, otp_code, origin_url=origin_url)
+
+    if not email_sent:
+        flash("We couldn't send the new OTP email. Please try again in a moment.", "danger")
+        return redirect(url_for("reset_password_verify"))
+
+    flash("A new 6-digit OTP has been sent to your email.", "success")
+    return redirect(url_for("reset_password_verify"))
+
+@app.route("/reset-password", methods=["GET", "POST"])
+def reset_password():
+    """Allow user to enter New Password and Confirm Password after OTP verification."""
+    if session.get("user_id"):
+        return redirect(url_for("dashboard"))
+
+    reset_user_id = session.get("reset_user_id")
+    reset_email = session.get("reset_email")
+    reset_verified = session.get("reset_otp_verified")
+
+    if not reset_user_id or not reset_email or not reset_verified:
+        flash("Please verify your OTP before resetting password.", "warning")
+        return redirect(url_for("forgot_password"))
+
+    if request.method == "POST":
+        password = request.form.get("password", "")
+        confirm_password = request.form.get("confirm_password", "")
+
+        if not password or not confirm_password:
+            flash("Please enter both password and confirm password.", "danger")
+            return render_template("reset_password.html")
+
+        if password != confirm_password:
+            flash("Passwords do not match. Please re-enter your password.", "danger")
+            return render_template("reset_password.html")
+
+        if len(password) < 6:
+            flash("Password must be at least 6 characters in length.", "danger")
+            return render_template("reset_password.html")
+
+        success = update_user_password(reset_user_id, password)
+
+        # Clear reset session tokens
+        session.pop("reset_email", None)
+        session.pop("reset_user_id", None)
+        session.pop("reset_name", None)
+        session.pop("reset_otp_sent_at", None)
+        session.pop("reset_otp_verified", None)
+
+        if success:
+            flash("Password reset successfully! You can now log in with your new password.", "success")
+            return redirect(url_for("login"))
+        else:
+            flash("Failed to update password. Please try again.", "danger")
+            return redirect(url_for("forgot_password"))
+
+    return render_template("reset_password.html")
 
 # -------------------------------------------------------------
 # DASHBOARD & PROFILE
