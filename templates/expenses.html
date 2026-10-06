@@ -656,39 +656,195 @@ document.addEventListener("DOMContentLoaded", function () {
       timeElement.textContent = String(hour).padStart(2, "0") + ":" + minute + " " + period;
     });
 
+    // Register minimal service worker for mobile notifications if supported
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}").catch(function () {});
+    }
+
     const enableButton = document.getElementById("enableReminderNotifications");
     const permissionStatus = document.getElementById("notificationPermissionStatus");
     const reminderCards = Array.from(document.querySelectorAll(".farm-reminder-card"));
 
     function updatePermissionStatus() {
-      if (!permissionStatus || !("Notification" in window)) return;
+      if (!permissionStatus) return;
+      if (!("Notification" in window)) {
+        permissionStatus.textContent = "Browser notifications are not supported in this browser.";
+        return;
+      }
       permissionStatus.textContent = Notification.permission === "granted"
         ? "Browser notifications are enabled."
         : "Enable browser notifications to receive reminders while this page is open.";
     }
 
+    function requestNotificationPermission() {
+      if (!("Notification" in window)) return;
+      if (Notification.permission === "granted") {
+        updatePermissionStatus();
+        return;
+      }
+      try {
+        const promise = Notification.requestPermission(function () {
+          updatePermissionStatus();
+        });
+        if (promise && typeof promise.then === "function") {
+          promise.then(updatePermissionStatus).catch(function () {});
+        }
+      } catch (err) {
+        try {
+          Notification.requestPermission(updatePermissionStatus);
+        } catch (e) {}
+      }
+    }
+
     if (enableButton && "Notification" in window) {
       enableButton.addEventListener("click", function () {
-        if (Notification.permission !== "granted") {
-          Notification.requestPermission().then(updatePermissionStatus);
-        }
+        requestNotificationPermission();
       });
       updatePermissionStatus();
     } else if (permissionStatus) {
       permissionStatus.textContent = "Browser notifications are not supported in this browser.";
     }
 
-    function notifyDueReminders() {
+    function escapeReminderHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Explicit local date construction (prevents timezone / string parsing ambiguities on mobile)
+    function parseReminderDate(rawStr) {
+      if (!rawStr) return null;
+      const clean = String(rawStr).replace("T", " ").trim();
+      const parts = clean.split(" ");
+      if (parts.length < 2) return null;
+      const dateParts = parts[0].split("-").map(Number);
+      const timeParts = parts[1].split(":").map(Number);
+      if (dateParts.length < 3 || timeParts.length < 2) return null;
+      const year = dateParts[0];
+      const monthIndex = dateParts[1] - 1;
+      const day = dateParts[2];
+      const hour = timeParts[0];
+      const minute = timeParts[1];
+      return new Date(year, monthIndex, day, hour, minute, 0, 0);
+    }
+
+    // In-page floating reminder toast (guaranteed visual alert on mobile & desktop)
+    function showInPageReminderToast(title, description, timeStr) {
+      let toastContainer = document.getElementById("cropwiseReminderToastContainer");
+      if (!toastContainer) {
+        toastContainer = document.createElement("div");
+        toastContainer.id = "cropwiseReminderToastContainer";
+        toastContainer.setAttribute("role", "alert");
+        toastContainer.setAttribute("aria-live", "assertive");
+        toastContainer.style.cssText = "position: fixed; top: 20px; right: 20px; z-index: 99999; max-width: calc(100vw - 32px); width: 380px; display: flex; flex-direction: column; gap: 10px; pointer-events: none;";
+        document.body.appendChild(toastContainer);
+      }
+
+      const toast = document.createElement("div");
+      toast.className = "cropwise-reminder-toast";
+      toast.style.cssText = "background: var(--color-card-bg, #ffffff); color: var(--color-text-main, #1c2d27); border: 2px solid var(--color-primary, #2D6A4F); border-left: 6px solid var(--color-primary, #2D6A4F); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.18); padding: 14px 16px; pointer-events: auto; display: flex; flex-direction: column; gap: 4px; font-family: inherit; transition: opacity 0.25s, transform 0.25s;";
+
+      toast.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--color-primary, #2D6A4F); font-size: 0.95rem;">
+            <span>🌱</span>
+            <span>Farm Reminder Alert</span>
+          </div>
+          <button type="button" aria-label="Dismiss reminder" style="background: none; border: none; font-size: 1.35rem; line-height: 1; cursor: pointer; color: var(--color-text-muted, #666); padding: 0 4px;">&times;</button>
+        </div>
+        <div style="font-weight: 600; font-size: 0.95rem; margin-top: 2px; color: var(--color-heading, #111);">${escapeReminderHtml(title)}</div>
+        ${description ? `<div style="font-size: 0.85rem; color: var(--color-text-muted, #555); margin-top: 2px; line-height: 1.35;">${escapeReminderHtml(description)}</div>` : ''}
+        <div style="font-size: 0.78rem; color: var(--color-text-muted, #777); margin-top: 4px;">Scheduled for: ${escapeReminderHtml(timeStr)}</div>
+      `;
+
+      const closeBtn = toast.querySelector("button");
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function () {
+          toast.style.opacity = "0";
+          toast.style.transform = "translateY(-10px)";
+          setTimeout(function () { toast.remove(); }, 260);
+        });
+      }
+
+      // Auto-dismiss after 12 seconds
+      setTimeout(function () {
+        if (toast.parentElement) {
+          toast.style.opacity = "0";
+          toast.style.transform = "translateY(-10px)";
+          setTimeout(function () { toast.remove(); }, 260);
+        }
+      }, 12000);
+
+      toastContainer.appendChild(toast);
+
+      // Safe haptic vibration on mobile if supported
+      if ("vibrate" in navigator) {
+        try {
+          navigator.vibrate([150, 100, 150]);
+        } catch (e) {}
+      }
+    }
+
+    // System notification dispatcher with ServiceWorker & safe fallback
+    function triggerSystemNotification(title, description, timeStr) {
       if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+      const notifTitle = "CROPWISE AI 🌱 Farm Reminder";
+      const notifBody = title + (description ? "\n" + description : "") + "\nScheduled: " + timeStr;
+      const notifOptions = {
+        body: notifBody,
+        icon: "{{ url_for('static', filename='images/favicon.png', _external=False) }}",
+        badge: "{{ url_for('static', filename='images/favicon.png', _external=False) }}",
+        tag: "cropwise-reminder",
+        renotify: true
+      };
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.ready.then(function (reg) {
+          if (reg && typeof reg.showNotification === "function") {
+            reg.showNotification(notifTitle, notifOptions).catch(function () {
+              fallbackNotificationConstructor(notifTitle, notifOptions);
+            });
+          } else {
+            fallbackNotificationConstructor(notifTitle, notifOptions);
+          }
+        }).catch(function () {
+          fallbackNotificationConstructor(notifTitle, notifOptions);
+        });
+      } else {
+        fallbackNotificationConstructor(notifTitle, notifOptions);
+      }
+    }
+
+    function fallbackNotificationConstructor(notifTitle, notifOptions) {
+      try {
+        new Notification(notifTitle, notifOptions);
+      } catch (err) {
+        // Silently caught: mobile browsers disallow new Notification constructor
+      }
+    }
+
+    function notifyDueReminders() {
       const now = new Date();
       reminderCards.forEach(function (card) {
-        const reminderAt = new Date(card.dataset.reminderAt);
+        const reminderAt = parseReminderDate(card.dataset.reminderAt);
+        if (!reminderAt) return;
         const notificationKey = "cropwise-reminder-" + card.dataset.reminderId;
         if (reminderAt <= now && !localStorage.getItem(notificationKey)) {
-          new Notification("CROPWISE AI 🌱", {
-            body: "Farm Reminder\n" + card.dataset.reminderTitle + "\n" + card.dataset.reminderDescription + "\nReminder time: " + reminderAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
-          });
           localStorage.setItem(notificationKey, "1");
+          const title = card.dataset.reminderTitle || "Farm Task";
+          const desc = card.dataset.reminderDescription || "";
+          const timeStr = reminderAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+
+          // 1. Always display in-page floating toast
+          showInPageReminderToast(title, desc, timeStr);
+
+          // 2. Dispatch OS system notification if supported & enabled
+          triggerSystemNotification(title, desc, timeStr);
         }
       });
     }
