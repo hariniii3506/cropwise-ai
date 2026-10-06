@@ -984,13 +984,19 @@ def forgot_password():
 
 @app.route("/reset-password-verify", methods=["GET", "POST"])
 def reset_password_verify():
-    """Verify OTP sent for password reset."""
+    """Verify OTP sent for password reset and process seamless in-place password reset."""
     if session.get("user_id"):
         return redirect(url_for("dashboard"))
 
     reset_email = session.get("reset_email")
     reset_user_id = session.get("reset_user_id")
     if not reset_email or not reset_user_id:
+        if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return jsonify({
+                "success": False,
+                "message": "Password reset session expired or not found. Please start again.",
+                "redirect": url_for("forgot_password")
+            }), 401
         flash("Password reset session expired or not found. Please start again.", "warning")
         return redirect(url_for("forgot_password"))
 
@@ -998,44 +1004,129 @@ def reset_password_verify():
     otp_sent_at = session.get("reset_otp_sent_at", time.time())
     elapsed = int(time.time() - otp_sent_at)
     resend_in = max(0, 45 - elapsed)
+    step = "reset" if session.get("reset_otp_verified") else "otp"
 
     if request.method == "POST":
-        entered_otp = request.form.get("otp", "").strip()
+        data = request.get_json() if request.is_json else request.form
+        action = data.get("action", "")
 
-        if not entered_otp or len(entered_otp) != 6 or not entered_otp.isdigit():
-            flash("Please enter the complete 6-digit OTP.", "danger")
-            return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email)
+        # Action 1: Verify OTP
+        if action == "verify_otp" or ("otp" in data and "password" not in data and action != "reset_password"):
+            entered_otp = str(data.get("otp", "")).strip()
 
-        success, result = verify_reset_otp(reset_email, entered_otp)
+            if not entered_otp or len(entered_otp) != 6 or not entered_otp.isdigit():
+                msg = "Please enter the complete 6-digit OTP."
+                if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return jsonify({"success": False, "message": msg}), 400
+                flash(msg, "danger")
+                return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email, step="otp")
 
-        if success:
-            session["reset_otp_verified"] = True
-            flash("OTP verified successfully! Please set your new password.", "success")
-            return redirect(url_for("reset_password"))
-        else:
-            if "expired" in str(result).lower():
-                flash("Your OTP has expired. Please request a new OTP.", "danger")
-            elif "too many" in str(result).lower():
-                flash("Too many invalid attempts. Please request a new OTP.", "danger")
+            success, result = verify_reset_otp(reset_email, entered_otp)
+
+            if success:
+                session["reset_otp_verified"] = True
+                msg = "OTP verified successfully! Please set your new password."
+                if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return jsonify({"success": True, "message": msg, "step": "reset"})
+                flash(msg, "success")
+                return render_template("reset_password_verify.html", resend_in=0, email=reset_email, step="reset")
             else:
-                flash("Incorrect OTP. Please try again.", "danger")
-            return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email)
+                if "expired" in str(result).lower():
+                    msg = "Your OTP has expired. Please request a new OTP."
+                elif "too many" in str(result).lower():
+                    msg = "Too many invalid attempts. Please request a new OTP."
+                else:
+                    msg = "Incorrect OTP. Please try again."
+                if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return jsonify({"success": False, "message": msg}), 400
+                flash(msg, "danger")
+                return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email, step="otp")
 
-    return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email)
+        # Action 2: Reset Password
+        elif action == "reset_password" or "password" in data:
+            if not session.get("reset_otp_verified"):
+                msg = "Please verify your OTP before resetting password."
+                if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return jsonify({"success": False, "message": msg, "step": "otp"}), 403
+                flash(msg, "warning")
+                return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email, step="otp")
 
-@app.route("/resend-reset-otp")
+            password = data.get("password", "")
+            confirm_password = data.get("confirm_password", "")
+
+            if not password or not confirm_password:
+                msg = "Please enter both password and confirm password."
+                if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return jsonify({"success": False, "message": msg}), 400
+                flash(msg, "danger")
+                return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email, step="reset")
+
+            if password != confirm_password:
+                msg = "Passwords do not match. Please re-enter your password."
+                if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return jsonify({"success": False, "message": msg}), 400
+                flash(msg, "danger")
+                return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email, step="reset")
+
+            if len(password) < 6:
+                msg = "Password must be at least 6 characters in length."
+                if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return jsonify({"success": False, "message": msg}), 400
+                flash(msg, "danger")
+                return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email, step="reset")
+
+            success = update_user_password(reset_user_id, password)
+
+            # Clear reset session tokens
+            session.pop("reset_email", None)
+            session.pop("reset_user_id", None)
+            session.pop("reset_name", None)
+            session.pop("reset_otp_sent_at", None)
+            session.pop("reset_otp_verified", None)
+
+            if success:
+                msg = "Password reset successfully. You can now login."
+                if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return jsonify({
+                        "success": True,
+                        "message": msg,
+                        "step": "success",
+                        "login_url": url_for("login")
+                    })
+                flash(msg, "success")
+                return render_template("reset_password_verify.html", step="success", login_url=url_for("login"))
+            else:
+                msg = "Failed to update password. Please try again."
+                if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return jsonify({"success": False, "message": msg}), 500
+                flash(msg, "danger")
+                return redirect(url_for("forgot_password"))
+
+    return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email, step=step)
+
+
+@app.route("/resend-reset-otp", methods=["GET", "POST"])
 def resend_reset_otp():
     """Resend a new 6-digit OTP to the farmer's reset email."""
     reset_email = session.get("reset_email")
     reset_user_id = session.get("reset_user_id")
 
     if not reset_email or not reset_user_id:
+        if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return jsonify({
+                "success": False,
+                "message": "Password reset session expired. Please start again.",
+                "redirect": url_for("forgot_password")
+            }), 401
         flash("Password reset session expired. Please start again.", "warning")
         return redirect(url_for("forgot_password"))
 
     otp_sent_at = session.get("reset_otp_sent_at", 0)
     if time.time() - otp_sent_at < 30:
-        flash("Please wait before requesting another OTP.", "warning")
+        msg = "Please wait before requesting another OTP."
+        if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return jsonify({"success": False, "message": msg}), 429
+        flash(msg, "warning")
         return redirect(url_for("reset_password_verify"))
 
     # Generate NEW 6-digit OTP
@@ -1045,16 +1136,24 @@ def resend_reset_otp():
 
     update_user_otp(reset_user_id, otp_hash, expiry, time.time())
     session["reset_otp_sent_at"] = time.time()
+    session["reset_otp_verified"] = False
 
     origin_url = request.host_url
     email_sent, send_err = send_otp_email(reset_email, otp_code, origin_url=origin_url)
 
     if not email_sent:
-        flash("We couldn't send the new OTP email. Please try again in a moment.", "danger")
+        msg = "We couldn't send the new OTP email. Please try again in a moment."
+        if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return jsonify({"success": False, "message": msg}), 500
+        flash(msg, "danger")
         return redirect(url_for("reset_password_verify"))
 
-    flash("A new 6-digit OTP has been sent to your email.", "success")
+    msg = "A new 6-digit OTP has been sent to your email."
+    if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({"success": True, "message": msg, "resend_in": 45})
+    flash(msg, "success")
     return redirect(url_for("reset_password_verify"))
+
 
 @app.route("/reset-password", methods=["GET", "POST"])
 def reset_password():
@@ -1071,20 +1170,30 @@ def reset_password():
         return redirect(url_for("forgot_password"))
 
     if request.method == "POST":
-        password = request.form.get("password", "")
-        confirm_password = request.form.get("confirm_password", "")
+        data = request.get_json() if request.is_json else request.form
+        password = data.get("password", "")
+        confirm_password = data.get("confirm_password", "")
 
         if not password or not confirm_password:
-            flash("Please enter both password and confirm password.", "danger")
-            return render_template("reset_password.html")
+            msg = "Please enter both password and confirm password."
+            if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return jsonify({"success": False, "message": msg}), 400
+            flash(msg, "danger")
+            return render_template("reset_password_verify.html", email=reset_email, step="reset")
 
         if password != confirm_password:
-            flash("Passwords do not match. Please re-enter your password.", "danger")
-            return render_template("reset_password.html")
+            msg = "Passwords do not match. Please re-enter your password."
+            if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return jsonify({"success": False, "message": msg}), 400
+            flash(msg, "danger")
+            return render_template("reset_password_verify.html", email=reset_email, step="reset")
 
         if len(password) < 6:
-            flash("Password must be at least 6 characters in length.", "danger")
-            return render_template("reset_password.html")
+            msg = "Password must be at least 6 characters in length."
+            if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return jsonify({"success": False, "message": msg}), 400
+            flash(msg, "danger")
+            return render_template("reset_password_verify.html", email=reset_email, step="reset")
 
         success = update_user_password(reset_user_id, password)
 
@@ -1096,13 +1205,19 @@ def reset_password():
         session.pop("reset_otp_verified", None)
 
         if success:
-            flash("Password reset successfully! You can now log in with your new password.", "success")
-            return redirect(url_for("login"))
+            msg = "Password reset successfully. You can now login."
+            if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return jsonify({"success": True, "message": msg, "step": "success", "login_url": url_for("login")})
+            flash(msg, "success")
+            return render_template("reset_password_verify.html", step="success", login_url=url_for("login"))
         else:
-            flash("Failed to update password. Please try again.", "danger")
+            msg = "Failed to update password. Please try again."
+            if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return jsonify({"success": False, "message": msg}), 500
+            flash(msg, "danger")
             return redirect(url_for("forgot_password"))
 
-    return render_template("reset_password.html")
+    return render_template("reset_password_verify.html", email=reset_email, step="reset")
 
 # -------------------------------------------------------------
 # DASHBOARD & PROFILE
