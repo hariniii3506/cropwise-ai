@@ -25,7 +25,7 @@ from flask import (
     flash,
     jsonify
 )
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 import joblib
 import numpy as np
 import pandas as pd
@@ -960,13 +960,19 @@ def forgot_password():
         otp_hash = generate_password_hash(otp_code)
         expiry = time.time() + 300  # 5 minutes validity
 
-        update_user_otp(user["id"], otp_hash, expiry, time.time())
+        try:
+            update_user_otp(user["id"], otp_hash, expiry, time.time())
+        except Exception as e:
+            print(f"[WARN] Database OTP update note: {e}")
 
-        # Store reset session state
+        # Store reset session state (serverless-resilient with hashed OTP)
         session["reset_email"] = user["email"]
         session["reset_user_id"] = user["id"]
         session["reset_name"] = user.get("name", "")
         session["reset_otp_sent_at"] = time.time()
+        session["reset_otp_hash"] = otp_hash
+        session["reset_otp_expiry"] = expiry
+        session["reset_otp_attempts"] = 0
         session["reset_otp_verified"] = False
 
         # Send OTP via EmailJS
@@ -1021,22 +1027,83 @@ def reset_password_verify():
                 flash(msg, "danger")
                 return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email, step="otp")
 
-            success, result = verify_reset_otp(reset_email, entered_otp)
+            # Read session OTP state
+            saved_otp_hash = session.get("reset_otp_hash")
+            saved_otp_expiry = session.get("reset_otp_expiry")
+            attempts = session.get("reset_otp_attempts", 0)
 
-            if success:
+            # Check attempt limit
+            if attempts >= 5:
+                msg = "Too many invalid attempts. Please request a new OTP."
+                if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return jsonify({"success": False, "message": msg}), 400
+                flash(msg, "danger")
+                return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email, step="otp")
+
+            # Check expiration
+            if not saved_otp_hash or not saved_otp_expiry or time.time() > float(saved_otp_expiry):
+                # Fallback check on DB just in case
+                db_success, db_result = False, ""
+                try:
+                    db_success, db_result = verify_reset_otp(reset_email, entered_otp)
+                except Exception:
+                    pass
+
+                if db_success:
+                    session["reset_otp_verified"] = True
+                    session.pop("reset_otp_hash", None)
+                    session.pop("reset_otp_expiry", None)
+                    session.pop("reset_otp_attempts", None)
+                    msg = "OTP verified successfully! Please set your new password."
+                    if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                        return jsonify({"success": True, "message": msg, "step": "reset"})
+                    flash(msg, "success")
+                    return render_template("reset_password_verify.html", resend_in=0, email=reset_email, step="reset")
+
+                msg = "Your OTP has expired. Please request a new OTP."
+                if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return jsonify({"success": False, "message": msg}), 400
+                flash(msg, "danger")
+                return render_template("reset_password_verify.html", resend_in=resend_in, email=reset_email, step="otp")
+
+            # Verify OTP using check_password_hash
+            is_valid = check_password_hash(saved_otp_hash, entered_otp)
+
+            # Fallback to DB if session hash check didn't match
+            if not is_valid:
+                try:
+                    db_success, _ = verify_reset_otp(reset_email, entered_otp)
+                    if db_success:
+                        is_valid = True
+                except Exception:
+                    pass
+
+            if is_valid:
                 session["reset_otp_verified"] = True
+                session.pop("reset_otp_hash", None)
+                session.pop("reset_otp_expiry", None)
+                session.pop("reset_otp_attempts", None)
+
+                # Clear DB OTP columns if available
+                try:
+                    verify_reset_otp(reset_email, entered_otp)
+                except Exception:
+                    pass
+
                 msg = "OTP verified successfully! Please set your new password."
                 if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
                     return jsonify({"success": True, "message": msg, "step": "reset"})
                 flash(msg, "success")
                 return render_template("reset_password_verify.html", resend_in=0, email=reset_email, step="reset")
             else:
-                if "expired" in str(result).lower():
-                    msg = "Your OTP has expired. Please request a new OTP."
-                elif "too many" in str(result).lower():
+                attempts += 1
+                session["reset_otp_attempts"] = attempts
+
+                if attempts >= 5:
                     msg = "Too many invalid attempts. Please request a new OTP."
                 else:
                     msg = "Incorrect OTP. Please try again."
+
                 if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest":
                     return jsonify({"success": False, "message": msg}), 400
                 flash(msg, "danger")
@@ -1082,6 +1149,9 @@ def reset_password_verify():
             session.pop("reset_user_id", None)
             session.pop("reset_name", None)
             session.pop("reset_otp_sent_at", None)
+            session.pop("reset_otp_hash", None)
+            session.pop("reset_otp_expiry", None)
+            session.pop("reset_otp_attempts", None)
             session.pop("reset_otp_verified", None)
 
             if success:
@@ -1134,8 +1204,15 @@ def resend_reset_otp():
     otp_hash = generate_password_hash(otp_code)
     expiry = time.time() + 300
 
-    update_user_otp(reset_user_id, otp_hash, expiry, time.time())
+    try:
+        update_user_otp(reset_user_id, otp_hash, expiry, time.time())
+    except Exception as e:
+        print(f"[WARN] Database OTP update note: {e}")
+
     session["reset_otp_sent_at"] = time.time()
+    session["reset_otp_hash"] = otp_hash
+    session["reset_otp_expiry"] = expiry
+    session["reset_otp_attempts"] = 0
     session["reset_otp_verified"] = False
 
     origin_url = request.host_url
@@ -1202,6 +1279,9 @@ def reset_password():
         session.pop("reset_user_id", None)
         session.pop("reset_name", None)
         session.pop("reset_otp_sent_at", None)
+        session.pop("reset_otp_hash", None)
+        session.pop("reset_otp_expiry", None)
+        session.pop("reset_otp_attempts", None)
         session.pop("reset_otp_verified", None)
 
         if success:
