@@ -148,7 +148,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Open `http://127.0.0.1:5000/register`, complete the form with your real email address, select **Send OTP**, and check the inbox and spam folder. The OTP expires after five minutes, and the account can be completed only after the received OTP is verified. If SMTP credentials are missing or rejected, the page reports an email service configuration problem instead of blaming the recipient address.
+Open `http://127.0.0.1:5000/register`, complete the form with your real email address, select **Send OTP**, and check the inbox and spam folder. The OTP expires after 1 minute, and the account can be completed only after the received OTP is verified. If SMTP credentials are missing or rejected, the page reports an email service configuration problem instead of blaming the recipient address.
 
 ---
 
