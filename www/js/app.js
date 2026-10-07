@@ -12,7 +12,7 @@
  * ===============================================================================
  */
 
-const PRODUCTION_BACKEND_URL = "https://cropwise-ai-psi.vercel.app";
+const PRODUCTION_BACKEND_URL = "https://YOUR-LIVE-FLASK-BACKEND-URL";
 
 document.addEventListener("DOMContentLoaded", () => {
   const cleanUrl = (PRODUCTION_BACKEND_URL || "").trim().replace(/\/+$/, "");

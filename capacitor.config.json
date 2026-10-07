@@ -4,11 +4,7 @@
   "webDir": "www",
   "server": {
     "androidScheme": "https",
-    "cleartext": true,
-    "allowNavigation": [
-      "cropwise-ai-psi.vercel.app",
-      "*.vercel.app"
-    ]
+    "cleartext": true
   },
   "android": {
     "overrideUserAgent": "CropwiseAndroid"
