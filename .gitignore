@@ -22,7 +22,9 @@ __pycache__/
 *.db
 *.sqlite
 *.sqlite3
-!database/cropwise.db
+database/*.db
+database/*.sqlite
+database/*.sqlite3
 
 # Node & Frontend dependencies
 node_modules/

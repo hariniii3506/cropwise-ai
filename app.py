@@ -16,6 +16,12 @@ from zoneinfo import ZoneInfo
 import urllib.request
 from functools import wraps
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
+
 from flask import (
     Flask,
     request,
