@@ -184,7 +184,15 @@ CREATE TABLE IF NOT EXISTS reminders (
 
 def is_postgres():
     """Returns True if a non-empty DATABASE_URL environment variable is present."""
-    url = (os.environ.get("DATABASE_URL") or "").strip()
+    url = (os.environ.get("DATABASE_URL") or "").strip().strip("'\"")
+    if url.startswith("DATABASE_URL="):
+        url = url[len("DATABASE_URL="):].strip().strip("'\"")
+    elif url.startswith("DATABASE_URL ="):
+        url = url[len("DATABASE_URL ="):].strip().strip("'\"")
+    elif url.startswith("DATABASE_URL:"):
+        url = url[len("DATABASE_URL:"):].strip().strip("'\"")
+    if url.startswith("psql "):
+        url = url[len("psql "):].strip().strip("'\"")
     return bool(url)
 
 
@@ -246,7 +254,20 @@ def get_pg_connection():
     import psycopg2
     from psycopg2.extras import RealDictCursor
 
-    url = os.environ.get("DATABASE_URL", "").strip()
+    url = (os.environ.get("DATABASE_URL") or "").strip().strip("'\"")
+
+    # Strip accidental 'DATABASE_URL=' prefix if pasted into Vercel value field
+    if url.startswith("DATABASE_URL="):
+        url = url[len("DATABASE_URL="):].strip().strip("'\"")
+    elif url.startswith("DATABASE_URL ="):
+        url = url[len("DATABASE_URL ="):].strip().strip("'\"")
+    elif url.startswith("DATABASE_URL:"):
+        url = url[len("DATABASE_URL:"):].strip().strip("'\"")
+
+    # Strip accidental 'psql ' CLI command prefix
+    if url.startswith("psql "):
+        url = url[len("psql "):].strip().strip("'\"")
+
     if url.startswith("postgres://"):
         url = "postgresql://" + url[len("postgres://"):]
 
@@ -266,6 +287,7 @@ def get_pg_connection():
             if attempt == 1:
                 raise e
             time.sleep(0.5)
+
 
 
 
