@@ -806,6 +806,9 @@ def register():
         session["pending_user_id"] = user_id
         session["pending_name"] = name
         session["otp_sent_at"] = time.time()
+        session["pending_otp_hash"] = otp_hash
+        session["pending_otp_expiry"] = expiry
+        session["pending_otp_attempts"] = 0
 
         # Send OTP via EmailJS
         origin_url = request.host_url
@@ -843,32 +846,73 @@ def verify_otp():
             flash("Please enter the complete 6-digit OTP.", "danger")
             return render_template("verify_otp.html", resend_in=resend_in, email=pending_email)
 
-        success, result = verify_user_otp(pending_email, entered_otp)
+        saved_otp_hash = session.get("pending_otp_hash")
+        saved_otp_expiry = session.get("pending_otp_expiry")
+        attempts = session.get("pending_otp_attempts", 0)
 
-        if success:
-            user_id = result
-            user = get_user_by_id(user_id)
-            if user:
-                session["user_id"] = user["id"]
-                session["user_name"] = user["name"]
-                session["user_email"] = user["email"]
+        # Check attempt limit
+        if attempts >= 5:
+            flash("Too many invalid attempts. Please request a new OTP.", "danger")
+            return render_template("verify_otp.html", resend_in=resend_in, email=pending_email)
+
+        is_valid = False
+        user_id = session.get("pending_user_id")
+
+        if saved_otp_hash and saved_otp_expiry:
+            if time.time() > float(saved_otp_expiry):
+                # Fallback to DB check
+                db_success, db_result = False, ""
+                try:
+                    db_success, db_result = verify_user_otp(pending_email, entered_otp)
+                except Exception:
+                    pass
+                if db_success:
+                    is_valid = True
+                    user_id = db_result
+                else:
+                    flash("Your OTP has expired. Please request a new OTP.", "danger")
+                    return render_template("verify_otp.html", resend_in=resend_in, email=pending_email)
+            elif check_password_hash(saved_otp_hash, entered_otp):
+                is_valid = True
+                try:
+                    verify_user_otp(pending_email, entered_otp)
+                except Exception:
+                    pass
+
+        if not is_valid:
+            # Fallback to DB verification
+            success, result = verify_user_otp(pending_email, entered_otp)
+            if success:
+                is_valid = True
+                user_id = result
+            else:
+                attempts += 1
+                session["pending_otp_attempts"] = attempts
+                if "expired" in str(result).lower():
+                    flash("Your OTP has expired. Please request a new OTP.", "danger")
+                elif attempts >= 5 or "too many" in str(result).lower():
+                    flash("Too many invalid attempts. Please request a new OTP.", "danger")
+                else:
+                    flash("Incorrect OTP. Please try again.", "danger")
+                return render_template("verify_otp.html", resend_in=resend_in, email=pending_email)
+
+        if is_valid:
+            user = get_user_by_id(user_id) if user_id else None
+            session["user_id"] = user["id"] if user else user_id
+            session["user_name"] = user["name"] if user else session.get("pending_name", "Farmer")
+            session["user_email"] = user["email"] if user else pending_email
 
             # Clear temporary session data
             session.pop("pending_email", None)
             session.pop("pending_user_id", None)
             session.pop("pending_name", None)
             session.pop("otp_sent_at", None)
+            session.pop("pending_otp_hash", None)
+            session.pop("pending_otp_expiry", None)
+            session.pop("pending_otp_attempts", None)
 
             flash("Email verified successfully! Welcome to CROPWISE AI.", "success")
             return redirect(url_for("dashboard"))
-        else:
-            if "expired" in str(result).lower():
-                flash("Your OTP has expired. Please request a new OTP.", "danger")
-            elif "too many" in str(result).lower():
-                flash("Too many invalid attempts. Please request a new OTP.", "danger")
-            else:
-                flash("Incorrect OTP. Please try again.", "danger")
-            return render_template("verify_otp.html", resend_in=resend_in, email=pending_email)
 
     return render_template("verify_otp.html", resend_in=resend_in, email=pending_email)
 
@@ -895,6 +939,9 @@ def resend_otp():
 
     update_user_otp(pending_user_id, otp_hash, expiry, time.time())
     session["otp_sent_at"] = time.time()
+    session["pending_otp_hash"] = otp_hash
+    session["pending_otp_expiry"] = expiry
+    session["pending_otp_attempts"] = 0
 
     origin_url = request.host_url
     email_sent, send_err = send_otp_email(pending_email, otp_code, origin_url=origin_url)
