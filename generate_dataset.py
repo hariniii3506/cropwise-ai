@@ -4,6 +4,16 @@ Generates an authentic agronomic dataset for CROPWISE AI based on ICAR, TNAU and
 Features: Soil_Type, pH, Temperature, Humidity, Rainfall -> Crop
 """
 
+# =============================================================================
+# CROPWISE AI - Agricultural Dataset Generation Pipeline
+# =============================================================================
+# Generates realistic synthetic soil and weather training data based on ICAR,
+# TNAU, and FAO benchmark guidelines for major Indian and Tamil Nadu crops:
+# - Models soil distribution weights (Clayey, Loamy, Sandy, Alluvial, Red, Black).
+# - Synthesizes realistic Gaussian distributions for pH, Temperature, Humidity, and Rainfall.
+# - Outputs clean, balanced crop_data.csv for training the Decision Tree Classifier.
+# =============================================================================
+
 import numpy as np
 import pandas as pd
 

@@ -1,3 +1,10 @@
+// =============================================================================
+// CROPWISE AI - Progressive Web App Service Worker (sw.js)
+// =============================================================================
+// Enables PWA installation on mobile devices, offline asset caching,
+// and background push notification interaction handling for farm reminders.
+// =============================================================================
+
 // static/sw.js
 // Minimal Service Worker for CROPWISE AI Farm Reminders & Mobile Notifications
 

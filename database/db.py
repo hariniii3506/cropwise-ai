@@ -4,6 +4,17 @@ Database connection and operations engine for CROPWISE AI.
 Uses SQLite for robust zero-config relational storage.
 """
 
+# =============================================================================
+# CROPWISE AI - Database Abstraction & Operations Layer
+# =============================================================================
+# This module provides a thread-safe SQLite persistence layer for CropWise AI:
+# - Resolves serverless writable paths (/tmp) in cloud environments (e.g., Vercel).
+# - Handles user registration, Argon2/PBKDF2 password hashing, and login authentication.
+# - Manages 6-digit OTP verification with strict 60-second expiration and attempt limits.
+# - Persists AI crop recommendations, agronomic decision notes, and prediction history.
+# - Manages the farm expense ledger, agricultural notes, and calendar reminders.
+# =============================================================================
+
 import os
 import sqlite3
 import json

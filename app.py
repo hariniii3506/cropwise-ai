@@ -6,6 +6,17 @@ Preserves all original project architecture, authentication, OTP verification,
 ML inference, farm ledger, crop advisory modules, and government scheme eligibility.
 """
 
+# =============================================================================
+# CROPWISE AI - Central Flask Application & REST API Controller (app.py)
+# =============================================================================
+# Core application entrypoint:
+# - Configures Flask server, session security, Jinja template environment, and static routes.
+# - Manages user authentication, registration, session management, and password recovery.
+# - Enforces strict 60-second OTP expiration with EmailJS transactional email delivery.
+# - Loads serialized Decision Tree model bundle and executes real-time crop prediction.
+# - Provides REST API endpoints and data views for farm budget, water, schemes, and calendar.
+# =============================================================================
+
 import os
 import sys
 import json

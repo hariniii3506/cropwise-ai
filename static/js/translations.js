@@ -1,3 +1,12 @@
+// =============================================================================
+// CROPWISE AI - Bilingual Translation Dictionary & Localization Runner
+// =============================================================================
+// This module provides full bilingual localization (English & தமிழ்) for CropWise AI:
+// - Contains complete UI key-value translation dictionaries for both languages.
+// - Persists farmer language preference in localStorage ('en' or 'ta').
+// - Dynamically updates data-i18n and data-i18n-placeholder elements on the active DOM.
+// =============================================================================
+
 /**
  * CROPWISE AI - Bilingual Translation Engine (English & தமிழ்)
  * Provides comprehensive translations across the entire application.

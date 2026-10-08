@@ -1,3 +1,14 @@
+<!-- =============================================================================
+     templates/result.html
+     CROPWISE AI - Crop Recommendation Result Display Template
+     =============================================================================
+     This page presents the generated machine learning advisory report:
+     - Primary Recommended Crop with English, Tamil, and Scientific botanical names.
+     - Farmer's input parameters summary (Soil, pH, Temperature, Humidity, Rainfall).
+     - Agronomic parameters (Growth Duration, Water Need, Ideal Soil, pH tolerance).
+     - Secondary candidate alternative crops.
+     - Quick links to Duration, Water, Budget, and Printable Report.
+     ============================================================================= -->
 {% extends "base.html" %}
 
 {% block title %}Recommendation Result: {{ crop_name }} - CROPWISE AI{% endblock %}

@@ -1,3 +1,14 @@
+// =============================================================================
+// CROPWISE AI - Client Application Logic (main.js)
+// =============================================================================
+// Manages dynamic frontend user interactions across the application:
+// - Responsive mobile navigation drawer toggle and active page highlighting.
+// - Real-time soil parameter sliders and synced numeric inputs (N, P, K, pH, rainfall).
+// - Interactive farm budget calculator computing total and per-acre estimates.
+// - Dynamic water volume converter between Acres and Cents.
+// - PWA service worker registration and push notification lifecycle hooks.
+// =============================================================================
+
 /**
  * CROPWISE AI - Client Application Logic
  * Interactive handlers, reactive calculations, and DOM events.

@@ -1,4 +1,15 @@
+-- =============================================================================
+-- CROPWISE AI - Relational Database Schema Definition
+-- =============================================================================
+-- This file defines the core SQLite relational database tables used by CropWise AI.
+-- It establishes primary keys, unique constraints, foreign key relationships with
+-- cascading deletes, and default timestamp tracking for all agricultural entities.
+-- =============================================================================
 -- CROPWISE AI - Database Schema (SQLite / Standard SQL)
+-- -----------------------------------------------------------------------------
+-- Table: users
+-- Stores registered farmer credentials, contact details, farm profile, and OTP verification state.
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -18,6 +29,10 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- -----------------------------------------------------------------------------
+-- Table: recommendations
+-- Stores AI-generated crop recommendations, farmer input parameters, and agronomic reasoning.
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS recommendations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -34,6 +49,10 @@ CREATE TABLE IF NOT EXISTS recommendations (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- -----------------------------------------------------------------------------
+-- Table: expenses
+-- Stores farm financial ledger records including inputs (seeds, fertilizer, labor), amounts, and dates.
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS expenses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -45,6 +64,10 @@ CREATE TABLE IF NOT EXISTS expenses (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- -----------------------------------------------------------------------------
+-- Table: notes
+-- Stores agricultural field notes, observations, and agronomic reminders tagged by category.
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS notes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -56,6 +79,10 @@ CREATE TABLE IF NOT EXISTS notes (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- -----------------------------------------------------------------------------
+-- Table: reminders
+-- Stores interactive farming calendar tasks, scheduled activities, and completion flags.
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS reminders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,

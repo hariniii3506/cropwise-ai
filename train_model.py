@@ -5,6 +5,17 @@ Inputs: Soil_Type, pH, Temperature, Humidity, Rainfall
 Output: Recommended Crop
 """
 
+# =============================================================================
+# CROPWISE AI - Decision Tree Classifier Training Pipeline
+# =============================================================================
+# Trains, evaluates, and serializes the core Machine Learning model for CropWise AI:
+# - Loads crop_data.csv and encodes categorical soil & crop labels using LabelEncoder.
+# - Splits data (80% train, 20% test) with stratified sampling.
+# - Fits a DecisionTreeClassifier using the CART algorithm with Gini impurity criterion.
+# - Validates performance with 5-fold cross-validation and classification reports.
+# - Serializes model bundle to models/crop_decision_tree.pkl and metadata to JSON.
+# =============================================================================
+
 import os
 import sys
 import json

@@ -1,3 +1,10 @@
+// =============================================================================
+// CROPWISE AI - Vector Outline Icon Replacement Engine (icon-system.js)
+// =============================================================================
+// Maps Unicode emojis and data attributes across the DOM to lightweight,
+// crisp SVG outline icons for agricultural, weather, financial, and navigation items.
+// =============================================================================
+
 /* CROPWISE AI shared outline icon system. */
 (() => {
   const codePoint = (...values) => String.fromCodePoint(...values);

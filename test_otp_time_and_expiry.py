@@ -9,6 +9,15 @@ Tests:
   6. Login unverified user OTP 60-second expiry.
 """
 
+# =============================================================================
+# CROPWISE AI - OTP Expiration & Timezone Integration Test Suite
+# =============================================================================
+# Validates critical security constraints across authentication and password recovery:
+# - Strict 60-second expiration window enforcement on server and client.
+# - Indian Standard Time (IST - Asia/Kolkata) timestamp formatting in OTP emails.
+# - Rate limiting and resend cooldown throttling.
+# =============================================================================
+
 import unittest
 import time
 import datetime

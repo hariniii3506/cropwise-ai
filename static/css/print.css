@@ -1,3 +1,11 @@
+/* =============================================================================
+ * CROPWISE AI - Printable Advisory Report Stylesheet (print.css)
+ * =============================================================================
+ * Optimizes layout, fonts, and borders specifically for printer output and PDF export:
+ * - Hides interactive web controls, buttons, and navigation elements.
+ * - Forces crisp black-on-white text contrast and preserves clean page margins.
+ * ============================================================================= */
+
 /*
  * CROPWISE AI - Print Stylesheet
  * Formats official crop advisory report for A4 / Letter paper

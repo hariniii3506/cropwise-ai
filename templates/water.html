@@ -1,3 +1,17 @@
+<!--
+  CROPWISE AI - Crop Water Requirement & Irrigation Guide Template (water.html)
+  ================================================================================
+  This template provides detailed water management guidelines for any chosen crop.
+  It helps farmers plan seasonal water budgets, calculate water volume requirements
+  for their specific land area (in Acres or Cents), and identify suitable irrigation techniques.
+
+  Key sections:
+  1. Header and Selector: Dashboard link and crop selector dropdown.
+  2. Advisory Disclaimer: Informs farmers that data is based on ICAR agronomic models.
+  3. Water Rating and Dynamic Calculator: Shows baseline mm range and live calculates water volume for entered land area.
+  4. Irrigation Methods: Best techniques (Drip, Sprinkler, Furrow, etc.) suited for this crop.
+  5. Water Conservation Advisory: Bilingual tips on moisture management and critical growth stages.
+-->
 {% extends "base.html" %}
 
 {% block title %}Water Requirement: {{ crop.name }} - CROPWISE AI | நீர் தேவை{% endblock %}

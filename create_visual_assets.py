@@ -4,6 +4,15 @@ Generates clean, elegant, modern agricultural vector illustrations (SVG)
 for CROPWISE AI branding, modules, and crop representations.
 """
 
+# =============================================================================
+# CROPWISE AI - Agricultural Vector Graphic Asset Generator
+# =============================================================================
+# Generates scalable vector graphics (SVG) for the CropWise AI web interface:
+# - Generates crisp brand logos, horizontal navbar headers, and splash banners.
+# - Renders custom crop card illustrations (Paddy, Wheat, Cotton, Sugarcane, etc.).
+# - Outputs production assets directly into static/images/ for fast offline loading.
+# =============================================================================
+
 import os
 
 def generate_assets():
