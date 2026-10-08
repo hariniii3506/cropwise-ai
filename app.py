@@ -180,7 +180,7 @@ def send_otp_email(recipient_email, otp_code, origin_url=None):
             headers=headers,
             method="POST"
         )
-        with urllib.request.urlopen(req, timeout=12) as response:
+        with urllib.request.urlopen(req, timeout=8) as response:
             if response.status == 200:
                 print(f"[OK] OTP email successfully delivered to {recipient_email} via EmailJS (status 200).")
                 return True, None
@@ -250,8 +250,14 @@ def login_required(f):
     """Decorator to protect routes requiring logged-in farmer session."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if "user_id" not in session:
+        user_id = session.get("user_id")
+        if not user_id:
             flash("Please log in to access this feature.", "warning")
+            return redirect(url_for("login"))
+        user = get_user_by_id(user_id)
+        if not user:
+            session.clear()
+            flash("Session expired. Please log in again.", "warning")
             return redirect(url_for("login"))
         return f(*args, **kwargs)
     return decorated_function
@@ -759,8 +765,13 @@ def android_splash():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Farmer registration initiation with 6-digit OTP dispatch."""
-    if session.get("user_id"):
-        return redirect(url_for("dashboard"))
+    # Ensure registration is publicly accessible without requiring login
+    session.pop("user_id", None)
+    session.pop("user_name", None)
+    session.pop("user_email", None)
+    session.pop("reset_user_id", None)
+    session.pop("reset_email", None)
+    session.pop("reset_otp_verified", None)
 
     if request.method == "POST":
         name = request.form.get("name", "").strip()
@@ -812,6 +823,14 @@ def register():
 
         update_user_otp(user_id, otp_hash, expiry, time.time())
 
+        # Remove any stale authentication/reset session keys before creating registration session
+        session.pop("user_id", None)
+        session.pop("user_name", None)
+        session.pop("user_email", None)
+        session.pop("reset_user_id", None)
+        session.pop("reset_email", None)
+        session.pop("reset_otp_verified", None)
+
         # Store pending session state for OTP screen
         session["pending_email"] = email
         session["pending_user_id"] = user_id
@@ -837,7 +856,12 @@ def register():
 @app.route("/verify-otp", methods=["GET", "POST"])
 def verify_otp():
     """Verify the 6-digit OTP sent to the farmer's email."""
-    if session.get("user_id"):
+    # If registration is pending, do not redirect to dashboard based on an old user_id
+    if session.get("pending_email"):
+        session.pop("user_id", None)
+        session.pop("user_name", None)
+        session.pop("user_email", None)
+    elif session.get("user_id"):
         return redirect(url_for("dashboard"))
 
     pending_email = session.get("pending_email")
@@ -966,9 +990,14 @@ def resend_otp():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    """Farmer login handler with identifier and password."""
-    if session.get("user_id"):
-        return redirect(url_for("dashboard"))
+    user_id = session.get("user_id")
+    if user_id:
+        user = get_user_by_id(user_id)
+        if user:
+            return redirect(url_for("dashboard"))
+        session.pop("user_id", None)
+        session.pop("user_name", None)
+        session.pop("user_email", None)
 
     if request.method == "POST":
         identifier = request.form.get("identifier", "").strip()
@@ -1019,8 +1048,14 @@ def logout():
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
     """Handle password reset request by validating registered email and sending 6-digit OTP."""
-    if session.get("user_id"):
-        return redirect(url_for("dashboard"))
+    user_id = session.get("user_id")
+    if user_id:
+        user = get_user_by_id(user_id)
+        if user:
+            return redirect(url_for("dashboard"))
+        session.pop("user_id", None)
+        session.pop("user_name", None)
+        session.pop("user_email", None)
 
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
@@ -1070,8 +1105,14 @@ def forgot_password():
 @app.route("/reset-password-verify", methods=["GET", "POST"])
 def reset_password_verify():
     """Verify OTP sent for password reset and process seamless in-place password reset."""
-    if session.get("user_id"):
-        return redirect(url_for("dashboard"))
+    user_id = session.get("user_id")
+    if user_id:
+        user = get_user_by_id(user_id)
+        if user:
+            return redirect(url_for("dashboard"))
+        session.pop("user_id", None)
+        session.pop("user_name", None)
+        session.pop("user_email", None)
 
     reset_email = session.get("reset_email")
     reset_user_id = session.get("reset_user_id")
@@ -1314,8 +1355,14 @@ def resend_reset_otp():
 @app.route("/reset-password", methods=["GET", "POST"])
 def reset_password():
     """Allow user to enter New Password and Confirm Password after OTP verification."""
-    if session.get("user_id"):
-        return redirect(url_for("dashboard"))
+    user_id = session.get("user_id")
+    if user_id:
+        user = get_user_by_id(user_id)
+        if user:
+            return redirect(url_for("dashboard"))
+        session.pop("user_id", None)
+        session.pop("user_name", None)
+        session.pop("user_email", None)
 
     reset_user_id = session.get("reset_user_id")
     reset_email = session.get("reset_email")

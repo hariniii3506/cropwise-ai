@@ -292,10 +292,14 @@ def create_user(name, mobile, email, password, farm_location, land_area, land_un
     cursor = conn.cursor()
     password_hash = generate_password_hash(password)
     try:
+        try:
+            area_val = float(land_area)
+        except (ValueError, TypeError):
+            area_val = 1.0
         cursor.execute("""
             INSERT INTO users (name, mobile, email, password_hash, farm_location, land_area, land_unit, preferred_soil, avatar, is_verified)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (name.strip(), mobile.strip(), email.strip().lower(), password_hash, farm_location.strip(), float(land_area), land_unit, preferred_soil, avatar, is_verified))
+        """, (name.strip(), mobile.strip(), email.strip().lower(), password_hash, farm_location.strip(), area_val, land_unit, preferred_soil, avatar, is_verified))
         conn.commit()
         user_id = cursor.lastrowid
         return user_id, None
