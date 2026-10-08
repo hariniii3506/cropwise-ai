@@ -70,9 +70,19 @@
             </td>
             <td><strong>{{ c.duration_days }}</strong></td>
             <td>
-              <span style="display: inline-block; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 0.8rem; font-weight: 700; background: {% if c.water_requirement == 'High' %}#FFEBEB; color: #C92A2A;{% elif c.water_requirement == 'Moderate' %}#E8F5E9; color: #2D6A4F;{% else %}#D8F3DC; color: #1B4332;{% endif %}">
-                {{ c.water_requirement }}
-              </span>
+              {% if c.water_requirement == 'High' %}
+                <span style="display: inline-block; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 0.8rem; font-weight: 700; background: #FFEBEB; color: #C92A2A;">
+                  {{ c.water_requirement }}
+                </span>
+              {% elif c.water_requirement == 'Moderate' %}
+                <span style="display: inline-block; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 0.8rem; font-weight: 700; background: #E8F5E9; color: #2D6A4F;">
+                  {{ c.water_requirement }}
+                </span>
+              {% else %}
+                <span style="display: inline-block; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 0.8rem; font-weight: 700; background: #D8F3DC; color: #1B4332;">
+                  {{ c.water_requirement }}
+                </span>
+              {% endif %}
               <div style="font-size: 0.78rem; color: var(--color-text-muted);">{{ c.water_mm_range }}</div>
             </td>
             <td>{{ c.ideal_soil|join(', ') }}</td>
