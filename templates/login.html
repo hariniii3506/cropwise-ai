@@ -44,9 +44,12 @@
 
         <!-- Password -->
         <div class="form-group">
-          <label class="form-label" for="loginPassword" data-i18n="auth.password">
-            Password
-          </label>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+            <label class="form-label" for="loginPassword" data-i18n="auth.password" style="margin-bottom: 0;">
+              Password
+            </label>
+            <a href="{{ url_for('forgot_password') }}" style="font-size: 0.85rem; font-weight: 600; color: var(--color-primary); text-decoration: none;" id="linkForgotPassword" data-i18n="auth.forgot_password">Forgot Password?</a>
+          </div>
           <input 
             type="password" 
             id="loginPassword" 
@@ -58,12 +61,9 @@
           >
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 1rem; margin-bottom: 12px;" data-i18n="auth.btn_login" id="btnLoginSubmit">
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 1rem; margin-bottom: 15px;" data-i18n="auth.btn_login" id="btnLoginSubmit">
           Login to Farm Portal
         </button>
-        <div style="text-align: center; margin-bottom: 15px;">
-          <a href="{{ url_for('forgot_password') }}" style="font-size: 0.9rem; font-weight: 600; color: var(--color-primary);" id="linkForgotPassword" data-i18n="auth.forgot_password">Forgot Password?</a>
-        </div>
       </form>
 
       <div class="auth-footer">

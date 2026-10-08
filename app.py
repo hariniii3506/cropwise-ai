@@ -1048,14 +1048,14 @@ def logout():
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
     """Handle password reset request by validating registered email and sending 6-digit OTP."""
-    user_id = session.get("user_id")
-    if user_id:
-        user = get_user_by_id(user_id)
-        if user:
-            return redirect(url_for("dashboard"))
-        session.pop("user_id", None)
-        session.pop("user_name", None)
-        session.pop("user_email", None)
+    # Clear previous reset session tokens on entering forgot-password
+    session.pop("reset_email", None)
+    session.pop("reset_user_id", None)
+    session.pop("reset_name", None)
+    session.pop("reset_otp_hash", None)
+    session.pop("reset_otp_expiry", None)
+    session.pop("reset_otp_attempts", None)
+    session.pop("reset_otp_verified", None)
 
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
@@ -1066,8 +1066,18 @@ def forgot_password():
 
         user = get_user_by_email(email)
         if not user:
-            flash("No account is registered with this email address. Please check your email or register.", "danger")
-            return render_template("forgot_password.html", entered_email=email)
+            # Fallback to signed session identity if user is currently authenticated
+            sess_email = (session.get("user_email") or "").strip().lower()
+            sess_user_id = session.get("user_id")
+            if sess_user_id and sess_email and sess_email == email:
+                user = {
+                    "id": sess_user_id,
+                    "email": sess_email,
+                    "name": session.get("user_name", "Farmer")
+                }
+            else:
+                flash("No account is registered with this email address. Please check your email or register.", "danger")
+                return render_template("forgot_password.html", entered_email=email)
 
         # Generate ONE 6-digit OTP
         otp_code = f"{random.randint(100000, 999999)}"
@@ -1105,15 +1115,6 @@ def forgot_password():
 @app.route("/reset-password-verify", methods=["GET", "POST"])
 def reset_password_verify():
     """Verify OTP sent for password reset and process seamless in-place password reset."""
-    user_id = session.get("user_id")
-    if user_id:
-        user = get_user_by_id(user_id)
-        if user:
-            return redirect(url_for("dashboard"))
-        session.pop("user_id", None)
-        session.pop("user_name", None)
-        session.pop("user_email", None)
-
     reset_email = session.get("reset_email")
     reset_user_id = session.get("reset_user_id")
     if not reset_email or not reset_user_id:
@@ -1355,15 +1356,6 @@ def resend_reset_otp():
 @app.route("/reset-password", methods=["GET", "POST"])
 def reset_password():
     """Allow user to enter New Password and Confirm Password after OTP verification."""
-    user_id = session.get("user_id")
-    if user_id:
-        user = get_user_by_id(user_id)
-        if user:
-            return redirect(url_for("dashboard"))
-        session.pop("user_id", None)
-        session.pop("user_name", None)
-        session.pop("user_email", None)
-
     reset_user_id = session.get("reset_user_id")
     reset_email = session.get("reset_email")
     reset_verified = session.get("reset_otp_verified")
