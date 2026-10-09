@@ -43,6 +43,7 @@ import numpy as np
 import pandas as pd
 
 from database.db import (
+    get_db,
     init_db,
     create_user,
     delete_unverified_user,
@@ -243,8 +244,65 @@ if os.path.exists(MODEL_PATH):
         print(f"[WARN] Could not load ML model bundle: {e}")
 
 # -------------------------------------------------------------
-# AUTHENTICATION DECORATOR
+# AUTHENTICATION DECORATOR & USER RESOLUTION
 # -------------------------------------------------------------
+
+def get_authenticated_user(user_id=None):
+    """
+    Retrieve user profile from database, safely falling back to
+    cryptographically signed session identity if the database record
+    is temporarily absent in a serverless multi-container environment.
+    """
+    uid = user_id or session.get("user_id")
+    if not uid:
+        return None
+    user = get_user_by_id(uid)
+    if user:
+        return user
+
+    if session.get("user_id"):
+        session_user = {
+            "id": session.get("user_id"),
+            "name": session.get("user_name", "Farmer"),
+            "email": session.get("user_email", ""),
+            "mobile": session.get("mobile", ""),
+            "farm_location": session.get("farm_location", "Tamil Nadu"),
+            "land_area": session.get("land_area", 1.0),
+            "land_unit": session.get("land_unit", "Acres"),
+            "preferred_soil": session.get("preferred_soil", "Loamy"),
+            "avatar": session.get("avatar", "farmer1"),
+            "created_at": str(session.get("created_at") or datetime.date.today().isoformat()),
+            "is_verified": 1
+        }
+        # Best-effort re-hydration into local container SQLite if absent
+        try:
+            if session_user["email"]:
+                conn = get_db()
+                cursor = conn.cursor()
+                cursor.execute("SELECT id FROM users WHERE id = ? OR email = ?", (session_user["id"], session_user["email"]))
+                if not cursor.fetchone():
+                    cursor.execute("""
+                        INSERT OR IGNORE INTO users (id, name, mobile, email, password_hash, farm_location, land_area, land_unit, preferred_soil, avatar, is_verified)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+                    """, (
+                        session_user["id"],
+                        session_user["name"],
+                        session_user["mobile"] or f"farmer_{session_user['id']}",
+                        session_user["email"],
+                        "session_authenticated",
+                        session_user["farm_location"],
+                        session_user["land_area"],
+                        session_user["land_unit"],
+                        session_user["preferred_soil"],
+                        session_user["avatar"]
+                    ))
+                    conn.commit()
+                conn.close()
+        except Exception:
+            pass
+
+        return session_user
+    return None
 
 def login_required(f):
     """Decorator to protect routes requiring logged-in farmer session."""
@@ -253,11 +311,6 @@ def login_required(f):
         user_id = session.get("user_id")
         if not user_id:
             flash("Please log in to access this feature.", "warning")
-            return redirect(url_for("login"))
-        user = get_user_by_id(user_id)
-        if not user:
-            session.clear()
-            flash("Session expired. Please log in again.", "warning")
             return redirect(url_for("login"))
         return f(*args, **kwargs)
     return decorated_function
@@ -835,6 +888,11 @@ def register():
         session["pending_email"] = email
         session["pending_user_id"] = user_id
         session["pending_name"] = name
+        session["pending_mobile"] = mobile
+        session["pending_farm_location"] = farm_location
+        session["pending_land_area"] = land_area
+        session["pending_land_unit"] = land_unit
+        session["pending_preferred_soil"] = preferred_soil
         session["otp_sent_at"] = time.time()
         session["pending_otp_hash"] = otp_hash
         session["pending_otp_expiry"] = expiry
@@ -933,14 +991,27 @@ def verify_otp():
 
         if is_valid:
             user = get_user_by_id(user_id) if user_id else None
+            session.permanent = True
             session["user_id"] = user["id"] if user else user_id
             session["user_name"] = user["name"] if user else session.get("pending_name", "Farmer")
             session["user_email"] = user["email"] if user else pending_email
+            session["mobile"] = user["mobile"] if (user and user.get("mobile")) else session.get("pending_mobile", "")
+            session["farm_location"] = user["farm_location"] if (user and user.get("farm_location")) else session.get("pending_farm_location", "Tamil Nadu")
+            session["land_area"] = user["land_area"] if (user and user.get("land_area") is not None) else session.get("pending_land_area", 1.0)
+            session["land_unit"] = user["land_unit"] if (user and user.get("land_unit")) else session.get("pending_land_unit", "Acres")
+            session["preferred_soil"] = user["preferred_soil"] if (user and user.get("preferred_soil")) else session.get("pending_preferred_soil", "Loamy")
+            session["avatar"] = user.get("avatar", "farmer1") if user else "farmer1"
+            session["created_at"] = str(user.get("created_at") or datetime.date.today().isoformat())[:10] if user else datetime.date.today().isoformat()
 
             # Clear temporary session data
             session.pop("pending_email", None)
             session.pop("pending_user_id", None)
             session.pop("pending_name", None)
+            session.pop("pending_mobile", None)
+            session.pop("pending_farm_location", None)
+            session.pop("pending_land_area", None)
+            session.pop("pending_land_unit", None)
+            session.pop("pending_preferred_soil", None)
             session.pop("otp_sent_at", None)
             session.pop("pending_otp_hash", None)
             session.pop("pending_otp_expiry", None)
@@ -992,7 +1063,7 @@ def resend_otp():
 def login():
     user_id = session.get("user_id")
     if user_id:
-        user = get_user_by_id(user_id)
+        user = get_authenticated_user(user_id)
         if user:
             return redirect(url_for("dashboard"))
         session.pop("user_id", None)
@@ -1027,9 +1098,17 @@ def login():
                 flash("Please verify your email address before logging in. A new 6-digit OTP has been sent to your email.", "warning")
                 return redirect(url_for("verify_otp"))
 
+            session.permanent = True
             session["user_id"] = user["id"]
             session["user_name"] = user["name"]
             session["user_email"] = user["email"]
+            session["mobile"] = user.get("mobile", "")
+            session["farm_location"] = user.get("farm_location", "Tamil Nadu")
+            session["land_area"] = user.get("land_area", 1.0)
+            session["land_unit"] = user.get("land_unit", "Acres")
+            session["preferred_soil"] = user.get("preferred_soil", "Loamy")
+            session["avatar"] = user.get("avatar", "farmer1")
+            session["created_at"] = str(user.get("created_at") or datetime.date.today().isoformat())[:10]
             flash(f"Welcome back, {user['name']}!", "success")
             return redirect(url_for("dashboard"))
         else:
@@ -1426,11 +1505,7 @@ def reset_password():
 def dashboard():
     """Farmer dashboard with quick module actions, metrics, and latest records."""
     user_id = session["user_id"]
-    user = get_user_by_id(user_id)
-    if not user:
-        session.clear()
-        flash("Session expired. Please log in again.", "warning")
-        return redirect(url_for("login"))
+    user = get_authenticated_user(user_id)
 
     history = get_recommendation_history(user_id, limit=1)
     last_rec = history[0] if history else None
@@ -1448,20 +1523,20 @@ def dashboard():
 def profile():
     """Farmer profile viewer and settings updater."""
     user_id = session["user_id"]
-    user = get_user_by_id(user_id)
-    if not user:
-        flash("User information not found.", "danger")
-        return redirect(url_for("dashboard"))
+    user = get_authenticated_user(user_id)
 
     if request.method == "POST":
         name = request.form.get("name", "").strip()
         mobile = request.form.get("mobile", "").strip()
         email = request.form.get("email", "").strip().lower()
         farm_location = request.form.get("farm_location", "").strip()
-        land_area = float(request.form.get("land_area", 1.0))
+        try:
+            land_area = float(request.form.get("land_area", 1.0))
+        except (ValueError, TypeError):
+            land_area = 1.0
         land_unit = request.form.get("land_unit", "Acres")
         preferred_soil = request.form.get("preferred_soil", "Loamy")
-        avatar = user.get("avatar", "farmer1")
+        avatar = user.get("avatar", "farmer1") if user else "farmer1"
 
         success, err = update_user_profile(
             user_id,
@@ -1478,11 +1553,16 @@ def profile():
         if success:
             session["user_name"] = name
             session["user_email"] = email
+            session["mobile"] = mobile
+            session["farm_location"] = farm_location
+            session["land_area"] = land_area
+            session["land_unit"] = land_unit
+            session["preferred_soil"] = preferred_soil
+            session["avatar"] = avatar
             flash("Farm profile updated successfully.", "success")
-            return redirect(url_for("profile"))
         else:
             flash(err or "Failed to update profile.", "danger")
-            return redirect(url_for("profile"))
+        return redirect(url_for("profile"))
 
     return render_template("profile.html", user=user)
 
@@ -1495,7 +1575,7 @@ def profile():
 def recommend():
     """Crop recommendation input form and Decision Tree inference engine."""
     user_id = session["user_id"]
-    user = get_user_by_id(user_id)
+    user = get_authenticated_user(user_id)
 
     soil_types = ['Alluvial', 'Black', 'Clay', 'Laterite', 'Loamy', 'Red', 'Sandy']
 
@@ -1868,7 +1948,7 @@ def budget():
 
     user = None
     if session.get("user_id"):
-        user = get_user_by_id(session["user_id"])
+        user = get_authenticated_user(session["user_id"])
 
     return render_template(
         "budget.html",
@@ -1903,7 +1983,7 @@ def water():
 
     user = None
     if session.get("user_id"):
-        user = get_user_by_id(session["user_id"])
+        user = get_authenticated_user(session["user_id"])
 
     return render_template(
         "water.html",
@@ -1922,7 +2002,7 @@ def print_report(rec_id):
         flash("Recommendation record not found.", "danger")
         return redirect(url_for("dashboard"))
 
-    user = get_user_by_id(user_id)
+    user = get_authenticated_user(user_id)
     crop_name = rec["recommended_crop"]
     crop_data = crop_database.get(crop_name, {})
 
@@ -1947,7 +2027,7 @@ def print_report(rec_id):
 def schemes():
     """Government Schemes discovery and customized eligibility engine."""
     user_id = session["user_id"]
-    user = get_user_by_id(user_id)
+    user = get_authenticated_user(user_id)
 
     if not user:
         flash("User information not found.", "danger")
